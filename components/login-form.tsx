@@ -218,7 +218,7 @@ export function LoginForm() {
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password" className="font-semibold">Official Password</Label>
-                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">RBAC Enforced</span>
+                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Authorized Access</span>
               </div>
               <Input
                 id="password"

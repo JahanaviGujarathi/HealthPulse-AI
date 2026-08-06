@@ -90,7 +90,7 @@ export function SiteFooter() {
               <Lock className="size-3 text-emerald-500" /> End-to-End Encrypted
             </span>
             <span>·</span>
-            <span>RBAC Permissioned</span>
+            <span>Securely Permissioned</span>
           </div>
         </div>
       </div>

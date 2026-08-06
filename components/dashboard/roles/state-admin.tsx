@@ -88,7 +88,7 @@ export function StateAdminDashboard({ section }: { section: string }) {
       <div className="space-y-6">
         <SectionHeader
           title="State Health Governance Dashboard — Dr. N. Sharma"
-          description="Assam State Health Department. Oversee platform security, RBAC user provisioning, AI model pipelines, and security audit logs."
+          description="Assam State Health Department. Oversee platform security, secure user provisioning, AI model pipelines, and security audit logs."
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -158,7 +158,7 @@ export function StateAdminDashboard({ section }: { section: string }) {
   if (section === 'users') {
     return (
       <div className="space-y-6 max-w-4xl mx-auto">
-        <SectionHeader title="User Verification & Governance" description="RBAC identity checks for health department accounts." />
+        <SectionHeader title="User Verification & Governance" description="Authorized identity checks for health department accounts." />
         <div className="space-y-3">
           {usersQueue.map((u) => (
             <Card key={u.id}>

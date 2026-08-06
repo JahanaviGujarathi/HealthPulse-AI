@@ -21,7 +21,7 @@ export function RolesSection() {
             One platform, eight specialized role portals
           </h2>
           <p className="mt-2 text-sm sm:text-base text-muted-foreground">
-            Each role receives a purpose-built dashboard with Role-Based Access Control (RBAC). Select any role to log in and inspect the workflow.
+            Each role receives a purpose-built dashboard with secure permission controls. Select any role to log in and inspect the workflow.
           </p>
         </div>
 

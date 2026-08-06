@@ -75,7 +75,7 @@ export function Hero() {
           {/* Security Compliance Seal */}
           <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground pt-1">
             <ShieldCheck className="size-4 text-emerald-500" />
-            <span>Built with <b>Secure Enterprise Architecture</b> · RBAC Enforced</span>
+            <span>Built with <b>Secure Enterprise Architecture</b> · Access Control Enforced</span>
           </div>
 
           {/* Classic Stats Grid */}

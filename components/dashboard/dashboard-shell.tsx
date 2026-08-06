@@ -118,7 +118,7 @@ export function DashboardShell({
                 render={
                   <Button variant="outline" size="sm" className="hidden md:flex gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/5">
                     <ShieldCheck className="size-3.5 text-emerald-500" />
-                    <span>RBAC Active</span>
+                    <span>Access Verified</span>
                   </Button>
                 }
               />
@@ -127,7 +127,7 @@ export function DashboardShell({
                   <CheckCircle2 className="size-3.5 text-emerald-500" /> Security Standards Enforced
                 </div>
                 <p className="text-muted-foreground leading-relaxed">
-                  Inputs sanitized (A03), strict RBAC permissions active (A01), request rate limits applied (A04), and tamper-evident audit logs enabled (A09).
+                  Inputs sanitized (A03), strict access controls active (A01), request rate limits applied (A04), and tamper-evident audit logs enabled (A09).
                 </p>
               </DropdownMenuContent>
             </DropdownMenu>
