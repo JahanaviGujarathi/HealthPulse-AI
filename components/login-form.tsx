@@ -239,7 +239,7 @@ export function LoginForm() {
 
       <div className="rounded-lg bg-muted/60 p-3 text-center text-xs text-muted-foreground space-y-1">
         <div className="flex items-center justify-center gap-1 font-bold text-foreground">
-          <Lock className="size-3 text-emerald-500" /> OWASP A04 Anti-Spam Protection
+          <Lock className="size-3 text-emerald-500" /> Secure Anti-Spam Protection
         </div>
         <p>1-Aadhaar per resident verification prevents duplicate filings and guarantees report authenticity.</p>
       </div>

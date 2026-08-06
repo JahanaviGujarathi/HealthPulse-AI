@@ -88,14 +88,14 @@ export function StateAdminDashboard({ section }: { section: string }) {
       <div className="space-y-6">
         <SectionHeader
           title="State Health Governance Dashboard — Dr. N. Sharma"
-          description="Assam State Health Department. Oversee platform security, RBAC user provisioning, AI model pipelines, and OWASP audit logs."
+          description="Assam State Health Department. Oversee platform security, RBAC user provisioning, AI model pipelines, and security audit logs."
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard icon={Building2} label="Districts Monitored" value="33 Districts" hint="All Assam divisions" tone="default" />
           <StatCard icon={UserCheck} label="Pending User Verifications" value={usersQueue.length} hint="Doctors & Officers queue" tone="warning" />
           <StatCard icon={Sparkles} label="Active AI Models" value="4 Models" hint="Avg Accuracy: 89%" tone="success" />
-          <StatCard icon={Lock} label="OWASP Security Index" value="100%" hint="A01-A10 Compliance Active" tone="success" />
+          <StatCard icon={Lock} label="Security Compliance Index" value="100%" hint="Core Compliance Active" tone="success" />
         </div>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -181,7 +181,7 @@ export function StateAdminDashboard({ section }: { section: string }) {
   if (section === 'audit') {
     return (
       <div className="space-y-6 max-w-5xl mx-auto">
-        <SectionHeader title="OWASP Top 10 Security Audit Logs" description="Real-time tamper-evident ledger of API requests, authentication, and security events." />
+        <SectionHeader title="Security Audit Logs" description="Real-time tamper-evident ledger of API requests, authentication, and security events." />
 
         <Card>
           <CardHeader className="flex-row items-center justify-between pb-3">
@@ -189,7 +189,7 @@ export function StateAdminDashboard({ section }: { section: string }) {
               <CardTitle className="text-base flex items-center gap-2">
                 <Lock className="size-4 text-emerald-500" /> Security Audit Event Ledger
               </CardTitle>
-              <CardDescription>Compliant with OWASP A09 (Logging & Monitoring Failures)</CardDescription>
+              <CardDescription>Standard-compliant logging & monitoring active</CardDescription>
             </div>
             <Badge variant="outline" className="border-emerald-500/30 text-emerald-600 bg-emerald-500/10">
               Immutability Verified
@@ -233,7 +233,7 @@ export function StateAdminDashboard({ section }: { section: string }) {
     <div className="space-y-6">
       <SectionHeader title="State Administration View" description="System monitoring and audit inspection." />
       <Card className="p-6 text-center text-muted-foreground text-sm">
-        Select a section from the left sidebar to manage system monitoring, user verification, or OWASP security audit logs.
+        Select a section from the left sidebar to manage system monitoring, user verification, or security audit logs.
       </Card>
     </div>
   )

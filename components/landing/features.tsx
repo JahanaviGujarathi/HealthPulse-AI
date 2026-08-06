@@ -32,7 +32,7 @@ const aiFeatures = [
   { icon: MapPin, title: 'Geospatial Hotspot Clustering', body: 'Generates live heatmaps of high, medium, and safe villages from GPS coordinates and active case density.' },
   { icon: Droplets, title: 'Water Contamination Classifier', body: 'Forecasts bacterial contamination from pH, turbidity (NTU), residual chlorine (mg/L), and coliform counts.' },
   { icon: Truck, title: 'Resource Pre-positioning Model', body: 'Projects required hospital beds, doctors, ORS packets, IV fluids, and mobile water tankers per block.' },
-  { icon: ShieldAlert, title: 'XSS & Duplicate Detection', body: 'OWASP-compliant anomaly filters sanitize inputs and automatically merge duplicate citizen submissions.' },
+  { icon: ShieldAlert, title: 'XSS & Duplicate Detection', body: 'Secure, high-fidelity anomaly filters sanitize inputs and automatically merge duplicate citizen submissions.' },
   { icon: Bell, title: 'Advisory Authorization Pipeline', body: 'Auto-drafts emergency boil-water alerts and government orders, requiring DHO/Collector authorization before broadcast.' },
 ]
 

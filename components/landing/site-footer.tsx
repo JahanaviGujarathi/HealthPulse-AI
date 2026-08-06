@@ -16,7 +16,7 @@ export function SiteFooter() {
             </p>
             <div className="flex items-center gap-2 pt-1">
               <Badge variant="outline" className="border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold text-[11px] gap-1 px-2.5 py-1">
-                <ShieldCheck className="size-3.5 text-emerald-500" /> OWASP Top 10 Compliant Architecture
+                <ShieldCheck className="size-3.5 text-emerald-500" /> Enterprise-Grade Security Architecture
               </Badge>
             </div>
           </div>

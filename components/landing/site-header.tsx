@@ -76,7 +76,7 @@ export function SiteHeader() {
               variant="outline"
               className="hidden lg:inline-flex items-center gap-1.5 border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs px-3 py-1.5"
             >
-              <ShieldCheck className="size-4 text-emerald-500" /> OWASP Protected
+              <ShieldCheck className="size-4 text-emerald-500" /> System Secured
             </Badge>
 
             {session ? (
