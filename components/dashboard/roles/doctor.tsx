@@ -127,7 +127,7 @@ export function DoctorDashboard({ section }: { section: string }) {
                 </div>
                 <div className="space-y-2">
                   <Label>Diagnosed Disease</Label>
-                  <Select value={disease} onValueChange={setDisease}>
+                  <Select value={disease} onValueChange={(v) => v && setDisease(v)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -144,7 +144,7 @@ export function DoctorDashboard({ section }: { section: string }) {
                 </div>
                 <div className="space-y-2">
                   <Label>Clinical Severity</Label>
-                  <Select value={severity} onValueChange={(v: any) => setSeverity(v)}>
+                  <Select value={severity} onValueChange={(v: any) => v && setSeverity(v)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>

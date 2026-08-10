@@ -48,9 +48,10 @@ function DialogTrigger({
   const ctx = React.useContext(DialogContext)
 
   if (render && React.isValidElement(render)) {
-    return React.cloneElement(render, {
+    const renderElement = render as React.ReactElement<{ onClick?: (e: React.MouseEvent) => void }>
+    return React.cloneElement(renderElement, {
       onClick: (e: React.MouseEvent) => {
-        (render.props as any)?.onClick?.(e)
+        renderElement.props?.onClick?.(e)
         ctx?.setOpen(true)
       },
     })

@@ -82,7 +82,7 @@ export function LabDashboard({ section }: { section: string }) {
 
                 <div className="space-y-2">
                   <Label>Diagnostic Assay / Test</Label>
-                  <Select value={testType} onValueChange={setTestType}>
+                  <Select value={testType} onValueChange={(v) => v && setTestType(v)}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
                       <SelectItem value="Stool Culture & PCR">Stool Culture & Real-Time PCR</SelectItem>
@@ -100,7 +100,7 @@ export function LabDashboard({ section }: { section: string }) {
                   </div>
                   <div className="space-y-2">
                     <Label>Assay Outcome</Label>
-                    <Select value={result} onValueChange={setResult}>
+                    <Select value={result} onValueChange={(v) => v && setResult(v)}>
                       <SelectTrigger><SelectValue /></SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Positive">POSITIVE (Pathogen Detected)</SelectItem>
