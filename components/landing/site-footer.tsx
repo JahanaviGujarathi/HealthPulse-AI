@@ -29,10 +29,10 @@ export function SiteFooter() {
                 <Link href="/" className="hover:text-primary transition-colors">Home Page</Link>
               </li>
               <li>
-                <Link href="#how" className="hover:text-primary transition-colors">Surveillance Workflow</Link>
+                <Link href="#how" className="hover:text-primary transition-colors">How It Works</Link>
               </li>
               <li>
-                <Link href="#ai" className="hover:text-primary transition-colors">AI Prediction Engine</Link>
+                <Link href="#ai" className="hover:text-primary transition-colors">Safety Features</Link>
               </li>
               <li>
                 <Link href="#roles" className="hover:text-primary transition-colors">8 Role Portals</Link>

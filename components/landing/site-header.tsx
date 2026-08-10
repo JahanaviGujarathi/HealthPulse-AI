@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge'
 
 const links = [
   { label: 'How it works', href: '#how' },
-  { label: 'AI Engine', href: '#ai' },
+  { label: 'Safety Features', href: '#ai' },
   { label: 'Role Portals', href: '#roles' },
 ]
 

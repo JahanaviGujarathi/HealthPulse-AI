@@ -47,7 +47,7 @@ export function Hero() {
 
           {/* Subtitle */}
           <p className="max-w-xl text-pretty text-base sm:text-lg leading-relaxed text-muted-foreground font-normal">
-            HealthPulse AI connects Citizens, ASHA Field Workers, Doctors, Pathology Labs, Water Testing Officers, and District Officials into one unified intelligence platform — using predictive AI to detect cholera, typhoid, and water contamination early.
+            HealthPulse AI is a simple, community-focused platform that connects citizens, health workers, and local authorities to keep our drinking water clean and protect our families. Report water contamination or sickness in a few taps and get instant safety updates.
           </p>
 
           {/* Action CTAs */}

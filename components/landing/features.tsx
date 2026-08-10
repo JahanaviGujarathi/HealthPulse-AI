@@ -12,28 +12,28 @@ import {
 const flow = [
   {
     step: '01',
-    title: 'Multi-Source Data Intake',
-    body: 'Citizens, ASHA field workers, doctors, pathology labs, and water officers submit symptoms, clinical records, and water quality assays — online or offline.',
+    title: 'Fill a Simple Report',
+    body: 'Enter symptoms, choose your village, or upload a photo of local water issues. It takes less than a minute!',
   },
   {
     step: '02',
-    title: 'AI Neural Inference Engine',
-    body: 'Predictive models fuse symptom velocity, bacterial culture counts, pH/turbidity, and weather forecasts to predict outbreak risks 7 days in advance.',
+    title: 'Instant Verification',
+    body: 'Our platform automatically reviews the submission so local health workers can address your issue right away.',
   },
   {
     step: '03',
-    title: 'Automated Real-Time Response',
-    body: 'District Health Officers and Collectors approve high-priority advisories; Rapid Response Teams (RRT) and water chlorination units dispatch automatically.',
+    title: 'Help is Deployed',
+    body: 'Emergency teams, clean water tankers, and chlorination units are dispatched directly to affected villages.',
   },
 ]
 
 const aiFeatures = [
-  { icon: Brain, title: 'Outbreak Risk Forecasting', body: 'Predicts disease, risk percentage (0-100%), and model confidence score from symptoms, lab assays, water quality, and rainfall.' },
-  { icon: MapPin, title: 'Geospatial Hotspot Clustering', body: 'Generates live heatmaps of high, medium, and safe villages from GPS coordinates and active case density.' },
-  { icon: Droplets, title: 'Water Contamination Classifier', body: 'Forecasts bacterial contamination from pH, turbidity (NTU), residual chlorine (mg/L), and coliform counts.' },
-  { icon: Truck, title: 'Resource Pre-positioning Model', body: 'Projects required hospital beds, doctors, ORS packets, IV fluids, and mobile water tankers per block.' },
-  { icon: ShieldAlert, title: 'XSS & Duplicate Detection', body: 'Secure, high-fidelity anomaly filters sanitize inputs and automatically merge duplicate citizen submissions.' },
-  { icon: Bell, title: 'Advisory Authorization Pipeline', body: 'Auto-drafts emergency boil-water alerts and government orders, requiring DHO/Collector authorization before broadcast.' },
+  { icon: Brain, title: 'Simple Symptom Reports', body: 'Flag any household illness easily to get immediate support from local health workers.' },
+  { icon: MapPin, title: 'Village Safety Heatmap', body: 'View a simple color-coded map showing high, medium, and safe areas in your district.' },
+  { icon: Droplets, title: 'Water Safety Checker', body: 'Check simple safety ratings and cleanliness levels of your local drinking water sources.' },
+  { icon: Truck, title: 'Request Clean Water', body: 'Instantly request emergency water tankers if your local supply becomes unsafe.' },
+  { icon: ShieldAlert, title: 'Spam-Free Security', body: 'Simple checks keep reports genuine, making sure help goes to the families who need it most.' },
+  { icon: Bell, title: 'Instant Safety Alerts', body: 'Receive clear, straightforward boil-water warnings and health advice on your mobile phone.' },
 ]
 
 export function Features() {
@@ -44,13 +44,13 @@ export function Features() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="max-w-3xl">
             <span className="text-xs font-bold uppercase tracking-wider text-primary">
-              Epidemiology Workflow
+              Easy Reporting
             </span>
             <h2 className="mt-2 text-balance text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              From field symptom intake to frontline emergency response
+              Report issues & stay safe in 3 simple steps
             </h2>
             <p className="mt-2 text-sm sm:text-base text-muted-foreground">
-              A closed-loop surveillance pipeline bridging community health workers and district administration.
+              Reporting water contamination or illness is fast, secure, and protects your entire neighborhood.
             </p>
           </div>
 
@@ -74,18 +74,18 @@ export function Features() {
         </div>
       </section>
 
-      {/* AI Models Architecture */}
+      {/* Health & Safety Features */}
       <section id="ai" className="border-b border-border py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="max-w-3xl">
             <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary">
-              <Sparkles className="size-3.5 animate-spin" style={{ animationDuration: '8s' }} /> Intelligence Layer
+              <Sparkles className="size-3.5 animate-spin" style={{ animationDuration: '8s' }} /> Safety Features
             </span>
             <h2 className="mt-2 text-balance text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-              Six neural models working in unison to prevent epidemics
+              Simple tools designed to keep your family healthy
             </h2>
             <p className="mt-2 text-sm sm:text-base text-muted-foreground">
-              Engineered specifically for public health surveillance across rural and urban districts.
+              We make it easy to monitor water safety, get emergency resources, and protect your loved ones.
             </p>
           </div>
 
