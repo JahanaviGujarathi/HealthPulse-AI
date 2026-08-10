@@ -36,6 +36,13 @@ import { AWARENESS, DISEASE_REPORTS, HOSPITALS, type DiseaseReport } from '@/lib
 import { toast } from 'sonner'
 import { sanitizeInput, maskAadhaar } from '@/lib/security'
 import { getAuthSession } from '@/lib/auth'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog'
 
 export function CitizenDashboard({ section }: { section: string }) {
   const session = getAuthSession()
@@ -48,6 +55,7 @@ export function CitizenDashboard({ section }: { section: string }) {
   const [notes, setNotes] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [tankerRequested, setTankerRequested] = useState(false)
+  const [reportDialogOpen, setReportDialogOpen] = useState(false)
 
   const commonSymptoms = [
     'Fever / Chills',
@@ -106,6 +114,7 @@ export function CitizenDashboard({ section }: { section: string }) {
         })
         setSelectedSymptoms([])
         setNotes('')
+        setReportDialogOpen(false)
       } else {
         toast.error(data.error || 'Failed to submit report')
       }
@@ -120,222 +129,60 @@ export function CitizenDashboard({ section }: { section: string }) {
   if (section === 'overview' || !section) {
     return (
       <div className="space-y-6">
-        {/* Welcome Community Header */}
-        <div className="rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/10 via-amber-500/10 to-emerald-500/10 p-6 shadow-sm">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                  👋 Majuli Village Community Society Bulletin
-                </span>
-                <Badge variant="outline" className="border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs gap-1">
-                  <Fingerprint className="size-3 text-emerald-500" /> Aadhaar Verified: {userAadhaar}
-                </Badge>
-              </div>
-              <h2 className="mt-2 text-2xl font-extrabold text-foreground sm:text-3xl">
-                Good morning, {patientName.split(' ')[0]}!
-              </h2>
-              <p className="mt-1 text-xs sm:text-sm text-muted-foreground">
-                Here is today{"'"}s water safety status and health news for your neighborhood in Kamalabari.
-              </p>
+        {/* Modern Minimalist Welcome & Water Safety Status Banner */}
+        <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-amber-500/5 to-transparent p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-300">
+                ⚠️ Water Alert: Boil advisory active in Kamalabari
+              </span>
             </div>
+            <h2 className="text-2xl font-extrabold text-foreground sm:text-3xl tracking-tight">
+              Hello, {patientName.split(' ')[0]}
+            </h2>
+            <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-xl">
+              High turbidity detected in Kamalabari Well #3. Please boil drinking water for at least 1 minute.
+            </p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground pt-1.5 border-t border-border/40">
+              <span className="flex items-center gap-1">
+                👩‍⚕️ <span className="font-semibold text-foreground">ASHA Worker:</span> Anjali Boro
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                🏥 <span className="font-semibold text-foreground">Nearest Clinic:</span> Kamalabari PHC (1.2 km)
+              </span>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                📋 <span className="font-semibold text-foreground">My Reports:</span> {reports.length} Active
+              </span>
+            </div>
+          </div>
 
+          <div className="flex flex-wrap gap-3 shrink-0">
             <Button
               size="lg"
-              onClick={() => {
-                const el = document.getElementById('quick-report')
-                if (el) el.scrollIntoView({ behavior: 'smooth' })
-              }}
-              className="gap-2 font-bold shadow-md bg-primary hover:bg-primary/90 text-primary-foreground shrink-0"
+              onClick={() => setReportDialogOpen(true)}
+              className="gap-2 font-extrabold shadow-md bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
             >
-              <Plus className="size-4" /> Report Health or Water Issue
+              <Plus className="size-4" /> Report an Issue
             </Button>
-          </div>
-        </div>
-
-        {/* Community Water Safety Alert Banner */}
-        <Card className="border-amber-500/40 bg-amber-500/10 shadow-sm">
-          <CardContent className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex items-start gap-3">
-              <div className="grid size-10 place-items-center rounded-xl bg-amber-500 text-white shrink-0 mt-0.5">
-                <Droplets className="size-5 animate-bounce" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-extrabold text-sm text-amber-800 dark:text-amber-300 uppercase tracking-wide">
-                    Boil Water Advisory Active
-                  </span>
-                  <Badge variant="outline" className="text-[10px] bg-amber-500/20 text-amber-800 dark:text-amber-300 border-amber-500/40 font-bold">
-                    Kamalabari Well #3
-                  </Badge>
-                </div>
-                <p className="mt-1 text-xs text-amber-900/80 dark:text-amber-200 leading-relaxed">
-                  High turbidity detected in the main village well. Please boil drinking water for at least 1 minute before consuming.
-                </p>
-              </div>
-            </div>
-
             <Button
-              size="sm"
+              size="lg"
               variant="outline"
               onClick={handleRequestTanker}
               disabled={tankerRequested}
-              className="shrink-0 gap-1.5 border-amber-600/40 bg-card text-amber-800 dark:text-amber-200 hover:bg-amber-500/20 font-bold text-xs"
+              className="gap-2 font-extrabold border-amber-600/30 bg-amber-500/10 text-amber-800 dark:text-amber-200 hover:bg-amber-500/20 rounded-xl"
             >
-              <Truck className="size-3.5 text-amber-600" />
-              {tankerRequested ? 'Tanker Requested ✓' : 'Request Drinking Water Tanker'}
+              <Truck className="size-4 text-amber-600" />
+              {tankerRequested ? 'Tanker Sent ✓' : 'Request Clean Water'}
             </Button>
-          </CardContent>
-        </Card>
-
-        {/* 4 Community Quick Action Cards */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Card className="group border-primary/20 hover:border-primary/50 transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer">
-            <CardContent className="p-5 flex items-center gap-4">
-              <div className="grid size-12 place-items-center rounded-xl bg-primary/10 text-primary transition-transform group-hover:scale-110">
-                <Droplets className="size-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-muted-foreground uppercase">Drinking Water</p>
-                <p className="text-base font-extrabold text-foreground">Boil Water Advisory</p>
-                <p className="text-[11px] text-amber-600 dark:text-amber-400 font-semibold mt-0.5">Use boiled or filtered water</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="group border-emerald-500/20 hover:border-emerald-500/50 transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer">
-            <CardContent className="p-5 flex items-center gap-4">
-              <div className="grid size-12 place-items-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 transition-transform group-hover:scale-110">
-                <HeartPulse className="size-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-muted-foreground uppercase">Local ASHA Worker</p>
-                <p className="text-base font-extrabold text-foreground">Anjali Boro</p>
-                <p className="text-[11px] text-emerald-600 dark:text-emerald-400 font-semibold mt-0.5">On duty in Sector 2</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="group border-cyan-500/20 hover:border-cyan-500/50 transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer">
-            <CardContent className="p-5 flex items-center gap-4">
-              <div className="grid size-12 place-items-center rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 transition-transform group-hover:scale-110">
-                <ShieldCheck className="size-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-muted-foreground uppercase">Nearest Health Center</p>
-                <p className="text-base font-extrabold text-foreground">Kamalabari PHC</p>
-                <p className="text-[11px] text-cyan-600 dark:text-cyan-400 font-semibold mt-0.5">Open 24/7 (1.2 km away)</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="group border-purple-500/20 hover:border-purple-500/50 transition-all duration-300 shadow-xs hover:shadow-md cursor-pointer">
-            <CardContent className="p-5 flex items-center gap-4">
-              <div className="grid size-12 place-items-center rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 transition-transform group-hover:scale-110">
-                <FileText className="size-6" />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-muted-foreground uppercase">My Family Requests</p>
-                <p className="text-base font-extrabold text-foreground">{reports.length} Active Reports</p>
-                <p className="text-[11px] text-purple-600 dark:text-purple-400 font-semibold mt-0.5">Verified by health team</p>
-              </div>
-            </CardContent>
-          </Card>
+          </div>
         </div>
 
-        {/* Main 2-Column Section */}
+        {/* Announcements & Emergency Contacts side-by-side (No inline form to reduce clutter) */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Quick Report Form */}
-          <div id="quick-report" className="lg:col-span-2">
-            <Card className="border-primary/20 shadow-md">
-              <CardHeader className="bg-primary/5">
-                <CardTitle className="text-base font-bold flex items-center justify-between">
-                  <span className="flex items-center gap-2">
-                    <ClipboardList className="size-5 text-primary" /> Report a Health or Water Concern
-                  </span>
-                  <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/30">
-                    Aadhaar Linked Report
-                  </Badge>
-                </CardTitle>
-                <CardDescription>
-                  Informing your local ASHA worker helps protect your family and neighbors. Confidential and instant.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="p-6">
-                <form onSubmit={handleSubmitReport} className="space-y-5">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label htmlFor="patientName" className="font-semibold">Your Verified Name</Label>
-                      <Input
-                        id="patientName"
-                        value={patientName}
-                        onChange={(e) => setPatientName(e.target.value)}
-                        placeholder="Rahul Das"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="villageName" className="font-semibold">Your Village / Lane</Label>
-                      <Input
-                        id="villageName"
-                        value={villageName}
-                        onChange={(e) => setVillageName(e.target.value)}
-                        placeholder="Kamalabari, Sector 2"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    <Label className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
-                      Select Symptoms or Observations
-                    </Label>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                      {commonSymptoms.map((symptom) => (
-                        <div
-                          key={symptom}
-                          onClick={() => handleSymptomToggle(symptom)}
-                          className={`flex items-center gap-2 rounded-xl border p-3 cursor-pointer transition-all duration-200 ${
-                            selectedSymptoms.includes(symptom)
-                              ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs'
-                              : 'border-border/80 bg-card hover:bg-muted/50 text-foreground'
-                          }`}
-                        >
-                          <Checkbox
-                            checked={selectedSymptoms.includes(symptom)}
-                            onCheckedChange={() => handleSymptomToggle(symptom)}
-                          />
-                          <span className="text-xs font-medium">{symptom}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="notes" className="font-semibold">Additional Details</Label>
-                    <Textarea
-                      id="notes"
-                      placeholder="e.g. Water from local pump looks cloudy, family member has had mild fever since yesterday..."
-                      rows={3}
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                    />
-                  </div>
-
-                  <Button type="submit" disabled={isSubmitting} className="w-full gap-2 py-6 text-sm font-bold shadow-md">
-                    {isSubmitting ? (
-                      <>Sending Update to ASHA Worker...</>
-                    ) : (
-                      <>
-                        <Send className="size-4" /> Submit Aadhaar Verified Report
-                      </>
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Right Column: Community Announcements & Helplines */}
-          <div className="space-y-6">
+          {/* Left Column: Announcements (takes 2 cols on lg screens) */}
+          <div className="lg:col-span-2 space-y-6">
             {/* Community Announcements */}
             <Card>
               <CardHeader className="pb-3">
@@ -370,7 +217,10 @@ export function CitizenDashboard({ section }: { section: string }) {
                 </div>
               </CardContent>
             </Card>
+          </div>
 
+          {/* Right Column: Helpline Emergency Toll-Free Numbers (takes 1 col) */}
+          <div className="space-y-6">
             {/* Helpline Emergency Toll-Free Numbers */}
             <Card className="border-destructive/20 bg-destructive/5">
               <CardHeader className="pb-3">
@@ -404,18 +254,89 @@ export function CitizenDashboard({ section }: { section: string }) {
           </div>
         </div>
 
-        {/* Clean Water & Clinic Map Card */}
-        <Card className="border-primary/20">
-          <CardHeader>
-            <CardTitle className="text-base font-bold flex items-center gap-2">
-              <MapPin className="size-4 text-primary" /> Clean Water Points & Clinics Near You
-            </CardTitle>
-            <CardDescription>Interactive map showing nearby safe water sources and open health centers</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <HotspotMap height={320} zoom={11} center={[26.95, 94.17]} />
-          </CardContent>
-        </Card>
+        {/* Dialog Modal Pop-up for Reporting */}
+        <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+          <DialogContent className="sm:max-w-xl">
+            <DialogHeader>
+              <DialogTitle className="text-base font-bold flex items-center gap-2">
+                <ClipboardList className="size-5 text-primary" /> Report a Health or Water Concern
+              </DialogTitle>
+              <DialogDescription>
+                Informing your local ASHA worker helps protect your family and neighbors. Linked to Aadhaar {userAadhaar}.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleSubmitReport} className="space-y-5">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="dialogPatientName" className="font-semibold">Your Name</Label>
+                  <Input
+                    id="dialogPatientName"
+                    value={patientName}
+                    onChange={(e) => setPatientName(e.target.value)}
+                    placeholder="Rahul Das"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="dialogVillageName" className="font-semibold">Your Village / Lane</Label>
+                  <Input
+                    id="dialogVillageName"
+                    value={villageName}
+                    onChange={(e) => setVillageName(e.target.value)}
+                    placeholder="Kamalabari, Sector 2"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2.5">
+                <Label className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                  Select Symptoms or Observations
+                </Label>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+                  {commonSymptoms.map((symptom) => (
+                    <div
+                      key={symptom}
+                      onClick={() => handleSymptomToggle(symptom)}
+                      className={`flex items-center gap-2 rounded-xl border p-2.5 cursor-pointer transition-all duration-200 ${
+                        selectedSymptoms.includes(symptom)
+                          ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs'
+                          : 'border-border/80 bg-card hover:bg-muted/50 text-foreground'
+                      }`}
+                    >
+                      <Checkbox
+                        checked={selectedSymptoms.includes(symptom)}
+                        onCheckedChange={() => handleSymptomToggle(symptom)}
+                      />
+                      <span className="text-xs font-medium">{symptom}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="dialogNotes" className="font-semibold">Additional Details</Label>
+                <Textarea
+                  id="dialogNotes"
+                  placeholder="e.g. Water from local pump looks cloudy, family member has had mild fever since yesterday..."
+                  rows={3}
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                />
+              </div>
+
+              <Button type="submit" disabled={isSubmitting} className="w-full gap-2 py-6 text-sm font-bold shadow-md">
+                {isSubmitting ? (
+                  <>Sending Update...</>
+                ) : (
+                  <>
+                    <Send className="size-4" /> Submit Aadhaar Verified Report
+                  </>
+                )}
+              </Button>
+            </form>
+          </DialogContent>
+        </Dialog>
+
+
       </div>
     )
   }
