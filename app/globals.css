@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-sans), "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-sans), Georgia, Cambria, "Times New Roman", Times, serif;
   --font-mono: var(--font-mono), ui-monospace, monospace;
 
   --color-sidebar-ring: var(--sidebar-ring);
