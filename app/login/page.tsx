@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ArrowLeft, Lock } from 'lucide-react'
 import { Brand } from '@/components/brand'
 import { LoginForm } from '@/components/login-form'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default function LoginPage() {
   return (
@@ -36,7 +37,10 @@ export default function LoginPage() {
       </div>
 
       {/* Form panel */}
-      <div className="flex flex-col items-center justify-center p-6 sm:p-10">
+      <div className="relative flex flex-col items-center justify-center p-6 sm:p-10">
+        <div className="absolute top-6 right-6">
+          <ThemeToggle />
+        </div>
         <div className="w-full max-w-md">
           <div className="mb-8 flex items-center justify-between lg:hidden">
             <Link href="/">

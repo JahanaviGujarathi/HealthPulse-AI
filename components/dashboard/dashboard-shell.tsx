@@ -21,6 +21,8 @@ import { SeverityDot } from '@/components/dashboard/severity'
 import { clearAuthSession, getAuthSession, isAuthenticated, type UserSession } from '@/lib/auth'
 import { toast } from 'sonner'
 
+import { ThemeToggle } from '@/components/theme-toggle'
+
 export function DashboardShell({
   role,
   activeSection,
@@ -133,6 +135,8 @@ export function DashboardShell({
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+
+            <ThemeToggle />
 
             <DropdownMenu>
               <DropdownMenuTrigger
