@@ -143,16 +143,16 @@ export function CitizenDashboard({ section }: { section: string }) {
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-xl">
               High turbidity detected in Kamalabari Well #3. Please boil drinking water for at least 1 minute.
             </p>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground pt-1.5 border-t border-border/40">
-              <span className="flex items-center gap-1">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground pt-2.5 mt-2.5 border-t border-border/40">
+              <span className="flex items-center gap-1.5">
                 👩‍⚕️ <span className="font-semibold text-foreground">ASHA Worker:</span> Anjali Boro
               </span>
               <span>•</span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1.5">
                 🏥 <span className="font-semibold text-foreground">Nearest Clinic:</span> Kamalabari PHC (1.2 km)
               </span>
               <span>•</span>
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1.5">
                 📋 <span className="font-semibold text-foreground">My Reports:</span> {reports.length} Active
               </span>
             </div>

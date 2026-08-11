@@ -1,14 +1,14 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Plus_Jakarta_Sans, Geist_Mono } from 'next/font/google'
+import { Outfit, Geist_Mono } from 'next/font/google'
 import { ThemeProvider } from '@/components/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import './globals.css'
 
-const plusJakarta = Plus_Jakarta_Sans({
+const outfit = Outfit({
   subsets: ['latin'],
   variable: '--font-sans',
-  weight: ['300', '400', '500', '600', '700', '800'],
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
 })
 
 const geistMono = Geist_Mono({
@@ -46,7 +46,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="bg-background">
-      <body className={`${plusJakarta.variable} ${geistMono.variable} font-sans antialiased selection:bg-primary/20 selection:text-primary`}>
+      <body className={`${outfit.variable} ${geistMono.variable} font-sans antialiased selection:bg-primary/20 selection:text-primary`}>
         <ThemeProvider>
           {children}
           <Toaster richColors position="top-right" />
