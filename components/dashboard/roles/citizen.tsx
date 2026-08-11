@@ -179,79 +179,37 @@ export function CitizenDashboard({ section }: { section: string }) {
           </div>
         </div>
 
-        {/* Announcements & Emergency Contacts side-by-side (No inline form to reduce clutter) */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          {/* Left Column: Announcements (takes 2 cols on lg screens) */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Community Announcements */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base font-bold flex items-center gap-2">
-                  <Bell className="size-4 text-primary" /> Village Society Updates
-                </CardTitle>
-                <CardDescription>Official announcements from Majuli Health Office</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 divide-y divide-border/60">
-                <div className="pt-2">
-                  <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/20 font-bold mb-1">
-                    TODAY 11:30 AM
-                  </Badge>
-                  <p className="text-xs font-bold text-foreground">Clean Water Tanker Dispatch</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">PHED Mobile Tanker #4 will distribute purified water near Kamalabari School field.</p>
+        {/* Emergency Contacts Card (No grid needed since updates are removed) */}
+        <div className="max-w-2xl mx-auto">
+          <Card className="border-destructive/20 bg-destructive/5">
+            <CardHeader className="pb-3 text-center">
+              <CardTitle className="text-base font-bold flex items-center justify-center gap-2 text-destructive">
+                <PhoneCall className="size-4" /> Emergency Contacts
+              </CardTitle>
+              <CardDescription>24/7 Medical & Water Assistance lines for Majuli</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="rounded-xl bg-card p-4 flex items-center justify-between border border-border">
+                <div>
+                  <p className="font-extrabold text-sm text-foreground">Emergency Ambulance</p>
+                  <p className="text-[11px] text-muted-foreground">Toll-free 24/7 dispatcher</p>
                 </div>
+                <Button size="sm" variant="destructive" className="font-extrabold px-4">
+                  108
+                </Button>
+              </div>
 
-                <div className="pt-3">
-                  <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold mb-1">
-                    THIS SATURDAY
-                  </Badge>
-                  <p className="text-xs font-bold text-foreground">Free Health & Vaccination Camp</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">Free typhoid checkup and chlorine tablet distribution at Garamur Primary School.</p>
+              <div className="rounded-xl bg-card p-4 flex items-center justify-between border border-border">
+                <div>
+                  <p className="font-extrabold text-sm text-foreground">Health Advisory Line</p>
+                  <p className="text-[11px] text-muted-foreground">Free Medical Advice</p>
                 </div>
-
-                <div className="pt-3">
-                  <Badge variant="outline" className="text-[10px] bg-cyan-500/10 text-cyan-600 border-cyan-500/20 font-bold mb-1">
-                    HELPLINE
-                  </Badge>
-                  <p className="text-xs font-bold text-foreground">Free Well Testing Available</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">ASHA workers are conducting free household water testing in Majuli blocks this week.</p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Right Column: Helpline Emergency Toll-Free Numbers (takes 1 col) */}
-          <div className="space-y-6">
-            {/* Helpline Emergency Toll-Free Numbers */}
-            <Card className="border-destructive/20 bg-destructive/5">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base font-bold flex items-center gap-2 text-destructive">
-                  <PhoneCall className="size-4" /> Emergency Contacts
-                </CardTitle>
-                <CardDescription>24/7 Medical & Water Assistance</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2.5">
-                <div className="rounded-xl bg-card p-3 flex items-center justify-between border border-border">
-                  <div>
-                    <p className="font-extrabold text-sm text-foreground">Emergency Ambulance</p>
-                    <p className="text-[11px] text-muted-foreground">Toll-free 24/7</p>
-                  </div>
-                  <Button size="sm" variant="destructive" className="font-bold">
-                    108
-                  </Button>
-                </div>
-
-                <div className="rounded-xl bg-card p-3 flex items-center justify-between border border-border">
-                  <div>
-                    <p className="font-extrabold text-sm text-foreground">Health Advisory Line</p>
-                    <p className="text-[11px] text-muted-foreground">Free Medical Advice</p>
-                  </div>
-                  <Button size="sm" className="font-bold">
-                    104
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                <Button size="sm" className="font-extrabold px-4">
+                  104
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Dialog Modal Pop-up for Reporting */}
