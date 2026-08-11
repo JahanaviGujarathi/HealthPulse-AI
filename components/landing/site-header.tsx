@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, Lock, ShieldCheck, UserCheck, LayoutDashboard } from 'lucide-react'
+import { ArrowRight, Lock, ShieldCheck, UserCheck, LayoutDashboard, Sun, Moon } from 'lucide-react'
 import { Brand } from '@/components/brand'
 import { Button } from '@/components/ui/button'
 import { getAuthSession, type UserSession } from '@/lib/auth'
 import { Badge } from '@/components/ui/badge'
+import { useTheme } from 'next-themes'
 
 const links = [
   { label: 'How it works', href: '#how' },
@@ -20,7 +21,11 @@ export function SiteHeader() {
   const [session, setSession] = useState<UserSession | null>(null)
   const [scrolled, setScrolled] = useState(false)
 
+  const { theme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
   useEffect(() => {
+    setMounted(true)
     setSession(getAuthSession())
     const handleAuthChange = () => setSession(getAuthSession())
     window.addEventListener('auth_session_change', handleAuthChange)
@@ -72,6 +77,21 @@ export function SiteHeader() {
 
           {/* Right Action CTAs (Enlarged Buttons) */}
           <div className="flex items-center gap-3.5">
+            {mounted && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                className="h-11 w-11 rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all duration-200"
+                aria-label="Toggle theme"
+              >
+                {theme === 'dark' ? (
+                  <Sun className="size-5 text-amber-500 animate-spin-slow" />
+                ) : (
+                  <Moon className="size-5 text-primary animate-pulse" />
+                )}
+              </Button>
+            )}
 
 
             {session ? (
