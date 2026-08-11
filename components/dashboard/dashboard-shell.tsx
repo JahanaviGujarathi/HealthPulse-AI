@@ -113,24 +113,26 @@ export function DashboardShell({
           </div>
 
           <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button variant="outline" size="sm" className="hidden md:flex gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/5">
-                    <ShieldCheck className="size-3.5 text-emerald-500" />
-                    <span>Access Verified</span>
-                  </Button>
-                }
-              />
-              <DropdownMenuContent align="end" className="w-64 p-3 text-xs space-y-1.5">
-                <div className="font-semibold text-foreground flex items-center gap-1">
-                  <CheckCircle2 className="size-3.5 text-emerald-500" /> Security Standards Enforced
-                </div>
-                <p className="text-muted-foreground leading-relaxed">
-                  Inputs sanitized (A03), strict access controls active (A01), request rate limits applied (A04), and tamper-evident audit logs enabled (A09).
-                </p>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {role !== 'citizen' && (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button variant="outline" size="sm" className="hidden md:flex gap-1.5 text-xs text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/5">
+                      <ShieldCheck className="size-3.5 text-emerald-500" />
+                      <span>Access Verified</span>
+                    </Button>
+                  }
+                />
+                <DropdownMenuContent align="end" className="w-64 p-3 text-xs space-y-1.5">
+                  <div className="font-semibold text-foreground flex items-center gap-1">
+                    <CheckCircle2 className="size-3.5 text-emerald-500" /> Security Standards Enforced
+                  </div>
+                  <p className="text-muted-foreground leading-relaxed">
+                    Inputs sanitized (A03), strict access controls active (A01), request rate limits applied (A04), and tamper-evident audit logs enabled (A09).
+                  </p>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger
