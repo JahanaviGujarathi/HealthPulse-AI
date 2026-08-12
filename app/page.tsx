@@ -3,6 +3,7 @@ import { Hero } from '@/components/landing/hero'
 import { RolesSection } from '@/components/landing/roles-section'
 import { SiteFooter } from '@/components/landing/site-footer'
 import { SiteHeader } from '@/components/landing/site-header'
+import { AiChatAssistant } from '@/components/landing/ai-chat-assistant'
 
 export default function HomePage() {
   return (
@@ -14,6 +15,8 @@ export default function HomePage() {
         <RolesSection />
       </main>
       <SiteFooter />
+      <AiChatAssistant />
     </div>
   )
 }
+
