@@ -32,6 +32,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { StatCard, SectionHeader } from '@/components/dashboard/primitives'
 import { HotspotMap } from '@/components/dashboard/map-panel'
+import { InteractiveDiseaseMapSection } from '@/components/landing/interactive-disease-map'
 import { AWARENESS, DISEASE_REPORTS, HOSPITALS, type DiseaseReport } from '@/lib/data'
 import { toast } from 'sonner'
 import { sanitizeInput, maskAadhaar } from '@/lib/security'
@@ -178,6 +179,9 @@ export function CitizenDashboard({ section }: { section: string }) {
             </Button>
           </div>
         </div>
+
+        {/* Interactive State-Wise Disease Surveillance Map */}
+        <InteractiveDiseaseMapSection />
 
         {/* Emergency Contacts Card (No grid needed since updates are removed) */}
         <div className="max-w-2xl mx-auto">
@@ -422,6 +426,9 @@ export function CitizenDashboard({ section }: { section: string }) {
             </CardContent>
           </Card>
         </div>
+
+        {/* National State-Wise Surveillance Map */}
+        <InteractiveDiseaseMapSection />
       </div>
     )
   }
