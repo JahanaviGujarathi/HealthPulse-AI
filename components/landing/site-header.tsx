@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { useTheme } from 'next-themes'
 
 const links = [
+  { label: 'Disease Map', href: '#disease-map' },
   { label: 'How it works', href: '#how' },
   { label: 'Safety Features', href: '#ai' },
   { label: 'Role Portals', href: '#roles' },
