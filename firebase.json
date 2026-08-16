@@ -1,0 +1,14 @@
+{
+  "auth": {
+    "authorizedDomains": [
+      "localhost"
+    ],
+    "providers": {
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "HealthPulse AI",
+        "supportEmail": "btechjanu09@gmail.com"
+      }
+    }
+  }
+}
