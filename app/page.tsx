@@ -5,10 +5,12 @@ import { RolesSection } from '@/components/landing/roles-section'
 import { SiteFooter } from '@/components/landing/site-footer'
 import { SiteHeader } from '@/components/landing/site-header'
 import { AiChatAssistant } from '@/components/landing/ai-chat-assistant'
+import { OutbreakToastBroadcaster } from '@/components/ui/outbreak-toast'
 
 export default function HomePage() {
   return (
     <div className="flex min-h-dvh flex-col">
+      <OutbreakToastBroadcaster />
       <SiteHeader />
       <main className="flex-1">
         <Hero />
@@ -21,5 +23,3 @@ export default function HomePage() {
     </div>
   )
 }
-
-

@@ -183,34 +183,50 @@ export function CitizenDashboard({ section }: { section: string }) {
         {/* Interactive State-Wise Disease Surveillance Map */}
         <InteractiveDiseaseMapSection />
 
-        {/* Emergency Contacts Card (No grid needed since updates are removed) */}
-        <div className="max-w-2xl mx-auto">
-          <Card className="border-destructive/20 bg-destructive/5">
+        {/* Emergency Contacts Card (1-Click Call Helplines) */}
+        <div className="max-w-3xl mx-auto">
+          <Card className="border-destructive/30 bg-destructive/5 shadow-md">
             <CardHeader className="pb-3 text-center">
-              <CardTitle className="text-base font-bold flex items-center justify-center gap-2 text-destructive">
-                <PhoneCall className="size-4" /> Emergency Contacts
+              <CardTitle className="text-base font-extrabold flex items-center justify-center gap-2 text-destructive">
+                <PhoneCall className="size-5 animate-pulse text-destructive" /> 24/7 Interactive Emergency Helplines
               </CardTitle>
-              <CardDescription>24/7 Medical & Water Assistance lines for Majuli</CardDescription>
+              <CardDescription>Click any helpline to dial 24/7 Medical, Ambulance, or Water Supply assistance</CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="rounded-xl bg-card p-4 flex items-center justify-between border border-border">
+            <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="rounded-2xl bg-card p-4 flex flex-col justify-between border border-border shadow-xs hover:border-destructive/50 transition-all">
                 <div>
-                  <p className="font-extrabold text-sm text-foreground">Emergency Ambulance</p>
-                  <p className="text-[11px] text-muted-foreground">Toll-free 24/7 dispatcher</p>
+                  <p className="font-extrabold text-sm text-foreground flex items-center gap-1.5">🚨 Ambulance</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Toll-free 24/7 dispatch</p>
                 </div>
-                <Button size="sm" variant="destructive" className="font-extrabold px-4">
-                  108
-                </Button>
+                <a href="tel:108" className="mt-3 block">
+                  <Button size="sm" variant="destructive" className="w-full font-black gap-1.5 shadow-md hover:scale-105 transition-all">
+                    <PhoneCall className="size-3.5" /> Call 108
+                  </Button>
+                </a>
               </div>
 
-              <div className="rounded-xl bg-card p-4 flex items-center justify-between border border-border">
+              <div className="rounded-2xl bg-card p-4 flex flex-col justify-between border border-border shadow-xs hover:border-primary/50 transition-all">
                 <div>
-                  <p className="font-extrabold text-sm text-foreground">Health Advisory Line</p>
-                  <p className="text-[11px] text-muted-foreground">Free Medical Advice</p>
+                  <p className="font-extrabold text-sm text-foreground flex items-center gap-1.5">🏥 Doctor Helpline</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">Free Tele-consultation</p>
                 </div>
-                <Button size="sm" className="font-extrabold px-4">
-                  104
-                </Button>
+                <a href="tel:104" className="mt-3 block">
+                  <Button size="sm" className="w-full font-black gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:scale-105 transition-all">
+                    <PhoneCall className="size-3.5" /> Call 104
+                  </Button>
+                </a>
+              </div>
+
+              <div className="rounded-2xl bg-card p-4 flex flex-col justify-between border border-border shadow-xs hover:border-amber-500/50 transition-all">
+                <div>
+                  <p className="font-extrabold text-sm text-foreground flex items-center gap-1.5">💧 Water Supply</p>
+                  <p className="text-[11px] text-muted-foreground mt-0.5">PHED Tanker Request</p>
+                </div>
+                <a href="tel:1915" className="mt-3 block">
+                  <Button size="sm" variant="outline" className="w-full font-black gap-1.5 border-amber-500/40 bg-amber-500/10 text-amber-800 dark:text-amber-200 hover:bg-amber-500/20 shadow-md hover:scale-105 transition-all">
+                    <PhoneCall className="size-3.5 text-amber-600" /> Call 1915
+                  </Button>
+                </a>
               </div>
             </CardContent>
           </Card>
