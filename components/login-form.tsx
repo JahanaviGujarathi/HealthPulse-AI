@@ -2,7 +2,11 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
+<<<<<<< HEAD
 import { ArrowRight, Lock, ShieldCheck, Building2, Fingerprint, KeyRound, CheckCircle2 } from 'lucide-react'
+=======
+import { ArrowRight, Lock, ShieldCheck, Users, Building2, Fingerprint, KeyRound, CheckCircle2, Sparkles, Stethoscope, Microchip, Shield } from 'lucide-react'
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -60,6 +64,21 @@ export function LoginForm() {
     }
   }
 
+  const quickDemoLogin = (targetRole: RoleId) => {
+    setLoading(true)
+    const demoEmail = targetRole === 'citizen' ? 'rahul.das@majuli.org' : `${targetRole}@healthpulse.gov.in`
+    const demoAadhaar = '4819 2049 4921'
+    const session = setAuthSession(targetRole, demoEmail, demoAadhaar)
+
+    toast.success(`Quick Access: Signed in as ${session.name}`, {
+      description: `Role: ${ROLES[targetRole].name}. Loading dashboard...`,
+    })
+
+    setTimeout(() => {
+      router.push(`/dashboard/${targetRole}`)
+    }, 350)
+  }
+
   const handleSendAadhaarOtp = (e: React.FormEvent) => {
     e.preventDefault()
     if (!isValidAadhaar(aadhaar)) {
@@ -76,7 +95,7 @@ export function LoginForm() {
       toast.success('Aadhaar OTP Sent!', {
         description: `OTP sent to mobile registered with Aadhaar ${maskAadhaar(aadhaar)}. Default OTP is 4921.`,
       })
-    }, 600)
+    }, 500)
   }
 
   // Handle standard Firebase Anonymous Auth for Citizens
@@ -96,9 +115,17 @@ export function LoginForm() {
           createdAt: new Date().toISOString(),
         })
 
+<<<<<<< HEAD
         toast.success('Welcome!', {
           description: `Aadhaar ${maskAadhaar(aadhaar)} Verified. Unique Citizen Account Active.`,
         })
+=======
+    toast.success(`Welcome back, ${session.name}!`, {
+      description: portalType === 'citizen'
+        ? `Aadhaar ${maskAadhaar(aadhaar)} Verified. Unique Citizen Account Active.`
+        : `Authenticated for ${ROLES[role].name}. Loading portal...`,
+    })
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
 
         setTimeout(() => {
           router.push(redirectTo || `/dashboard/citizen`)
@@ -194,51 +221,96 @@ export function LoginForm() {
 
   return (
     <div className="space-y-6">
+      {/* Quick Demo Role Selection Chips */}
+      <div className="space-y-2 rounded-2xl border border-primary/20 bg-card/90 p-3.5 shadow-md backdrop-blur-xl">
+        <div className="flex items-center justify-between text-xs font-black text-foreground">
+          <span className="flex items-center gap-1.5 text-primary">
+            <Sparkles className="size-3.5 text-amber-500 animate-spin" style={{ animationDuration: '6s' }} />
+            Quick Demo Access (1-Click Login):
+          </span>
+        </div>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          <button
+            type="button"
+            onClick={() => quickDemoLogin('citizen')}
+            className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-primary/10 hover:border-primary/40"
+          >
+            <span>🌾 Resident</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => quickDemoLogin('doctor')}
+            className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-emerald-500/10 hover:border-emerald-500/40"
+          >
+            <span>👨‍⚕️ Doctor</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => quickDemoLogin('lab')}
+            className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-cyan-500/10 hover:border-cyan-500/40"
+          >
+            <span>🔬 Lab Tech</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => quickDemoLogin('dho')}
+            className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-rose-500/10 hover:border-rose-500/40"
+          >
+            <span>🏛️ Official</span>
+          </button>
+        </div>
+      </div>
+
       {/* Portal Type Switcher Tabs */}
-      <div className="grid grid-cols-2 gap-2 rounded-xl bg-muted/60 p-1.5 border border-border">
+      <div className="grid grid-cols-2 gap-2 rounded-2xl bg-muted/60 p-1.5 border border-border">
         <button
           type="button"
           onClick={() => handlePortalSwitch('citizen')}
-          className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-bold transition-all ${
+          className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-extrabold transition-all cursor-pointer ${
             portalType === 'citizen'
-              ? 'bg-card text-foreground shadow-xs'
+              ? 'bg-card text-foreground shadow-md'
               : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <Fingerprint className="size-4 text-primary" /> Citizen Aadhaar Login
+          <Fingerprint className="size-4 text-primary" /> Citizen Aadhaar Portal
         </button>
 
         <button
           type="button"
           onClick={() => handlePortalSwitch('admin')}
-          className={`flex items-center justify-center gap-2 rounded-lg py-2.5 text-xs font-bold transition-all ${
+          className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-extrabold transition-all cursor-pointer ${
             portalType === 'admin'
-              ? 'bg-card text-foreground shadow-xs'
+              ? 'bg-card text-foreground shadow-md'
               : 'text-muted-foreground hover:text-foreground'
           }`}
         >
-          <Building2 className="size-4 text-emerald-600 dark:text-emerald-400" /> Official Staff Portal
+          <Building2 className="size-4 text-emerald-600 dark:text-emerald-400" /> Staff & Officials
         </button>
       </div>
 
       {portalType === 'citizen' ? (
         /* AADHAAR VERIFIED CITIZEN LOGIN FORM */
+<<<<<<< HEAD
         <form onSubmit={otpSent ? handleCitizenSubmit : handleSendAadhaarOtp} className="flex flex-col gap-5">
           <div className="space-y-4 rounded-xl border border-primary/30 bg-primary/5 p-4">
+=======
+        <form onSubmit={otpSent ? handleSubmit : handleSendAadhaarOtp} className="flex flex-col gap-5">
+          <div className="space-y-4 rounded-2xl border border-primary/30 bg-primary/5 p-4 shadow-sm">
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
             <div className="flex items-center justify-between">
               <span className="font-extrabold text-sm text-foreground flex items-center gap-1.5">
-                <Fingerprint className="size-4 text-primary" /> 1-Account Per Resident Verification
+                <Fingerprint className="size-4 text-primary" /> Verified Citizen Identification
               </span>
-              <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/30 font-bold">
-                UIDAI / ABHA LINKED
+              <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-600 border-emerald-500/30 font-black rounded-full">
+                UIDAI LINKED
               </Badge>
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Log in with your 12-digit Aadhaar number to access your verified Majuli society health update and submit authentic reports.
+              Enter your 12-digit Aadhaar number to verify your resident identity and submit authentic disease reports.
             </p>
 
             <div className="space-y-2 pt-1">
-              <Label htmlFor="aadhaar" className="font-semibold text-xs flex items-center justify-between">
+              <Label htmlFor="aadhaar" className="font-bold text-xs flex items-center justify-between">
                 <span>12-Digit Aadhaar Number</span>
                 <span className="text-[10px] text-muted-foreground">Unique Citizen ID</span>
               </Label>
@@ -248,16 +320,20 @@ export function LoginForm() {
                 onChange={(e) => setAadhaar(e.target.value)}
                 placeholder="4819 2049 4921"
                 maxLength={14}
+<<<<<<< HEAD
                 className="font-mono tracking-wider font-bold h-11 border-primary/30"
                 disabled={loading}
+=======
+                className="font-mono tracking-wider font-extrabold h-11 border-primary/40 rounded-xl"
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
               />
             </div>
 
             {otpSent && (
               <div className="space-y-2 pt-1 animate-in fade-in-50 duration-300">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="otp" className="font-semibold text-xs">Enter 4-Digit Aadhaar OTP</Label>
-                  <span className="text-[10px] text-emerald-600 font-bold">OTP sent to ******4921</span>
+                  <Label htmlFor="otp" className="font-bold text-xs">Enter 4-Digit Aadhaar OTP</Label>
+                  <span className="text-[10px] text-emerald-600 font-extrabold">OTP sent to ******4921</span>
                 </div>
                 <Input
                   id="otp"
@@ -265,14 +341,18 @@ export function LoginForm() {
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="4921"
                   maxLength={4}
+<<<<<<< HEAD
                   className="font-mono text-center tracking-widest text-base font-extrabold h-11 border-emerald-500/40"
                   disabled={loading}
+=======
+                  className="font-mono text-center tracking-widest text-base font-black h-11 border-emerald-500/40 rounded-xl"
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
                 />
               </div>
             )}
           </div>
 
-          <Button type="submit" size="lg" className="mt-1 w-full font-extrabold shadow-md gap-2 h-11" disabled={loading}>
+          <Button type="submit" size="lg" className="mt-1 w-full font-black shadow-xl shadow-primary/20 gap-2 h-11 rounded-2xl bg-primary hover:bg-primary/90" disabled={loading}>
             {loading ? (
               'Verifying Credentials...'
             ) : otpSent ? (
@@ -291,15 +371,21 @@ export function LoginForm() {
         <form onSubmit={handleAdminSubmit} className="flex flex-col gap-5">
           <div className="space-y-4">
             <div className="flex flex-col gap-2">
+<<<<<<< HEAD
               <Label htmlFor="role" className="font-semibold">Official Staff Role</Label>
               <Select value={role} onValueChange={(v) => setRole(v as RoleId)} disabled={loading}>
                 <SelectTrigger id="role" className="w-full h-10 border-emerald-500/30">
+=======
+              <Label htmlFor="role" className="font-extrabold text-xs">Official Staff Role</Label>
+              <Select value={role} onValueChange={(v) => setRole(v as RoleId)}>
+                <SelectTrigger id="role" className="w-full h-11 border-emerald-500/30 rounded-xl font-bold">
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
                   <SelectValue placeholder="Select official role" />
                 </SelectTrigger>
                 <SelectContent>
                   {ROLE_GROUPS.filter((g) => g.id !== 'field' || role !== 'citizen').map((group) => (
                     <SelectGroup key={group.id}>
-                      <SelectLabel className="font-bold text-xs uppercase tracking-wider text-muted-foreground">{group.label}</SelectLabel>
+                      <SelectLabel className="font-black text-xs uppercase tracking-wider text-muted-foreground">{group.label}</SelectLabel>
                       {ROLE_ORDER.filter((id) => id !== 'citizen' && ROLES[id].group === group.id).map((id) => (
                         <SelectItem key={id} value={id}>
                           {ROLES[id].name}
@@ -313,21 +399,25 @@ export function LoginForm() {
             </div>
 
             <div className="flex flex-col gap-2">
-              <Label htmlFor="email" className="font-semibold">Official Government ID / Email</Label>
+              <Label htmlFor="email" className="font-bold text-xs">Official Government ID / Email</Label>
               <Input
                 id="email"
                 type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="username"
+<<<<<<< HEAD
                 disabled={loading}
+=======
+                className="h-11 rounded-xl font-medium"
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
               />
             </div>
 
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="font-semibold">Official Password</Label>
-                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">Authorized Access</span>
+                <Label htmlFor="password" className="font-bold text-xs">Official Password</Label>
+                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-extrabold">Authorized Access</span>
               </div>
               <Input
                 id="password"
@@ -335,18 +425,23 @@ export function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
+<<<<<<< HEAD
                 disabled={loading}
+=======
+                className="h-11 rounded-xl"
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
               />
             </div>
           </div>
 
-          <Button type="submit" size="lg" className="mt-2 w-full font-extrabold shadow-md gap-2 h-11" disabled={loading}>
+          <Button type="submit" size="lg" className="mt-2 w-full font-black shadow-xl shadow-emerald-500/20 gap-2 h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white" disabled={loading}>
             {loading ? 'Authenticating & Loading...' : 'Sign In to Official Admin Hub'}
             {!loading && <ArrowRight className="size-4" />}
           </Button>
         </form>
       )}
 
+<<<<<<< HEAD
       {/* Shared Google Sign-In CTA */}
       <div className="flex flex-col gap-4 pt-2">
         <div className="relative flex items-center justify-center">
@@ -386,8 +481,13 @@ export function LoginForm() {
       <div className="rounded-lg bg-muted/60 p-3 text-center text-xs text-muted-foreground space-y-1">
         <div className="flex items-center justify-center gap-1 font-bold text-foreground">
           <Lock className="size-3 text-emerald-500" /> Secure Anti-Spam Protection
+=======
+      <div className="rounded-2xl bg-muted/60 p-3.5 text-center text-xs text-muted-foreground space-y-1 border border-border">
+        <div className="flex items-center justify-center gap-1 font-black text-foreground">
+          <Lock className="size-3 text-emerald-500" /> Secure Anti-Spam Verification Active
+>>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
         </div>
-        <p>1-Aadhaar per resident verification prevents duplicate filings and guarantees report authenticity.</p>
+        <p>1-Aadhaar per resident prevents duplicate filings and guarantees report authenticity.</p>
       </div>
     </div>
   )

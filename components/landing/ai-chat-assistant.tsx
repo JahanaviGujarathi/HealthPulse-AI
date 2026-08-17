@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
+import { FormattedMarkdownText } from '@/components/ui/formatted-markdown'
 
 interface Message {
   id: string
@@ -43,7 +44,7 @@ export function AiChatAssistant() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, isTyping])
 
-  const handleSendMessage = (textToSend: string) => {
+  const handleSendMessage = async (textToSend: string) => {
     if (!textToSend.trim()) return
 
     const userMsg: Message = {
@@ -57,12 +58,33 @@ export function AiChatAssistant() {
     setInput('')
     setIsTyping(true)
 
-    // Simulate AI thinking and typing response
-    setTimeout(() => {
-      const botResponse = generateAiResponse(textToSend)
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userQuery: textToSend }),
+      })
+
+      const data = await res.json()
+      const botResponse: Message = {
+        id: `bot-${Date.now()}`,
+        text: data.text || 'I am processing regional surveillance data. How else can I assist you?',
+        isBot: true,
+        timestamp: new Date(),
+      }
+
       setMessages((prev) => [...prev, botResponse])
+    } catch (e) {
+      const fallbackResponse: Message = {
+        id: `bot-${Date.now()}`,
+        text: '🤖 Emergency Public Health Advisory:\n\nPlease boil drinking water if in flood zones or contact 108 for medical emergency assistance.',
+        isBot: true,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, fallbackResponse])
+    } finally {
       setIsTyping(false)
-    }, 1000)
+    }
   }
 
   const generateAiResponse = (query: string): Message => {
@@ -213,7 +235,7 @@ export function AiChatAssistant() {
                         : "bg-primary text-primary-foreground border-primary/20"
                     )}
                   >
-                    {msg.text}
+                    <FormattedMarkdownText content={msg.text} />
                   </div>
                   
                   {/* Actions/Suggestions */}

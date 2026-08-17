@@ -55,7 +55,7 @@ export function Hero() {
             <Button
               size="lg"
               onClick={() => router.push('/login')}
-              className="group gap-2 text-sm font-extrabold shadow-xl shadow-primary/25 bg-primary hover:bg-primary/90 text-primary-foreground px-7 py-6 rounded-xl transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
+              className="group gap-2 text-sm font-black shadow-2xl shadow-primary/30 bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:scale-105"
             >
               <span>Sign In to Access Portals</span>
               <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -66,14 +66,14 @@ export function Hero() {
               onClick={() => {
                 document.getElementById('roles')?.scrollIntoView({ behavior: 'smooth' })
               }}
-              className="gap-2 text-sm font-bold border-border/80 hover:bg-muted/80 px-7 py-6 rounded-xl transition-all duration-300 hover:-translate-y-0.5"
+              className="gap-2 text-sm font-extrabold border-border/80 hover:bg-muted/80 px-7 py-6 rounded-2xl transition-all duration-300 hover:-translate-y-0.5"
             >
               Explore 8 Role Portals
             </Button>
           </div>
 
           {/* Security Compliance Seal */}
-          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground pt-1">
+          <div className="flex items-center gap-2 text-xs font-bold text-muted-foreground pt-1">
             <ShieldCheck className="size-4 text-emerald-500" />
             <span>Built with <b>Secure Enterprise Architecture</b> · Access Control Enforced</span>
           </div>
@@ -81,9 +81,9 @@ export function Hero() {
           {/* Classic Stats Grid */}
           <dl className="mt-4 grid grid-cols-3 gap-4 border-t border-border/60 pt-6">
             {stats.map((s) => (
-              <div key={s.label} className="group space-y-1 p-2.5 rounded-xl border border-transparent transition-all duration-300 hover:border-border/60 hover:bg-card/70 shadow-xs">
-                <dt className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl transition-colors group-hover:text-primary">{s.value}</dt>
-                <dd className="text-xs font-bold text-foreground">{s.label}</dd>
+              <div key={s.label} className="group space-y-1 p-3 rounded-2xl border border-transparent transition-all duration-300 hover:border-border/60 hover:bg-card/90 shadow-sm">
+                <dt className="text-2xl font-black tracking-tight text-foreground sm:text-3xl transition-colors group-hover:text-primary">{s.value}</dt>
+                <dd className="text-xs font-extrabold text-foreground">{s.label}</dd>
                 <p className="text-[11px] text-muted-foreground hidden sm:block">{s.desc}</p>
               </div>
             ))}
