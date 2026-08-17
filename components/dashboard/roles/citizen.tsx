@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   AlertTriangle,
   BookOpen,
@@ -50,6 +50,25 @@ export function CitizenDashboard({ section }: { section: string }) {
   const userAadhaar = session?.aadhaar ? maskAadhaar(session.aadhaar) : 'XXXX-XXXX-4921'
 
   const [reports, setReports] = useState<DiseaseReport[]>(DISEASE_REPORTS)
+
+  useEffect(() => {
+    let active = true
+    const fetchReports = async () => {
+      try {
+        const res = await fetch('/api/reports?role=citizen')
+        const data = await res.json()
+        if (active && res.ok && data.reports) {
+          setReports(data.reports)
+        }
+      } catch (err) {
+        console.error('Error fetching citizen reports:', err)
+      }
+    }
+    fetchReports()
+    return () => {
+      active = false
+    }
+  }, [])
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([])
   const [patientName, setPatientName] = useState(session?.name || 'Rahul Das')
   const [villageName, setVillageName] = useState('Kamalabari, Majuli')

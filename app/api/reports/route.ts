@@ -7,9 +7,8 @@ import {
   recordAuditEvent,
   sanitizeObject,
 } from '@/lib/security'
-
-// In-memory reports dataset store
-let reportsStore: DiseaseReport[] = [...DISEASE_REPORTS]
+import { collection, getDocs, setDoc, doc, query, orderBy, limit, addDoc } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 
 export async function GET(request: Request) {
   const securityHeaders = getSecurityHeaders()
@@ -34,7 +33,47 @@ export async function GET(request: Request) {
     )
   }
 
-  return NextResponse.json({ reports: reportsStore }, { status: 200, headers: securityHeaders })
+  try {
+    const reportsCol = collection(db, 'reports')
+    // Order by createdAt descending to show latest reports first
+    const q = query(reportsCol, orderBy('createdAt', 'desc'))
+    const snapshot = await getDocs(q)
+    let reports = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as DiseaseReport[]
+
+    // Auto-seed database if it is empty
+    if (reports.length === 0) {
+      console.log('Reports collection is empty in Firestore. Seeding mock reports...')
+      // Seed in sequential order with spaced timestamps
+      const now = Date.now()
+      const seedPromises = DISEASE_REPORTS.map((report, index) => {
+        const docRef = doc(db, 'reports', report.id)
+        return setDoc(docRef, {
+          patient: report.patient,
+          village: report.village,
+          disease: report.disease,
+          symptoms: report.symptoms,
+          status: report.status,
+          source: report.source,
+          reportedAt: report.reportedAt,
+          severity: report.severity,
+          createdAt: new Date(now - index * 3600000).toISOString(), // Spaced by 1 hour
+        })
+      })
+      await Promise.all(seedPromises)
+
+      // Retrieve again after seeding to return in correct order
+      const freshSnapshot = await getDocs(q)
+      reports = freshSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as DiseaseReport[]
+    }
+
+    return NextResponse.json({ reports }, { status: 200, headers: securityHeaders })
+  } catch (err: any) {
+    console.error('Error fetching reports from Firestore:', err)
+    return NextResponse.json(
+      { error: 'Database error: ' + (err.message || err) },
+      { status: 500, headers: securityHeaders },
+    )
+  }
 }
 
 export async function POST(request: Request) {
@@ -72,8 +111,8 @@ export async function POST(request: Request) {
     // OWASP A03: Input Sanitization
     const sanitizedBody = sanitizeObject(rawBody)
 
-    const newReport: DiseaseReport = {
-      id: `r-${Date.now()}`,
+    const reportId = `r-${Date.now()}`
+    const newReportData = {
       patient: sanitizedBody.patient || 'Anonymous Household',
       village: sanitizedBody.village || 'Majuli',
       disease: sanitizedBody.disease || 'Suspected',
@@ -82,9 +121,16 @@ export async function POST(request: Request) {
       source: sanitizedBody.source || 'Citizen',
       reportedAt: 'Just now',
       severity: sanitizedBody.severity || 'medium',
+      createdAt: new Date().toISOString(),
     }
 
-    reportsStore.unshift(newReport)
+    // Save directly to Firestore using custom ID
+    await setDoc(doc(db, 'reports', reportId), newReportData)
+
+    const newReport: DiseaseReport = {
+      id: reportId,
+      ...newReportData,
+    }
 
     // OWASP A09: Audit Logging
     recordAuditEvent({
@@ -102,9 +148,45 @@ export async function POST(request: Request) {
       { status: 201, headers: securityHeaders },
     )
   } catch (err: any) {
+    console.error('Error submitting report to Firestore:', err)
     return NextResponse.json(
-      { error: 'Invalid payload or JSON parsing error' },
+      { error: 'Invalid payload or database write error' },
       { status: 400, headers: securityHeaders },
     )
   }
 }
+
+export async function PATCH(request: Request) {
+  const securityHeaders = getSecurityHeaders()
+  
+  try {
+    const rawBody = await request.json()
+    const sanitized = sanitizeObject(rawBody)
+    const { id, status, disease, severity } = sanitized
+
+    if (!id) {
+      return NextResponse.json({ error: 'Missing report ID' }, { status: 400, headers: securityHeaders })
+    }
+
+    const reportRef = doc(db, 'reports', id)
+    const updateData: Record<string, any> = {}
+    
+    if (status) updateData.status = status
+    if (disease) updateData.disease = disease
+    if (severity) updateData.severity = severity
+
+    await setDoc(reportRef, updateData, { merge: true })
+
+    return NextResponse.json(
+      { success: true, message: 'Report updated successfully' },
+      { status: 200, headers: securityHeaders }
+    )
+  } catch (err: any) {
+    console.error('Error updating report in Firestore:', err)
+    return NextResponse.json(
+      { error: 'Database update failed: ' + (err.message || err) },
+      { status: 500, headers: securityHeaders }
+    )
+  }
+}
+

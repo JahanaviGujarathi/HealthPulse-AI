@@ -9,6 +9,8 @@
  * A07: Authentication Failures (Session validity check)
  * A09: Security Logging & Monitoring (Tamper-evident Audit Log System)
  */
+import { doc, setDoc } from 'firebase/firestore'
+import { db } from './firebase'
 
 export type RolePermission =
   | 'report:read'
@@ -228,8 +230,24 @@ export function recordAuditEvent(event: Omit<AuditEvent, 'id' | 'timestamp'>): A
   }
 
   auditLogLedger.unshift(newEvent)
-  // Keep max 100 recent events
   if (auditLogLedger.length > 100) auditLogLedger.pop()
+
+  // Persist to Firestore in background
+  if (db) {
+    const docRef = doc(db, 'audit_logs', newEvent.id)
+    setDoc(docRef, {
+      actor: newEvent.actor,
+      role: newEvent.role,
+      action: newEvent.action,
+      status: newEvent.status,
+      severity: newEvent.severity,
+      ip: newEvent.ip || '127.0.0.1',
+      details: newEvent.details || '',
+      timestamp: newEvent.timestamp,
+    }).catch((err) => {
+      console.error('Failed to log audit event to Firestore:', err)
+    })
+  }
 
   return newEvent
 }

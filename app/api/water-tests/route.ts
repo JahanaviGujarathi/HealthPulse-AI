@@ -7,21 +7,64 @@ import {
   recordAuditEvent,
   sanitizeObject,
 } from '@/lib/security'
-
-let waterSourcesStore: WaterSource[] = [...WATER_SOURCES]
+import { collection, getDocs, setDoc, doc, query, orderBy } from 'firebase/firestore'
+import { db } from '@/lib/firebase'
 
 export async function GET(request: Request) {
   const securityHeaders = getSecurityHeaders()
-  return NextResponse.json(
-    { waterSources: waterSourcesStore },
-    { status: 200, headers: securityHeaders },
-  )
+  
+  try {
+    const waterCol = collection(db, 'water_tests')
+    // Order by createdAt descending to show latest water tests first
+    const q = query(waterCol, orderBy('createdAt', 'desc'))
+    const snapshot = await getDocs(q)
+    let waterSources = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as WaterSource[]
+
+    // Auto-seed database if it is empty
+    if (waterSources.length === 0) {
+      console.log('Water tests collection is empty in Firestore. Seeding mock water sources...')
+      const now = Date.now()
+      const seedPromises = WATER_SOURCES.map((source, index) => {
+        const docRef = doc(db, 'water_tests', source.id)
+        return setDoc(docRef, {
+          name: source.name,
+          village: source.village,
+          lat: source.lat,
+          lng: source.lng,
+          ph: source.ph,
+          turbidity: source.turbidity,
+          chlorine: source.chlorine,
+          bacteria: source.bacteria,
+          risk: source.risk,
+          testedAt: source.testedAt,
+          createdAt: new Date(now - index * 3600000).toISOString(), // Spaced by 1 hour
+        })
+      })
+      await Promise.all(seedPromises)
+
+      // Retrieve again after seeding to return in correct order
+      const freshSnapshot = await getDocs(q)
+      waterSources = freshSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as WaterSource[]
+    }
+
+    return NextResponse.json(
+      { waterSources },
+      { status: 200, headers: securityHeaders },
+    )
+  } catch (err: any) {
+    console.error('Error fetching water tests from Firestore:', err)
+    return NextResponse.json(
+      { error: 'Database error: ' + (err.message || err) },
+      { status: 500, headers: securityHeaders },
+    )
+  }
 }
 
 export async function POST(request: Request) {
   const securityHeaders = getSecurityHeaders()
   const clientIp = request.headers.get('x-forwarded-for') || '127.0.0.1'
 
+  // OWASP A04: Rate Limiting Guard
   const rateLimit = checkRateLimit(`water_post_${clientIp}`, 10, 60000)
   if (!rateLimit.allowed) {
     return NextResponse.json(
@@ -34,6 +77,7 @@ export async function POST(request: Request) {
     const rawBody = await request.json()
     const role = rawBody.role || 'water-officer'
 
+    // OWASP A01: Broken Access Control Guard
     if (!hasPermission(role, 'water:create')) {
       recordAuditEvent({
         actor: rawBody.testerName || 'Unknown User',
@@ -51,24 +95,38 @@ export async function POST(request: Request) {
       )
     }
 
+    // OWASP A03: Input Sanitization
     const sanitized = sanitizeObject(rawBody)
 
-    const newSource: WaterSource = {
-      id: `w-${Date.now()}`,
+    const sourceId = `w-${Date.now()}`
+    const bacteria = Number(sanitized.bacteria) || 50
+    const ph = Number(sanitized.ph) || 7.0
+    // Set risk evaluation logically
+    const risk = bacteria > 300 || ph < 6.0 || ph > 8.5 ? 'high' : 'low'
+
+    const newSourceData = {
       name: sanitized.name || 'Community Water Intake',
       village: sanitized.village || 'Majuli Block',
       lat: Number(sanitized.lat) || 26.95,
       lng: Number(sanitized.lng) || 94.17,
-      ph: Number(sanitized.ph) || 7.0,
+      ph: ph,
       turbidity: Number(sanitized.turbidity) || 2.0,
       chlorine: Number(sanitized.chlorine) || 0.5,
-      bacteria: Number(sanitized.bacteria) || 50,
-      risk: Number(sanitized.bacteria) > 300 || Number(sanitized.ph) < 6.0 ? 'high' : 'low',
+      bacteria: bacteria,
+      risk: risk,
       testedAt: 'Just now',
+      createdAt: new Date().toISOString(),
     }
 
-    waterSourcesStore.unshift(newSource)
+    // Save directly to Firestore using custom ID
+    await setDoc(doc(db, 'water_tests', sourceId), newSourceData)
 
+    const newSource: WaterSource = {
+      id: sourceId,
+      ...newSourceData,
+    }
+
+    // OWASP A09: Audit Logging
     recordAuditEvent({
       actor: sanitized.testerName || 'Water Officer',
       role,
@@ -83,7 +141,11 @@ export async function POST(request: Request) {
       { success: true, waterSource: newSource },
       { status: 201, headers: securityHeaders },
     )
-  } catch (err) {
-    return NextResponse.json({ error: 'Malformed payload' }, { status: 400, headers: securityHeaders })
+  } catch (err: any) {
+    console.error('Error submitting water test to Firestore:', err)
+    return NextResponse.json(
+      { error: 'Malformed payload or database write error' },
+      { status: 400, headers: securityHeaders },
+    )
   }
 }

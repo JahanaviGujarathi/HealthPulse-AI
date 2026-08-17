@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Activity,
   BarChart3,
@@ -29,36 +29,66 @@ export function DoctorDashboard({ section }: { section: string }) {
     DISEASE_REPORTS.filter((r) => r.status === 'confirmed'),
   )
 
+  useEffect(() => {
+    let active = true
+    const fetchReports = async () => {
+      try {
+        const res = await fetch('/api/reports?role=doctor')
+        const data = await res.json()
+        if (active && res.ok && data.reports) {
+          setCases(data.reports.filter((r: any) => r.status === 'confirmed'))
+        }
+      } catch (err) {
+        console.error('Error fetching doctor cases:', err)
+      }
+    }
+    fetchReports()
+    return () => {
+      active = false
+    }
+  }, [])
+
   // Form state
   const [patient, setPatient] = useState('')
   const [disease, setDisease] = useState('Cholera')
   const [village, setVillage] = useState('Kamalabari')
   const [severity, setSeverity] = useState<'high' | 'medium' | 'low'>('high')
 
-  const handleAddCase = (e: React.FormEvent) => {
+  const handleAddCase = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!patient) {
       toast.error('Please enter patient name / ID')
       return
     }
 
-    const newCase: DiseaseReport = {
-      id: `c-${Date.now()}`,
-      patient,
-      village,
-      disease: disease as any,
-      symptoms: ['Confirmed Diagnosis', 'Dehydration'],
-      status: 'confirmed',
-      source: 'Doctor',
-      reportedAt: 'Just now',
-      severity,
-    }
+    try {
+      const res = await fetch('/api/reports', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          patient,
+          village,
+          disease: disease as any,
+          symptoms: ['Confirmed Diagnosis', 'Dehydration'],
+          status: 'confirmed',
+          source: 'Doctor',
+          severity,
+        }),
+      })
 
-    setCases([newCase, ...cases])
-    toast.success('Confirmed Case Logged!', {
-      description: `${disease} case for ${patient} uploaded to district surveillance ledger.`,
-    })
-    setPatient('')
+      const data = await res.json()
+      if (res.ok && data.report) {
+        setCases([data.report, ...cases])
+        toast.success('Confirmed Case Logged!', {
+          description: `${disease} case for ${patient} uploaded to district surveillance ledger.`,
+        })
+        setPatient('')
+      } else {
+        toast.error(data.error || 'Failed to upload case')
+      }
+    } catch (err) {
+      toast.error('Network error uploading case')
+    }
   }
 
   if (section === 'overview' || !section) {

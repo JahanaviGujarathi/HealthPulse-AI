@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   AlertTriangle,
   Beaker,
@@ -25,6 +25,25 @@ import { sanitizeInput } from '@/lib/security'
 
 export function WaterDashboard({ section }: { section: string }) {
   const [sources, setSources] = useState<WaterSource[]>(WATER_SOURCES)
+
+  useEffect(() => {
+    let active = true
+    const fetchWaterTests = async () => {
+      try {
+        const res = await fetch('/api/water-tests')
+        const data = await res.json()
+        if (active && res.ok && data.waterSources) {
+          setSources(data.waterSources)
+        }
+      } catch (err) {
+        console.error('Error fetching water tests:', err)
+      }
+    }
+    fetchWaterTests()
+    return () => {
+      active = false
+    }
+  }, [])
 
   // Form state
   const [name, setName] = useState('')

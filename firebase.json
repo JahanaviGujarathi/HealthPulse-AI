@@ -10,5 +10,8 @@
         "supportEmail": "btechjanu09@gmail.com"
       }
     }
+  },
+  "firestore": {
+    "rules": "firestore.rules"
   }
 }

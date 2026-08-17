@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Activity,
   CheckCircle2,
@@ -27,6 +27,26 @@ export function AshaDashboard({ section }: { section: string }) {
   const [pendingReports, setPendingReports] = useState<DiseaseReport[]>(
     DISEASE_REPORTS.filter((r) => r.status === 'pending'),
   )
+
+  useEffect(() => {
+    let active = true
+    const fetchReports = async () => {
+      try {
+        const res = await fetch('/api/reports?role=asha')
+        const data = await res.json()
+        if (active && res.ok && data.reports) {
+          setPendingReports(data.reports.filter((r: any) => r.status === 'pending'))
+        }
+      } catch (err) {
+        console.error('Error fetching ASHA pending reports:', err)
+      }
+    }
+    fetchReports()
+    return () => {
+      active = false
+    }
+  }, [])
+
   const [offlineCount, setOfflineCount] = useState(2)
   const [isSyncing, setIsSyncing] = useState(false)
 
@@ -37,11 +57,28 @@ export function AshaDashboard({ section }: { section: string }) {
   const [feverCases, setFeverCases] = useState('1')
   const [waterSource, setWaterSource] = useState('Community Tube Well')
 
-  const handleVerify = (id: string, approve: boolean) => {
-    setPendingReports((prev) => prev.filter((r) => r.id !== id))
-    toast.success(approve ? 'Report verified & forwarded to Doctor' : 'Report flagged as rejected', {
-      description: `Report #${id} processed by ASHA Worker.`,
-    })
+  const handleVerify = async (id: string, approve: boolean) => {
+    try {
+      const res = await fetch('/api/reports', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          status: approve ? 'confirmed' : 'rejected', // forward to doctor as confirmed
+        }),
+      })
+
+      if (res.ok) {
+        setPendingReports((prev) => prev.filter((r) => r.id !== id))
+        toast.success(approve ? 'Report verified & forwarded to Doctor' : 'Report flagged as rejected', {
+          description: `Report #${id} processed by ASHA Worker.`,
+        })
+      } else {
+        toast.error('Failed to update report status in database')
+      }
+    } catch (err) {
+      toast.error('Network error processing verification')
+    }
   }
 
   const handleSyncOffline = () => {

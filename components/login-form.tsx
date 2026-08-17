@@ -1,12 +1,8 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState } from 'react'
-<<<<<<< HEAD
-import { ArrowRight, Lock, ShieldCheck, Building2, Fingerprint, KeyRound, CheckCircle2 } from 'lucide-react'
-=======
+import { useState, useEffect } from 'react'
 import { ArrowRight, Lock, ShieldCheck, Users, Building2, Fingerprint, KeyRound, CheckCircle2, Sparkles, Stethoscope, Microchip, Shield } from 'lucide-react'
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { ROLE_GROUPS, ROLE_ORDER, ROLES, type RoleId } from '@/lib/roles'
-import { getAuthSession } from '@/lib/auth'
+import { getAuthSession, setAuthSession } from '@/lib/auth'
 import { isValidAadhaar, maskAadhaar } from '@/lib/security'
 import { toast } from 'sonner'
 import { Badge } from '@/components/ui/badge'
@@ -51,6 +47,25 @@ export function LoginForm() {
   const [password, setPassword] = useState('demo1234')
   const [loading, setLoading] = useState(false)
 
+  // Detect session changes reactively and redirect without race conditions
+  useEffect(() => {
+    const checkRedirect = () => {
+      const session = getAuthSession()
+      if (session) {
+        setLoading(false)
+        router.push(redirectTo || `/dashboard/${session.role}`)
+      }
+    }
+
+    // Run initial check
+    checkRedirect()
+
+    window.addEventListener('auth_session_change', checkRedirect)
+    return () => {
+      window.removeEventListener('auth_session_change', checkRedirect)
+    }
+  }, [router, redirectTo])
+
   const handlePortalSwitch = (type: 'citizen' | 'admin') => {
     setPortalType(type)
     setOtpSent(false)
@@ -74,9 +89,7 @@ export function LoginForm() {
       description: `Role: ${ROLES[targetRole].name}. Loading dashboard...`,
     })
 
-    setTimeout(() => {
-      router.push(`/dashboard/${targetRole}`)
-    }, 350)
+    // Redirection will happen reactively via the auth_session_change listener
   }
 
   const handleSendAadhaarOtp = (e: React.FormEvent) => {
@@ -115,21 +128,11 @@ export function LoginForm() {
           createdAt: new Date().toISOString(),
         })
 
-<<<<<<< HEAD
         toast.success('Welcome!', {
           description: `Aadhaar ${maskAadhaar(aadhaar)} Verified. Unique Citizen Account Active.`,
         })
-=======
-    toast.success(`Welcome back, ${session.name}!`, {
-      description: portalType === 'citizen'
-        ? `Aadhaar ${maskAadhaar(aadhaar)} Verified. Unique Citizen Account Active.`
-        : `Authenticated for ${ROLES[role].name}. Loading portal...`,
-    })
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
 
-        setTimeout(() => {
-          router.push(redirectTo || `/dashboard/citizen`)
-        }, 600)
+        // Redirection will happen reactively via the auth_session_change listener
       })
       .catch((error) => {
         setLoading(false)
@@ -150,9 +153,7 @@ export function LoginForm() {
         toast.success('Access Approved!', {
           description: `Loading your dashboard portal...`,
         })
-        setTimeout(() => {
-          router.push(redirectTo || `/dashboard/${role}`)
-        }, 800)
+        // Redirection will happen reactively via the auth_session_change listener
       })
       .catch((error) => {
         // Fallback: create demo user in Firebase Auth if it doesn't exist yet
@@ -171,9 +172,7 @@ export function LoginForm() {
               toast.success('Demo Account Initialized!', {
                 description: `Created and authenticated credentials for ${ROLES[role]?.name}.`,
               })
-              setTimeout(() => {
-                router.push(redirectTo || `/dashboard/${role}`)
-              }, 800)
+              // Redirection will happen reactively via the auth_session_change listener
             })
             .catch((regError: any) => {
               setLoading(false)
@@ -202,13 +201,7 @@ export function LoginForm() {
         toast.success(`Authenticated as ${user.displayName || user.email}!`, {
           description: 'Syncing your profile and loading portal...',
         })
-
-        // Wait brief delay for onAuthStateChanged listener in auth.ts to sync and retrieve role
-        setTimeout(() => {
-          const session = getAuthSession()
-          const targetRole = session?.role || 'citizen'
-          router.push(redirectTo || `/dashboard/${targetRole}`)
-        }, 1200)
+        // Redirection will happen reactively via the auth_session_change listener
       })
       .catch((error) => {
         setLoading(false)
@@ -221,28 +214,18 @@ export function LoginForm() {
 
   return (
     <div className="space-y-6">
-      {/* Quick Demo Role Selection Chips */}
-      <div className="space-y-2 rounded-2xl border border-primary/20 bg-card/90 p-3.5 shadow-md backdrop-blur-xl">
-        <div className="flex items-center justify-between text-xs font-black text-foreground">
-          <span className="flex items-center gap-1.5 text-primary">
-            <Sparkles className="size-3.5 text-amber-500 animate-spin" style={{ animationDuration: '6s' }} />
-            Quick Demo Access (1-Click Login):
-          </span>
+      {/* Quick Demo Bypass Access Panel */}
+      <div className="rounded-2xl border border-dashed border-border/80 bg-muted/30 p-4 space-y-3">
+        <div className="flex items-center gap-1.5 text-xs font-black text-foreground">
+          <Sparkles className="size-3.5 text-amber-500 animate-pulse" /> Sandbox Quick Bypass Roles
         </div>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+        <div className="grid grid-cols-3 gap-2">
           <button
             type="button"
             onClick={() => quickDemoLogin('citizen')}
             className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-primary/10 hover:border-primary/40"
           >
-            <span>🌾 Resident</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => quickDemoLogin('doctor')}
-            className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-emerald-500/10 hover:border-emerald-500/40"
-          >
-            <span>👨‍⚕️ Doctor</span>
+            <span>👥 Citizen</span>
           </button>
           <button
             type="button"
@@ -290,13 +273,8 @@ export function LoginForm() {
 
       {portalType === 'citizen' ? (
         /* AADHAAR VERIFIED CITIZEN LOGIN FORM */
-<<<<<<< HEAD
         <form onSubmit={otpSent ? handleCitizenSubmit : handleSendAadhaarOtp} className="flex flex-col gap-5">
-          <div className="space-y-4 rounded-xl border border-primary/30 bg-primary/5 p-4">
-=======
-        <form onSubmit={otpSent ? handleSubmit : handleSendAadhaarOtp} className="flex flex-col gap-5">
           <div className="space-y-4 rounded-2xl border border-primary/30 bg-primary/5 p-4 shadow-sm">
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
             <div className="flex items-center justify-between">
               <span className="font-extrabold text-sm text-foreground flex items-center gap-1.5">
                 <Fingerprint className="size-4 text-primary" /> Verified Citizen Identification
@@ -320,12 +298,8 @@ export function LoginForm() {
                 onChange={(e) => setAadhaar(e.target.value)}
                 placeholder="4819 2049 4921"
                 maxLength={14}
-<<<<<<< HEAD
-                className="font-mono tracking-wider font-bold h-11 border-primary/30"
-                disabled={loading}
-=======
                 className="font-mono tracking-wider font-extrabold h-11 border-primary/40 rounded-xl"
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
+                disabled={loading}
               />
             </div>
 
@@ -341,12 +315,8 @@ export function LoginForm() {
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="4921"
                   maxLength={4}
-<<<<<<< HEAD
-                  className="font-mono text-center tracking-widest text-base font-extrabold h-11 border-emerald-500/40"
-                  disabled={loading}
-=======
                   className="font-mono text-center tracking-widest text-base font-black h-11 border-emerald-500/40 rounded-xl"
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
+                  disabled={loading}
                 />
               </div>
             )}
@@ -371,15 +341,9 @@ export function LoginForm() {
         <form onSubmit={handleAdminSubmit} className="flex flex-col gap-5">
           <div className="space-y-4">
             <div className="flex flex-col gap-2">
-<<<<<<< HEAD
-              <Label htmlFor="role" className="font-semibold">Official Staff Role</Label>
-              <Select value={role} onValueChange={(v) => setRole(v as RoleId)} disabled={loading}>
-                <SelectTrigger id="role" className="w-full h-10 border-emerald-500/30">
-=======
               <Label htmlFor="role" className="font-extrabold text-xs">Official Staff Role</Label>
-              <Select value={role} onValueChange={(v) => setRole(v as RoleId)}>
+              <Select value={role} onValueChange={(v) => setRole(v as RoleId)} disabled={loading}>
                 <SelectTrigger id="role" className="w-full h-11 border-emerald-500/30 rounded-xl font-bold">
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
                   <SelectValue placeholder="Select official role" />
                 </SelectTrigger>
                 <SelectContent>
@@ -406,11 +370,8 @@ export function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="username"
-<<<<<<< HEAD
-                disabled={loading}
-=======
                 className="h-11 rounded-xl font-medium"
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
+                disabled={loading}
               />
             </div>
 
@@ -425,11 +386,8 @@ export function LoginForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
-<<<<<<< HEAD
-                disabled={loading}
-=======
                 className="h-11 rounded-xl"
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
+                disabled={loading}
               />
             </div>
           </div>
@@ -441,7 +399,6 @@ export function LoginForm() {
         </form>
       )}
 
-<<<<<<< HEAD
       {/* Shared Google Sign-In CTA */}
       <div className="flex flex-col gap-4 pt-2">
         <div className="relative flex items-center justify-center">
@@ -478,14 +435,9 @@ export function LoginForm() {
         </Button>
       </div>
 
-      <div className="rounded-lg bg-muted/60 p-3 text-center text-xs text-muted-foreground space-y-1">
-        <div className="flex items-center justify-center gap-1 font-bold text-foreground">
-          <Lock className="size-3 text-emerald-500" /> Secure Anti-Spam Protection
-=======
       <div className="rounded-2xl bg-muted/60 p-3.5 text-center text-xs text-muted-foreground space-y-1 border border-border">
         <div className="flex items-center justify-center gap-1 font-black text-foreground">
           <Lock className="size-3 text-emerald-500" /> Secure Anti-Spam Verification Active
->>>>>>> 448dafa2797e86b91bf01a5d8d5446db9b3596b6
         </div>
         <p>1-Aadhaar per resident prevents duplicate filings and guarantees report authenticity.</p>
       </div>

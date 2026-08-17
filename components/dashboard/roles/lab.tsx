@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Beaker,
   CheckCircle2,
@@ -24,6 +24,25 @@ import { toast } from 'sonner'
 
 export function LabDashboard({ section }: { section: string }) {
   const [waterSamples, setWaterSamples] = useState<WaterSource[]>(WATER_SOURCES)
+
+  useEffect(() => {
+    let active = true
+    const fetchWaterTests = async () => {
+      try {
+        const res = await fetch('/api/water-tests')
+        const data = await res.json()
+        if (active && res.ok && data.waterSources) {
+          setWaterSamples(data.waterSources)
+        }
+      } catch (err) {
+        console.error('Error fetching lab water tests:', err)
+      }
+    }
+    fetchWaterTests()
+    return () => {
+      active = false
+    }
+  }, [])
   const [sampleId, setSampleId] = useState('')
   const [patient, setPatient] = useState('')
   const [testType, setTestType] = useState('Stool Culture & PCR')
