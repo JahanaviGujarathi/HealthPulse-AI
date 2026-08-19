@@ -45,7 +45,7 @@ if (typeof window !== 'undefined') {
           aadhaar = data.aadhaar || ''
         } else {
           // Check for demo email matches to auto-provision roles
-          if (user.email === 'dho.jorhat@assam.gov.in') {
+          if (user.email === 'dho.jorhat@assam.gov.in' || user.email === 'btechjanu09@gmail.com') {
             roleId = 'dho'
             name = 'Dr. Arun Gogoi'
           } else if (user.email === 'state.admin@assam.gov.in') {
