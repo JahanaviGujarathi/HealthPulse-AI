@@ -540,9 +540,31 @@ export function InteractiveDiseaseMapSection() {
 
   return (
     <section id="disease-map" className="relative overflow-hidden py-12 lg:py-20 bg-muted/30">
+      {/* Live Scrolling Advisory News Ticker */}
+      <div className="w-full bg-destructive/10 border-y border-destructive/20 py-2.5 overflow-hidden relative z-20 mb-8 backdrop-blur-md">
+        <div className="flex whitespace-nowrap animate-ticker text-[11px] font-mono font-black tracking-wider uppercase text-destructive gap-16">
+          <span className="flex items-center gap-2">
+            <AlertTriangle className="size-4 animate-bounce text-rose-500" />
+            [ALERT NEWS] Kamalabari block under active Cholera Boil-Water Advisory
+          </span>
+          <span className="flex items-center gap-2">
+            <AlertTriangle className="size-4 animate-bounce text-rose-500" />
+            [CASE SURGE] State epidemiology logs indicate +14% Dengue spike in Jorhat District
+          </span>
+          <span className="flex items-center gap-2">
+            <AlertTriangle className="size-4 animate-bounce text-rose-500" />
+            [ASHA REPORT] 9 high-risk households synced from village field workers
+          </span>
+          <span className="flex items-center gap-2">
+            <AlertTriangle className="size-4 animate-bounce text-rose-500" />
+            [LAB UPDATE] Membrane filtration confirmed elevated CFU counts in community wells
+          </span>
+        </div>
+      </div>
+
       {/* Background Glow Blobs */}
-      <div className="pointer-events-none absolute top-0 left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-rose-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute top-0 left-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl animate-pulse-glow" />
+      <div className="pointer-events-none absolute bottom-0 right-1/4 h-96 w-96 rounded-full bg-rose-500/10 blur-3xl animate-float" />
 
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
@@ -610,7 +632,7 @@ export function InteractiveDiseaseMapSection() {
         {/* Main Grid: Left Map Cartogram (7 cols) + Right AI Assistant (5 cols) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           {/* MAP CONTAINER CARD (Perfect 7-Column Cartogram Grid) */}
-          <div className="lg:col-span-7 rounded-3xl border border-border/80 bg-card/90 backdrop-blur-xl p-5 shadow-2xl relative overflow-hidden flex flex-col justify-between">
+          <div className="lg:col-span-7 rounded-3xl p-5 shadow-2xl relative overflow-hidden flex flex-col justify-between glass-card">
             {/* Map Top Bar Legend */}
             <div className="flex items-center justify-between pb-3 border-b border-border/60">
               <div className="flex items-center gap-2 text-xs font-extrabold text-foreground">
@@ -635,7 +657,7 @@ export function InteractiveDiseaseMapSection() {
             </div>
 
             {/* CARTOGRAM GEOGRAPHIC TILE GRID */}
-            <div className="my-4 p-3 bg-gradient-to-b from-muted/30 via-background to-muted/40 rounded-2xl border border-border/60">
+            <div className="my-4 p-3 bg-gradient-to-b from-secondary/5 via-background/40 to-secondary/10 rounded-2xl border border-border/50">
               <div className="grid grid-cols-7 gap-2 sm:gap-2.5">
                 {gridCells.map(({ row, col, state: st }) => {
                   if (!st) {
@@ -653,15 +675,15 @@ export function InteractiveDiseaseMapSection() {
                       onMouseEnter={() => setHoveredStateCode(st.code)}
                       onMouseLeave={() => setHoveredStateCode(null)}
                       className={cn(
-                        'relative flex flex-col justify-between p-2 rounded-2xl border transition-all duration-300 cursor-pointer select-none h-16 sm:h-20',
+                        'relative flex flex-col justify-between p-2 rounded-2xl border transition-all duration-350 cursor-pointer select-none h-16 sm:h-20',
                         !visible && 'opacity-20 pointer-events-none',
                         st.risk === 'High Risk'
-                          ? 'bg-rose-500/10 border-rose-500/40 hover:bg-rose-500/25 dark:bg-rose-500/20 shadow-md shadow-rose-500/10'
+                          ? 'bg-rose-500/5 border-rose-500/20 text-rose-500 hover:bg-rose-500/15 dark:bg-rose-500/10 shadow-[0_0_10px_rgba(244,63,94,0.05)] hover:shadow-[0_0_15px_rgba(244,63,94,0.2)]'
                           : st.risk === 'Medium Risk'
-                            ? 'bg-amber-500/10 border-amber-500/40 hover:bg-amber-500/25 dark:bg-amber-500/20 shadow-md shadow-amber-500/10'
-                            : 'bg-emerald-500/10 border-emerald-500/30 hover:bg-emerald-500/20 dark:bg-emerald-500/15',
-                        isSelected && 'ring-2 ring-primary border-primary shadow-xl scale-105 z-10 bg-card',
-                        isHovered && !isSelected && 'scale-105 z-10 shadow-lg border-foreground/40'
+                            ? 'bg-amber-500/5 border-amber-500/25 text-amber-500 hover:bg-amber-500/15 dark:bg-amber-500/10 shadow-[0_0_8px_rgba(245,158,11,0.04)] hover:shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+                            : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/15 dark:bg-emerald-500/5',
+                        isSelected && 'ring-2 ring-primary border-primary shadow-xl scale-105 z-10 bg-card/90 animate-glow-primary',
+                        isHovered && !isSelected && 'scale-105 z-10 shadow-lg border-foreground/45'
                       )}
                     >
                       {/* Top Bar: Code + Risk Dot */}
@@ -734,9 +756,9 @@ export function InteractiveDiseaseMapSection() {
           </div>
 
           {/* AI HEALTH ASSISTANT PANEL (5 cols - Rounded 3xl) */}
-          <div className="lg:col-span-5 rounded-3xl border border-border/80 bg-card/95 backdrop-blur-xl shadow-2xl flex flex-col h-[600px] overflow-hidden">
+          <div className="lg:col-span-5 rounded-3xl shadow-2xl flex flex-col h-[600px] overflow-hidden glass-card">
             {/* AI Panel Header */}
-            <div className="p-4 border-b border-border bg-gradient-to-r from-primary/10 via-cyan-500/10 to-emerald-400/10 flex items-center justify-between">
+            <div className="p-4 border-b border-border bg-gradient-to-r from-primary/10 via-accent/10 to-emerald-400/10 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-2xl bg-gradient-to-tr from-primary to-cyan-500 flex items-center justify-center text-white shadow-md">
                   <Bot className="size-5" />
@@ -882,6 +904,92 @@ export function InteractiveDiseaseMapSection() {
                 <Send className="size-4" />
               </Button>
             </form>
+          </div>
+        </div>
+
+        {/* DISTRICT COMPARISON SPREADSHEET TABLE */}
+        <div className="mt-12 rounded-3xl p-6 glass-card shadow-2xl space-y-4">
+          <div className="flex items-center justify-between border-b border-border/60 pb-3">
+            <div>
+              <h3 className="text-base font-black text-foreground">District Disease Surveillance Ledger</h3>
+              <p className="text-[11px] text-muted-foreground font-medium">Sorted by risk indices & case prevalence</p>
+            </div>
+            <Badge variant="outline" className="font-mono text-xs border-primary/20 bg-primary/5 text-primary">
+              Showing {Object.values(INDIAN_STATES_DATA).filter(isStateVisible).length} states
+            </Badge>
+          </div>
+          
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-border/60 text-muted-foreground font-extrabold uppercase text-[10px] tracking-wider">
+                  <th className="py-3 px-4">State Code</th>
+                  <th className="py-3 px-4">State Name</th>
+                  <th className="py-3 px-4">Risk Level</th>
+                  <th className="py-3 px-4">Active Clusters</th>
+                  <th className="py-3 px-4">Risk Index Score</th>
+                  <th className="py-3 px-4">Primary Pathogens</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/40 font-bold text-foreground">
+                {Object.values(INDIAN_STATES_DATA)
+                  .filter(isStateVisible)
+                  .map((st) => (
+                    <tr 
+                      key={st.code} 
+                      className={cn(
+                        "transition-colors hover:bg-muted/40",
+                        st.code === selectedStateCode && "bg-primary/5"
+                      )}
+                    >
+                      <td className="py-3 px-4 font-mono text-primary">{st.code}</td>
+                      <td className="py-3 px-4">{st.name}</td>
+                      <td className="py-3 px-4">
+                        <Badge 
+                          variant="outline" 
+                          className={cn(
+                            "text-[9px] font-black uppercase px-2 py-0.5 rounded-full",
+                            st.risk === 'High Risk' 
+                              ? 'bg-rose-500/10 text-rose-600 border-rose-500/30'
+                              : st.risk === 'Medium Risk'
+                                ? 'bg-amber-500/10 text-amber-600 border-amber-500/30'
+                                : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/30'
+                          )}
+                        >
+                          {st.risk}
+                        </Badge>
+                      </td>
+                      <td className="py-3 px-4">{st.activeOutbreaks} clusters</td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-2">
+                          <span className="w-6">{st.riskScore}</span>
+                          <div className="h-1.5 w-16 bg-muted rounded-full overflow-hidden hidden sm:block">
+                            <div 
+                              className={cn(
+                                "h-full",
+                                st.risk === 'High Risk' ? 'bg-rose-500' : st.risk === 'Medium Risk' ? 'bg-amber-500' : 'bg-emerald-500'
+                              )}
+                              style={{ width: `${st.riskScore}%` }}
+                            />
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4 text-muted-foreground font-medium">{st.primaryDiseases.join(', ')}</td>
+                      <td className="py-3 px-4 text-right">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          onClick={() => handleStateClick(st.code)}
+                          className="h-7 text-[10px] font-extrabold hover:bg-primary/10 hover:text-primary rounded-lg border border-transparent hover:border-primary/20 cursor-pointer"
+                        >
+                          Inspect Node
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

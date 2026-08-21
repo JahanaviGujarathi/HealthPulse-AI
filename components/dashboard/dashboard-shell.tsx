@@ -97,7 +97,7 @@ export function DashboardShell({
     <SidebarProvider>
       <DashboardSidebar role={roleDef} active={active} onNavigate={handleNavigate} />
       <SidebarInset>
-        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border bg-background/85 px-4 backdrop-blur transition-all">
+        <header className="sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between gap-2 border-b border-border bg-background/70 px-4 backdrop-blur-md transition-all">
           <div className="flex items-center gap-3 min-w-0">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-1 h-4" />
@@ -106,7 +106,7 @@ export function DashboardShell({
                 <h1 className="truncate text-sm font-semibold text-foreground sm:text-base">
                   {roleDef.name} Portal
                 </h1>
-                <Badge variant="outline" className="hidden sm:inline-flex items-center gap-1 border-primary/30 bg-primary/5 text-[11px] text-primary">
+                <Badge variant="outline" className="hidden sm:inline-flex items-center gap-1 border-primary/20 bg-primary/10 text-[11px] text-primary">
                   <Lock className="size-3" /> Authenticated Session
                 </Badge>
               </div>
@@ -196,8 +196,11 @@ export function DashboardShell({
           </div>
         </header>
 
-        <main className="flex-1 bg-muted/30 p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto w-full max-w-7xl">
+        <main className="flex-1 bg-gradient-to-b from-background via-secondary/5 to-background p-4 sm:p-6 lg:p-8 relative">
+          {/* Ambient Glow Orb */}
+          <div className="pointer-events-none absolute top-12 left-12 h-64 w-64 rounded-full bg-primary/5 blur-3xl animate-pulse-glow" />
+          <div className="pointer-events-none absolute bottom-12 right-12 h-64 w-64 rounded-full bg-accent/5 blur-3xl animate-float" />
+          <div className="mx-auto w-full max-w-7xl relative z-10">
             {typeof children === 'function' ? children(active) : children}
           </div>
         </main>

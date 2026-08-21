@@ -76,33 +76,56 @@ export function DashboardSidebar({
 
         {/* Official Staff Portal Switcher — HIDDEN FOR CITIZENS, SHOWN FOR OFFICIAL STAFF */}
         {!isCitizen ? (
-          <SidebarGroup>
-            <SidebarGroupLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              Health Staff Portals
-            </SidebarGroupLabel>
-            <SidebarMenu>
-              {ROLE_ORDER.filter((id) => id !== 'citizen' && id !== role.id).map((id) => {
-                const r = ROLES[id as RoleId]
-                return (
-                  <SidebarMenuItem key={id}>
-                    <SidebarMenuButton
-                      size="sm"
-                      className="text-muted-foreground hover:text-foreground"
-                      onClick={() => router.push(`/dashboard/${id}`)}
-                      tooltip={r.name}
-                    >
-                      <r.icon className="size-4" />
-                      <span className="truncate">{r.name}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroup>
+          <>
+            <SidebarGroup>
+              <SidebarGroupLabel className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                Health Staff Portals
+              </SidebarGroupLabel>
+              <SidebarMenu>
+                {ROLE_ORDER.filter((id) => id !== 'citizen' && id !== role.id).map((id) => {
+                  const r = ROLES[id as RoleId]
+                  return (
+                    <SidebarMenuItem key={id}>
+                      <SidebarMenuButton
+                        size="sm"
+                        className="text-muted-foreground hover:text-foreground"
+                        onClick={() => router.push(`/dashboard/${id}`)}
+                        tooltip={r.name}
+                      >
+                        <r.icon className="size-4" />
+                        <span className="truncate">{r.name}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroup>
+
+            {/* Cryptographic Session Verification Card */}
+            <SidebarGroup className="mt-auto p-3">
+              <div className="rounded-2xl p-3 text-[10px] font-mono space-y-2 glass-card bg-primary/5 border-primary/20">
+                <div className="flex items-center justify-between text-foreground font-black">
+                  <span className="flex items-center gap-1">
+                    <ShieldCheck className="size-3 text-emerald-500 animate-pulse" />
+                    SESSION STATE
+                  </span>
+                  <span className="text-emerald-500 font-bold">SECURE</span>
+                </div>
+                <div className="space-y-1 text-muted-foreground leading-normal font-bold">
+                  <p>REF: Jorhat-Block-L2</p>
+                  <p>NODE: {role.id.toUpperCase()}-GW-4</p>
+                  <p className="truncate">SIG: f89c...201b</p>
+                </div>
+                <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
+                  <div className="h-full bg-emerald-500 w-[100%] animate-pulse" />
+                </div>
+              </div>
+            </SidebarGroup>
+          </>
         ) : (
           /* For Citizens: Friendly Card to access Official Portal */
           <SidebarGroup className="mt-auto p-3">
-            <div className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-xs space-y-2">
+            <div className="rounded-2xl p-3 text-xs space-y-2 glass-card border-primary/10">
               <div className="flex items-center gap-1.5 font-bold text-foreground">
                 <Lock className="size-3.5 text-primary" /> Official Health Staff?
               </div>

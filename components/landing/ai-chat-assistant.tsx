@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Sparkles, MessageSquare, X, Send, Bot, User, Droplets, AlertTriangle, Phone, MapPin, ClipboardList, HelpCircle } from 'lucide-react'
+import { Sparkles, X, Send, Bot, User, Droplets } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -146,15 +146,15 @@ export function AiChatAssistant() {
       <Button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "h-14 w-14 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 flex items-center justify-center border cursor-pointer",
+          "h-14 w-14 rounded-full shadow-2xl transition-all duration-350 hover:scale-110 flex items-center justify-center border cursor-pointer",
           isOpen 
-            ? "bg-destructive text-destructive-foreground hover:bg-destructive/90 border-destructive/20" 
-            : "bg-gradient-to-tr from-primary via-cyan-500 to-emerald-400 text-primary-foreground hover:shadow-primary/30 border-primary/20"
+            ? "bg-destructive text-destructive-foreground hover:bg-destructive/95 border-destructive/20" 
+            : "bg-gradient-to-tr from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground hover:shadow-primary/30 border-primary/10 shadow-lg shadow-primary/20"
         )}
         aria-label="Toggle assistant"
       >
         {isOpen ? (
-          <X className="size-6 animate-pulse-glow" />
+          <X className="size-6" />
         ) : (
           <div className="relative">
             <Sparkles className="size-6 text-white" />
@@ -168,11 +168,11 @@ export function AiChatAssistant() {
 
       {/* Chat Window Panel */}
       {isOpen && (
-        <div className="absolute bottom-18 right-0 w-[380px] sm:w-[420px] h-[550px] flex flex-col rounded-2xl border border-primary/20 bg-card/95 backdrop-blur-xl shadow-2xl overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-5">
+        <div className="absolute bottom-18 right-0 w-[380px] sm:w-[420px] h-[550px] flex flex-col rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 animate-in fade-in slide-in-from-bottom-5 glass-card">
           {/* Header */}
-          <div className="p-4 border-b border-border bg-gradient-to-r from-primary/10 via-cyan-500/10 to-emerald-400/10 flex items-center justify-between">
+          <div className="p-4 border-b border-border bg-gradient-to-r from-primary/10 via-accent/10 to-emerald-400/10 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-primary to-cyan-500 flex items-center justify-center text-white shadow-md">
+              <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-primary-foreground shadow-md">
                 <Sparkles className="size-5" />
               </div>
               <div>
@@ -196,12 +196,12 @@ export function AiChatAssistant() {
           </div>
 
           {/* Quick Stats Banner inside Chat */}
-          <div className="px-4 py-2 border-b border-border bg-amber-500/5 flex items-center justify-between text-xs text-amber-800 dark:text-amber-300 font-semibold">
+          <div className="px-4 py-2 border-b border-border bg-amber-500/10 flex items-center justify-between text-xs text-amber-600 dark:text-amber-400 font-bold">
             <span className="flex items-center gap-1.5">
               <Droplets className="size-3 text-amber-500 animate-bounce" />
               Boil water advisory: Kamalabari
             </span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 font-bold uppercase">
+            <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/20 font-bold uppercase">
               Alert
             </span>
           </div>
@@ -218,9 +218,9 @@ export function AiChatAssistant() {
               >
                 <div
                   className={cn(
-                    "h-8 w-8 rounded-lg flex items-center justify-center shrink-0 text-white font-bold text-xs",
+                    "h-8 w-8 rounded-lg flex items-center justify-center shrink-0 text-white font-bold text-xs shadow-sm",
                     msg.isBot 
-                      ? "bg-gradient-to-tr from-primary to-cyan-500" 
+                      ? "bg-gradient-to-tr from-primary to-accent" 
                       : "bg-muted-foreground/30 text-foreground"
                   )}
                 >
@@ -229,10 +229,10 @@ export function AiChatAssistant() {
                 <div className="space-y-2">
                   <div
                     className={cn(
-                      "rounded-2xl p-3 text-xs leading-relaxed shadow-xs whitespace-pre-line border",
+                      "rounded-2xl p-3.5 text-xs leading-relaxed shadow-xs whitespace-pre-line border",
                       msg.isBot
                         ? "bg-card border-border/80 text-foreground"
-                        : "bg-primary text-primary-foreground border-primary/20"
+                        : "bg-primary text-primary-foreground border-primary/20 shadow-lg shadow-primary/10"
                     )}
                   >
                     <FormattedMarkdownText content={msg.text} />
@@ -245,7 +245,7 @@ export function AiChatAssistant() {
                         <button
                           key={i}
                           onClick={act.onClick}
-                          className="text-[11px] font-bold text-primary hover:text-primary/80 bg-primary/10 hover:bg-primary/20 border border-primary/20 rounded-full px-3 py-1 transition-all cursor-pointer"
+                          className="text-[11px] font-bold text-primary hover:text-primary-foreground bg-primary/10 hover:bg-primary border border-primary/20 rounded-full px-3 py-1 transition-all cursor-pointer shadow-xs"
                         >
                           {act.label}
                         </button>
@@ -258,7 +258,7 @@ export function AiChatAssistant() {
 
             {isTyping && (
               <div className="flex items-center gap-2.5 max-w-[80%]">
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-primary to-cyan-500 flex items-center justify-center text-white shrink-0">
+                <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white shrink-0">
                   <Bot className="size-4" />
                 </div>
                 <div className="bg-card border border-border/80 rounded-2xl p-3 shadow-xs">
@@ -275,22 +275,22 @@ export function AiChatAssistant() {
 
           {/* Quick Suggestions Footer */}
           {messages.length === 1 && !isTyping && (
-            <div className="px-4 py-2 bg-muted/30 border-t border-border flex flex-wrap gap-1.5 justify-center">
+            <div className="px-4 py-2.5 bg-muted/20 border-t border-border flex flex-wrap gap-1.5 justify-center">
               <button
                 onClick={() => handleSendMessage('Check Water Safety')}
-                className="text-[10px] font-bold text-foreground bg-card hover:bg-muted border border-border rounded-full px-2.5 py-1 transition-all cursor-pointer"
+                className="text-[10px] font-extrabold text-foreground bg-card hover:bg-muted border border-border rounded-full px-3 py-1 transition-all cursor-pointer shadow-xs"
               >
                 💧 Check Water Safety
               </button>
               <button
                 onClick={() => handleSendMessage('Report Sickness')}
-                className="text-[10px] font-bold text-foreground bg-card hover:bg-muted border border-border rounded-full px-2.5 py-1 transition-all cursor-pointer"
+                className="text-[10px] font-extrabold text-foreground bg-card hover:bg-muted border border-border rounded-full px-3 py-1 transition-all cursor-pointer shadow-xs"
               >
                 🤒 Report Sickness
               </button>
               <button
                 onClick={() => handleSendMessage('Find Nearest Clinic')}
-                className="text-[10px] font-bold text-foreground bg-card hover:bg-muted border border-border rounded-full px-2.5 py-1 transition-all cursor-pointer"
+                className="text-[10px] font-extrabold text-foreground bg-card hover:bg-muted border border-border rounded-full px-3 py-1 transition-all cursor-pointer shadow-xs"
               >
                 🏥 Find Nearest Clinic
               </button>
@@ -303,7 +303,7 @@ export function AiChatAssistant() {
               e.preventDefault()
               handleSendMessage(input)
             }}
-            className="p-3 border-t border-border bg-card flex gap-2"
+            className="p-3 border-t border-border bg-card/90 flex gap-2"
           >
             <Input
               value={input}
@@ -315,7 +315,7 @@ export function AiChatAssistant() {
               type="submit"
               size="icon"
               disabled={!input.trim()}
-              className="h-10 w-10 shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
+              className="h-10 w-10 shrink-0 bg-primary hover:bg-primary/95 text-primary-foreground rounded-xl"
             >
               <Send className="size-4" />
             </Button>

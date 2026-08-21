@@ -3,15 +3,15 @@
 import { useState, useEffect } from 'react'
 import {
   Activity,
-  BarChart3,
   Bell,
-  CheckCircle2,
-  ClipboardList,
   FilePlus,
-  Home,
   PlusCircle,
   Stethoscope,
   UserCheck,
+  TrendingUp,
+  BarChart4,
+  Droplets,
+  ClipboardList,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,9 +20,10 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { StatCard, SectionHeader } from '@/components/dashboard/primitives'
-import { CaseTrendChart } from '@/components/dashboard/charts'
+import { CaseTrendChart, CasesByBlockChart, WaterQualityChart } from '@/components/dashboard/charts'
 import { DISEASE_REPORTS, DISEASES, HOSPITALS, type DiseaseReport } from '@/lib/data'
 import { toast } from 'sonner'
+import { cn } from '@/lib/utils'
 
 export function DoctorDashboard({ section }: { section: string }) {
   const [cases, setCases] = useState<DiseaseReport[]>(
@@ -53,6 +54,9 @@ export function DoctorDashboard({ section }: { section: string }) {
   const [disease, setDisease] = useState('Cholera')
   const [village, setVillage] = useState('Kamalabari')
   const [severity, setSeverity] = useState<'high' | 'medium' | 'low'>('high')
+
+  // Tab state for chart switcher
+  const [activeChartTab, setActiveChartTab] = useState<'trends' | 'blocks' | 'water'>('trends')
 
   const handleAddCase = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -99,61 +103,228 @@ export function DoctorDashboard({ section }: { section: string }) {
           description="Jorhat Civil Hospital. Monitor confirmed clinical cases, bed availability, and epidemiological trends."
         />
 
+        {/* Dashboard stat cards with weekly sparklines and progress indicators */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={Stethoscope} label="Confirmed Cases Today" value="14" hint="Uploaded to registry" tone="danger" />
-          <StatCard icon={Activity} label="Hospital Bed Occupancy" value="83%" hint="266 of 320 beds filled" tone="warning" />
-          <StatCard icon={UserCheck} label="Recoveries This Week" value="39" hint="Discharged patients" tone="success" />
-          <StatCard icon={Bell} label="Active Outbreak Alerts" value="2" hint="Kamalabari & Teok" tone="danger" />
+          <StatCard
+            icon={Stethoscope}
+            label="Confirmed Cases Today"
+            value="14"
+            hint="Uploaded to registry"
+            tone="danger"
+            sparklineData={[10, 12, 11, 14, 15, 14]}
+          />
+          <StatCard
+            icon={Activity}
+            label="Hospital Bed Occupancy"
+            value="83%"
+            hint="266 of 320 beds filled"
+            tone="warning"
+            sparklineData={[80, 81, 82, 83, 83, 83]}
+            progress={83}
+          />
+          <StatCard
+            icon={UserCheck}
+            label="Recoveries This Week"
+            value="39"
+            hint="Discharged patients"
+            tone="success"
+            sparklineData={[30, 32, 35, 34, 38, 39]}
+          />
+          <StatCard
+            icon={Bell}
+            label="Active Outbreak Alerts"
+            value="2"
+            hint="Kamalabari & Teok"
+            tone="danger"
+            sparklineData={[1, 2, 2, 1, 2, 2]}
+          />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
-            <CaseTrendChart title="Clinical Disease Outbreak Trend" description="14-day confirmed disease trajectories" />
-          </div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Hospital Capacity</CardTitle>
-              <CardDescription>Emergency bed status in block hospitals</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {HOSPITALS.map((h) => (
-                <div key={h.id} className="rounded-lg border border-border p-3 space-y-1">
-                  <div className="flex justify-between items-center">
-                    <p className="font-semibold text-sm">{h.name}</p>
-                    <Badge variant="outline">{h.bedsAvailable} beds free</Badge>
+        {/* SPLIT CLINICAL WORKSTATION LAYOUT */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
+          
+          {/* LEFT PANE: Interactive Charts Hub (8 Cols) */}
+          <div className="lg:col-span-8 space-y-4">
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/60">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <CardTitle className="text-base font-extrabold flex items-center gap-1.5">
+                      <TrendingUp className="size-4 text-primary" />
+                      Epidemiological Analysis Hub
+                    </CardTitle>
+                    <CardDescription className="text-xs">Toggle metric models to inspect local health indices.</CardDescription>
                   </div>
-                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                    <div
-                      className="h-full bg-primary transition-all"
-                      style={{ width: `${Math.round(((h.beds - h.bedsAvailable) / h.beds) * 100)}%` }}
-                    />
+
+                  {/* Chart Tab Switcher Buttons */}
+                  <div className="flex items-center gap-1 bg-muted/40 p-1 rounded-xl border border-border shadow-xs">
+                    <button 
+                      onClick={() => setActiveChartTab('trends')}
+                      className={cn(
+                        "rounded-lg px-3 py-1.5 text-xs font-black transition-all cursor-pointer",
+                        activeChartTab === 'trends' ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Trends
+                    </button>
+                    <button 
+                      onClick={() => setActiveChartTab('blocks')}
+                      className={cn(
+                        "rounded-lg px-3 py-1.5 text-xs font-black transition-all cursor-pointer",
+                        activeChartTab === 'blocks' ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Blocks
+                    </button>
+                    <button 
+                      onClick={() => setActiveChartTab('water')}
+                      className={cn(
+                        "rounded-lg px-3 py-1.5 text-xs font-black transition-all cursor-pointer",
+                        activeChartTab === 'water' ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Water
+                    </button>
                   </div>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
+              </CardHeader>
+              
+              <CardContent className="pt-6">
+                <div className="animate-in fade-in duration-300">
+                  {activeChartTab === 'trends' && (
+                    <CaseTrendChart compact title="Clinical Disease Outbreak Trend" description="14-day confirmed disease trajectories" />
+                  )}
+                  {activeChartTab === 'blocks' && (
+                    <CasesByBlockChart />
+                  )}
+                  {activeChartTab === 'water' && (
+                    <WaterQualityChart />
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Bed Occupancy Capacity Sub-ledger */}
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-extrabold">Hospital Bed Capacity</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {HOSPITALS.map((h) => (
+                  <div key={h.id} className="rounded-2xl border border-border bg-muted/10 p-4 space-y-2.5">
+                    <div className="flex justify-between items-center">
+                      <p className="font-bold text-sm text-foreground">{h.name}</p>
+                      <Badge variant="outline" className="border-primary/20 bg-primary/5 text-[11px] font-bold">{h.bedsAvailable} free</Badge>
+                    </div>
+                    <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                      <div
+                        className="h-full bg-primary transition-all duration-500"
+                        style={{ width: `${Math.round(((h.beds - h.bedsAvailable) / h.beds) * 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* RIGHT PANE: Case entry + ledger (4 Cols) */}
+          <div className="lg:col-span-4 space-y-4">
+            
+            {/* Confirmed Case Form */}
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base flex items-center gap-2 font-extrabold">
+                  <PlusCircle className="size-4 text-primary" /> Confirmed Case Entry
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <form onSubmit={handleAddCase} className="space-y-3.5">
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs text-muted-foreground">Patient Name / ID</Label>
+                    <Input placeholder="e.g. Biren Saikia" value={patient} onChange={(e) => setPatient(e.target.value)} required className="h-9 text-xs rounded-xl" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs text-muted-foreground">Diagnosed Disease</Label>
+                    <Select value={disease} onValueChange={(v) => v && setDisease(v)}>
+                      <SelectTrigger className="h-9 text-xs rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DISEASES.map((d) => (
+                          <SelectItem key={d} value={d} className="text-xs">{d}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs text-muted-foreground">Patient Village</Label>
+                    <Input value={village} onChange={(e) => setVillage(e.target.value)} className="h-9 text-xs rounded-xl" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs text-muted-foreground">Clinical Severity</Label>
+                    <Select value={severity} onValueChange={(v: any) => v && setSeverity(v)}>
+                      <SelectTrigger className="h-9 text-xs rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="high" className="text-xs">High (ICU Admission)</SelectItem>
+                        <SelectItem value="medium" className="text-xs">Medium (General Ward)</SelectItem>
+                        <SelectItem value="low" className="text-xs">Low (Outpatient ORS)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button type="submit" className="w-full gap-2 font-black shadow-md shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground h-10 rounded-xl cursor-pointer">
+                    <FilePlus className="size-4" /> Upload Confirmed Case
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Case Registry Ledger list */}
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-extrabold">Registry Ledger</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                {cases.map((c) => (
+                  <div key={c.id} className="rounded-2xl border border-border bg-muted/10 p-3.5 space-y-2 transition-all hover:border-primary/30">
+                    <div className="flex justify-between items-start gap-1">
+                      <div>
+                        <p className="font-bold text-sm text-foreground">{c.patient}</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">{c.village} · {c.reportedAt}</p>
+                      </div>
+                      <Badge variant="outline" className={c.severity === 'high' ? 'bg-destructive/10 text-destructive border-destructive/20 font-bold text-[9px] uppercase rounded-full px-2 py-0.5' : 'bg-amber-500/10 text-amber-600 border-amber-500/20 font-bold text-[9px] uppercase rounded-full px-2 py-0.5'}>
+                        {c.severity}
+                      </Badge>
+                    </div>
+                    <Badge variant="outline" className="border-primary/20 text-primary bg-primary/5 font-black text-[10px] px-2 py-0.5 rounded-md">{c.disease}</Badge>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
         </div>
       </div>
     )
   }
 
+  // Fallback Case View
   if (section === 'cases') {
     return (
       <div className="space-y-6">
         <SectionHeader title="Log Confirmed Disease Case" description="Record verified clinical diagnoses to update district outbreak models." />
-
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <Card className="lg:col-span-1 border-primary/20">
+        <div className="max-w-2xl mx-auto">
+          <Card className="glass-card shadow-lg">
             <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <PlusCircle className="size-4 text-primary" /> Confirmed Case Entry
-              </CardTitle>
+              <CardTitle className="text-base font-extrabold">Clinical Intake Form</CardTitle>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleAddCase} className="space-y-4">
                 <div className="space-y-2">
                   <Label>Patient Name / ID</Label>
-                  <Input placeholder="e.g. Biren Saikia (Pt #904)" value={patient} onChange={(e) => setPatient(e.target.value)} required />
+                  <Input placeholder="e.g. Biren Saikia" value={patient} onChange={(e) => setPatient(e.target.value)} required />
                 </div>
                 <div className="space-y-2">
                   <Label>Diagnosed Disease</Label>
@@ -168,50 +339,10 @@ export function DoctorDashboard({ section }: { section: string }) {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>Patient Village</Label>
-                  <Input value={village} onChange={(e) => setVillage(e.target.value)} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Clinical Severity</Label>
-                  <Select value={severity} onValueChange={(v: any) => v && setSeverity(v)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="high">High (Admitted to ICU / IV fluids)</SelectItem>
-                      <SelectItem value="medium">Medium (General Ward)</SelectItem>
-                      <SelectItem value="low">Low (Outpatient ORS)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
                 <Button type="submit" className="w-full gap-2 font-bold">
                   <FilePlus className="size-4" /> Upload Confirmed Case
                 </Button>
               </form>
-            </CardContent>
-          </Card>
-
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-base">Confirmed Cases Ledger</CardTitle>
-              <CardDescription>Recent clinical submissions in Jorhat District</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {cases.map((c) => (
-                <div key={c.id} className="flex items-center justify-between rounded-lg border border-border p-3">
-                  <div>
-                    <p className="font-semibold text-sm">{c.patient}</p>
-                    <p className="text-xs text-muted-foreground">{c.village} · {c.reportedAt}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline" className="font-bold text-primary">{c.disease}</Badge>
-                    <Badge variant="outline" className={c.severity === 'high' ? 'bg-destructive/10 text-destructive' : 'bg-amber-500/10 text-amber-600'}>
-                      {c.severity} severity
-                    </Badge>
-                  </div>
-                </div>
-              ))}
             </CardContent>
           </Card>
         </div>
@@ -222,7 +353,9 @@ export function DoctorDashboard({ section }: { section: string }) {
   return (
     <div className="space-y-6">
       <SectionHeader title="Doctor Clinical View" description="Clinical analytics and trends." />
-      <CaseTrendChart />
+      <div className="glass-card rounded-3xl p-3">
+        <CaseTrendChart />
+      </div>
     </div>
   )
 }
