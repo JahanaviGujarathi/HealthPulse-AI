@@ -11,6 +11,7 @@ import {
   Send,
   Sparkles,
   Truck,
+  Activity,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -22,6 +23,7 @@ import { WaterQualityChart } from '@/components/dashboard/charts'
 import { WATER_SOURCES, type WaterSource } from '@/lib/data'
 import { toast } from 'sonner'
 import { sanitizeInput } from '@/lib/security'
+import { cn } from '@/lib/utils'
 
 export function WaterDashboard({ section }: { section: string }) {
   const [sources, setSources] = useState<WaterSource[]>(WATER_SOURCES)
@@ -114,104 +116,151 @@ export function WaterDashboard({ section }: { section: string }) {
           description="Public Health Engineering Department (PHED), Jorhat. Monitor pH, turbidity, residual chlorine, and bacterial contamination."
         />
 
+        {/* Dynamic Metric cards with sparklines */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard icon={Droplets} label="Water Sources Monitored" value={sources.length} hint="Community wells & intakes" tone="default" />
-          <StatCard icon={AlertTriangle} label="Contaminated Sources" value={sources.filter((s) => s.risk === 'high').length} hint="Exceeds safety thresholds" tone="danger" />
-          <StatCard icon={Beaker} label="Avg Residual Chlorine" value="0.3 mg/L" hint="Min target: 0.5 mg/L" tone="warning" />
-          <StatCard icon={CheckCircle2} label="Chlorination Dispatched" value="5 Units" hint="Active mobile teams" tone="success" />
+          <StatCard
+            icon={Droplets}
+            label="Water Sources Monitored"
+            value={sources.length}
+            hint="Community wells & intakes"
+            tone="default"
+            sparklineData={[12, 12, 14, 15, 15, sources.length]}
+          />
+          <StatCard
+            icon={AlertTriangle}
+            label="Contaminated Sources"
+            value={sources.filter((s) => s.risk === 'high').length}
+            hint="Exceeds safety thresholds"
+            tone="danger"
+            sparklineData={[3, 4, 3, 2, 3, sources.filter((s) => s.risk === 'high').length]}
+          />
+          <StatCard
+            icon={Beaker}
+            label="Avg Residual Chlorine"
+            value="0.3 mg/L"
+            hint="Min target: 0.5 mg/L"
+            tone="warning"
+            sparklineData={[0.35, 0.32, 0.30, 0.28, 0.29, 0.30]}
+          />
+          <StatCard
+            icon={CheckCircle2}
+            label="Chlorination Dispatched"
+            value="5 Units"
+            hint="Active mobile teams"
+            tone="success"
+            sparklineData={[2, 3, 4, 5, 5, 5]}
+          />
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+        {/* WATER CONTROL ROOM WORKSTATION */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
+          
+          {/* LEFT PANE: Water Quality Chart (8 Cols) */}
+          <div className="lg:col-span-8 glass-card rounded-3xl p-1.5 overflow-hidden shadow-xl border-border/80">
             <WaterQualityChart />
           </div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base flex items-center gap-2">
-                <AlertTriangle className="size-4 text-destructive" /> Critical Source Alerts
-              </CardTitle>
-              <CardDescription>Sources requiring immediate decontamination</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {sources
-                .filter((s) => s.risk === 'high')
-                .map((s) => (
-                  <div key={s.id} className="rounded-lg border border-destructive/30 bg-destructive/5 p-3 space-y-2">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <p className="font-bold text-sm text-destructive">{s.name}</p>
-                        <p className="text-xs text-muted-foreground">{s.village} · {s.testedAt}</p>
-                      </div>
-                      <Badge variant="destructive" className="text-[10px]">
-                        HIGH RISK
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-1 text-[11px] text-muted-foreground">
-                      <span>Bacteria: <b className="text-destructive">{s.bacteria} CFU</b></span>
-                      <span>Chlorine: <b className="text-destructive">{s.chlorine} mg/L</b></span>
-                    </div>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="w-full h-7 text-xs gap-1.5 font-bold"
-                      onClick={() => handleDispatchChlorination(s.name)}
-                    >
-                      <Truck className="size-3" /> Dispatch Chlorination Unit
-                    </Button>
+
+          {/* RIGHT PANE: Critical Source Alerts (4 Cols) */}
+          <div className="lg:col-span-4">
+            <Card className="glass-card shadow-xl border-border/80">
+              <CardHeader className="pb-3 border-b border-border/40 bg-destructive/5">
+                <CardTitle className="text-base flex items-center gap-2 font-extrabold text-destructive">
+                  <AlertTriangle className="size-4 animate-pulse" /> Critical Source Alerts
+                </CardTitle>
+                <CardDescription className="text-xs">Water wells requiring immediate chlorine dosage stabilization.</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-3 max-h-[420px] overflow-y-auto pr-1">
+                {sources.filter((s) => s.risk === 'high').length === 0 ? (
+                  <div className="text-center py-8 text-xs text-muted-foreground">
+                    <CheckCircle2 className="size-8 mx-auto text-emerald-500 mb-2 animate-bounce" />
+                    All water sources clean! No active alarms.
                   </div>
-                ))}
-            </CardContent>
-          </Card>
+                ) : (
+                  sources
+                    .filter((s) => s.risk === 'high')
+                    .map((s) => (
+                      <div key={s.id} className="rounded-2xl border border-destructive/20 bg-destructive/10 p-4 space-y-3 transition-all hover:border-destructive/40 animate-glow-red">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-extrabold text-sm text-foreground">{s.name}</p>
+                            <p className="text-[10px] text-muted-foreground mt-0.5 font-bold uppercase">{s.village} · Tested: {s.testedAt}</p>
+                          </div>
+                          <Badge variant="destructive" className="text-[9px] font-black uppercase px-2 py-0.5 rounded-full">
+                            HIGH RISK
+                          </Badge>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-2 text-xs font-bold text-muted-foreground border-y border-destructive/10 py-2">
+                          <span>Bacteria: <b className="text-destructive font-black">{s.bacteria} CFU</b></span>
+                          <span>Chlorine: <b className="text-destructive font-black">{s.chlorine} mg/L</b></span>
+                        </div>
+                        
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          className="w-full h-8 text-xs gap-1.5 font-black shadow-md rounded-xl cursor-pointer"
+                          onClick={() => handleDispatchChlorination(s.name)}
+                        >
+                          <Truck className="size-3.5 text-white animate-bounce" /> Dispatch Chlorination Unit
+                        </Button>
+                      </div>
+                    ))
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
         </div>
       </div>
     )
   }
 
+  // Upload Water test form view
   if (section === 'test') {
     return (
       <div className="space-y-6 max-w-2xl mx-auto">
         <SectionHeader title="Upload Water Quality Test" description="Log physical, chemical, and microbiological readings from field testing kits." />
 
-        <Card className="border-primary/20 shadow-md">
-          <CardHeader className="bg-primary/5">
-            <CardTitle className="text-base flex items-center gap-2">
+        <Card className="glass-card shadow-lg border-primary/20">
+          <CardHeader className="pb-3 border-b border-border/40">
+            <CardTitle className="text-base flex items-center gap-2 font-extrabold">
               <Beaker className="size-5 text-primary" /> PHED Water Field Intake Form
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
+          <CardContent className="pt-5">
             <form onSubmit={handleUploadTest} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Water Source Name</Label>
-                  <Input placeholder="e.g. Kamalabari Well #2" value={name} onChange={(e) => setName(e.target.value)} required />
+                <div className="space-y-1.5">
+                  <Label className="font-bold text-xs text-muted-foreground uppercase">Water Source Name</Label>
+                  <Input placeholder="e.g. Kamalabari Well #2" value={name} onChange={(e) => setName(e.target.value)} required className="h-10 text-xs rounded-xl" />
                 </div>
-                <div className="space-y-2">
-                  <Label>Village / Block</Label>
-                  <Input value={village} onChange={(e) => setVillage(e.target.value)} />
+                <div className="space-y-1.5">
+                  <Label className="font-bold text-xs text-muted-foreground uppercase">Village / Block</Label>
+                  <Input value={village} onChange={(e) => setVillage(e.target.value)} className="h-10 text-xs rounded-xl" />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div className="space-y-2">
-                  <Label>pH Level</Label>
-                  <Input value={ph} onChange={(e) => setPh(e.target.value)} />
+                <div className="space-y-1.5">
+                  <Label className="font-bold text-xs text-muted-foreground uppercase">pH Level</Label>
+                  <Input value={ph} onChange={(e) => setPh(e.target.value)} className="h-10 text-xs rounded-xl" />
                 </div>
-                <div className="space-y-2">
-                  <Label>Turbidity (NTU)</Label>
-                  <Input value={turbidity} onChange={(e) => setTurbidity(e.target.value)} />
+                <div className="space-y-1.5">
+                  <Label className="font-bold text-xs text-muted-foreground uppercase">Turbidity (NTU)</Label>
+                  <Input value={turbidity} onChange={(e) => setTurbidity(e.target.value)} className="h-10 text-xs rounded-xl" />
                 </div>
-                <div className="space-y-2">
-                  <Label>Free Chlorine (mg/L)</Label>
-                  <Input value={chlorine} onChange={(e) => setChlorine(e.target.value)} />
+                <div className="space-y-1.5">
+                  <Label className="font-bold text-xs text-muted-foreground uppercase">Free Chlorine (mg/L)</Label>
+                  <Input value={chlorine} onChange={(e) => setChlorine(e.target.value)} className="h-10 text-xs rounded-xl" />
                 </div>
-                <div className="space-y-2">
-                  <Label>Bacteria (CFU/100ml)</Label>
-                  <Input value={bacteria} onChange={(e) => setBacteria(e.target.value)} />
+                <div className="space-y-1.5">
+                  <Label className="font-bold text-xs text-muted-foreground uppercase">Bacteria (CFU)</Label>
+                  <Input value={bacteria} onChange={(e) => setBacteria(e.target.value)} className="h-10 text-xs rounded-xl" />
                 </div>
               </div>
 
-              <Button type="submit" disabled={isSubmitting} className="w-full gap-2 py-5 font-bold shadow-md">
-                <Send className="size-4" /> Log Water Test & Trigger AI Evaluation
+              <Button type="submit" disabled={isSubmitting} className="w-full gap-2 font-black shadow-md shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground h-11 rounded-xl cursor-pointer">
+                <Send className="size-4 animate-pulse" /> Log Water Test & Trigger AI Evaluation
               </Button>
             </form>
           </CardContent>
@@ -223,7 +272,9 @@ export function WaterDashboard({ section }: { section: string }) {
   return (
     <div className="space-y-6">
       <SectionHeader title="Water Testing Section" description="Quality monitoring and risk predictions." />
-      <WaterQualityChart />
+      <div className="glass-card rounded-3xl p-3 shadow-lg border-border/80">
+        <WaterQualityChart />
+      </div>
     </div>
   )
 }

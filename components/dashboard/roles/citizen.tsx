@@ -8,20 +8,15 @@ import {
   ClipboardList,
   Clock,
   Droplets,
-  FileText,
   HeartPulse,
-  Home,
   MapPin,
   PhoneCall,
   Send,
   ShieldCheck,
   Sparkles,
   Truck,
-  UserCheck,
-  Bell,
-  HelpCircle,
   Plus,
-  Fingerprint,
+  Lock,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,7 +25,7 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
-import { StatCard, SectionHeader } from '@/components/dashboard/primitives'
+import { SectionHeader } from '@/components/dashboard/primitives'
 import { HotspotMap } from '@/components/dashboard/map-panel'
 import { InteractiveDiseaseMapSection } from '@/components/landing/interactive-disease-map'
 import { AWARENESS, DISEASE_REPORTS, HOSPITALS, type DiseaseReport } from '@/lib/data'
@@ -44,6 +39,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
+import { cn } from '@/lib/utils'
 
 export function CitizenDashboard({ section }: { section: string }) {
   const session = getAuthSession()
@@ -69,6 +65,7 @@ export function CitizenDashboard({ section }: { section: string }) {
       active = false
     }
   }, [])
+
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([])
   const [patientName, setPatientName] = useState(session?.name || 'Rahul Das')
   const [villageName, setVillageName] = useState('Kamalabari, Majuli')
@@ -145,35 +142,36 @@ export function CitizenDashboard({ section }: { section: string }) {
     }
   }
 
-  // Render Society Bulletin overview section
+  // Render Citizen Overview
   if (section === 'overview' || !section) {
     return (
       <div className="space-y-6">
-        {/* Modern Minimalist Welcome & Water Safety Status Banner */}
-        <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/5 via-amber-500/5 to-transparent p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2">
+        {/* Cinematic Welcome & Water Safety Status Banner */}
+        <div className="rounded-3xl p-6 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6 glass-card glass-card-glow border-primary/20">
+          <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2.5 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-300">
-                ⚠️ Water Alert: Boil advisory active in Kamalabari
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-black text-amber-600 dark:text-amber-400 border border-amber-500/20">
+                <AlertTriangle className="size-3.5 animate-bounce" />
+                Water Alert: Boil advisory active in Kamalabari
               </span>
             </div>
-            <h2 className="text-2xl font-extrabold text-foreground sm:text-3xl tracking-tight">
+            <h2 className="text-2xl font-black text-foreground sm:text-3xl tracking-tight">
               Hello, {patientName.split(' ')[0]}
             </h2>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-xl">
               High turbidity detected in Kamalabari Well #3. Please boil drinking water for at least 1 minute.
             </p>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground pt-2.5 mt-2.5 border-t border-border/40">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground pt-3 mt-3 border-t border-border/40 font-bold">
               <span className="flex items-center gap-1.5">
-                👩‍⚕️ <span className="font-semibold text-foreground">ASHA Worker:</span> Anjali Boro
+                👩‍⚕️ <span className="font-extrabold text-foreground">ASHA Worker:</span> Anjali Boro
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5">
-                🏥 <span className="font-semibold text-foreground">Nearest Clinic:</span> Kamalabari PHC (1.2 km)
+                🏥 <span className="font-extrabold text-foreground">Nearest PHC:</span> Kamalabari (1.2 km)
               </span>
               <span>•</span>
               <span className="flex items-center gap-1.5">
-                📋 <span className="font-semibold text-foreground">My Reports:</span> {reports.length} Active
+                📋 <span className="font-extrabold text-foreground">Active Reports:</span> {reports.length}
               </span>
             </div>
           </div>
@@ -182,64 +180,69 @@ export function CitizenDashboard({ section }: { section: string }) {
             <Button
               size="lg"
               onClick={() => setReportDialogOpen(true)}
-              className="gap-2 font-extrabold shadow-md bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl"
+              className="gap-2 font-black shadow-md shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground h-11 rounded-xl cursor-pointer"
             >
-              <Plus className="size-4" /> Report an Issue
+              <Plus className="size-4" /> Report Sickness
             </Button>
             <Button
               size="lg"
               variant="outline"
               onClick={handleRequestTanker}
               disabled={tankerRequested}
-              className="gap-2 font-extrabold border-amber-600/30 bg-amber-500/10 text-amber-800 dark:text-amber-200 hover:bg-amber-500/20 rounded-xl"
+              className={cn(
+                "gap-2 font-black h-11 rounded-xl transition-all duration-300",
+                tankerRequested 
+                  ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-600 cursor-not-allowed" 
+                  : "border-amber-500/30 bg-amber-500/10 text-amber-800 dark:text-amber-200 hover:bg-amber-500/20"
+              )}
             >
-              <Truck className="size-4 text-amber-600" />
+              <Truck className="size-4 text-amber-500" />
               {tankerRequested ? 'Tanker Sent ✓' : 'Request Clean Water'}
             </Button>
           </div>
         </div>
 
-        {/* Interactive State-Wise Disease Surveillance Map */}
+        {/* Interactive India Surveillance Map */}
         <InteractiveDiseaseMapSection />
 
-        {/* Emergency Contacts Card (1-Click Call Helplines) */}
+        {/* Emergency Contacts Card */}
         <div className="max-w-3xl mx-auto">
-          <Card className="border-destructive/30 bg-destructive/5 shadow-md">
-            <CardHeader className="pb-3 text-center">
-              <CardTitle className="text-base font-extrabold flex items-center justify-center gap-2 text-destructive">
-                <PhoneCall className="size-5 animate-pulse text-destructive" /> 24/7 Interactive Emergency Helplines
+          <Card className="glass-card shadow-xl border-destructive/20 bg-destructive/5">
+            <CardHeader className="pb-3 text-center border-b border-border/40">
+              <CardTitle className="text-base font-black flex items-center justify-center gap-2 text-destructive">
+                <PhoneCall className="size-5 animate-pulse" /> 24/7 Interactive Emergency Helplines
               </CardTitle>
-              <CardDescription>Click any helpline to dial 24/7 Medical, Ambulance, or Water Supply assistance</CardDescription>
+              <CardDescription className="text-xs">Click any helpline to dial 24/7 Medical, Ambulance, or Water Supply assistance.</CardDescription>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="rounded-2xl bg-card p-4 flex flex-col justify-between border border-border shadow-xs hover:border-destructive/50 transition-all">
+            <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+              <div className="rounded-2xl bg-card/60 p-4 flex flex-col justify-between border border-border shadow-xs hover:border-destructive/50 transition-all">
                 <div>
-                  <p className="font-extrabold text-sm text-foreground flex items-center gap-1.5">🚨 Ambulance</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">Toll-free 24/7 dispatch</p>
+                  <p className="font-bold text-sm text-foreground flex items-center gap-1.5">🚨 Ambulance</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 font-bold uppercase">Toll-free 24/7 Dispatch</p>
                 </div>
                 <a href="tel:108" className="mt-3 block">
-                  <Button size="sm" variant="destructive" className="w-full font-black gap-1.5 shadow-md hover:scale-105 transition-all">
+                  <Button size="sm" variant="destructive" className="w-full font-black gap-1.5 shadow-md shadow-destructive/20 hover:scale-105 transition-all">
                     <PhoneCall className="size-3.5" /> Call 108
                   </Button>
                 </a>
               </div>
 
-              <div className="rounded-2xl bg-card p-4 flex flex-col justify-between border border-border shadow-xs hover:border-primary/50 transition-all">
+              <div className="rounded-2xl bg-card/60 p-4 flex flex-col justify-between border border-border shadow-xs hover:border-primary/50 transition-all">
                 <div>
-                  <p className="font-extrabold text-sm text-foreground flex items-center gap-1.5">🏥 Doctor Helpline</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">Free Tele-consultation</p>
+                  <p className="font-bold text-sm text-foreground flex items-center gap-1.5">🏥 Doctor Helpline</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 font-bold uppercase">Free Consultation</p>
                 </div>
                 <a href="tel:104" className="mt-3 block">
-                  <Button size="sm" className="w-full font-black gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:scale-105 transition-all">
+                  <Button size="sm" className="w-full font-black gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md shadow-primary/10 hover:scale-105 transition-all">
                     <PhoneCall className="size-3.5" /> Call 104
                   </Button>
                 </a>
               </div>
 
-              <div className="rounded-2xl bg-card p-4 flex flex-col justify-between border border-border shadow-xs hover:border-amber-500/50 transition-all">
+              <div className="rounded-2xl bg-card/60 p-4 flex flex-col justify-between border border-border shadow-xs hover:border-amber-500/50 transition-all">
                 <div>
-                  <p className="font-extrabold text-sm text-foreground flex items-center gap-1.5">💧 Water Supply</p>
-                  <p className="text-[11px] text-muted-foreground mt-0.5">PHED Tanker Request</p>
+                  <p className="font-bold text-sm text-foreground flex items-center gap-1.5">💧 Water Supply</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 font-bold uppercase">PHED Tanker Request</p>
                 </div>
                 <a href="tel:1915" className="mt-3 block">
                   <Button size="sm" variant="outline" className="w-full font-black gap-1.5 border-amber-500/40 bg-amber-500/10 text-amber-800 dark:text-amber-200 hover:bg-amber-500/20 shadow-md hover:scale-105 transition-all">
@@ -253,76 +256,80 @@ export function CitizenDashboard({ section }: { section: string }) {
 
         {/* Dialog Modal Pop-up for Reporting */}
         <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
-          <DialogContent className="sm:max-w-xl">
+          <DialogContent className="sm:max-w-xl glass-card border-border/80">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold flex items-center gap-2">
-                <ClipboardList className="size-5 text-primary" /> Report a Health or Water Concern
+              <DialogTitle className="text-base font-black flex items-center gap-2">
+                <ClipboardList className="size-5 text-primary animate-pulse" /> Report Sickness or Contamination
               </DialogTitle>
-              <DialogDescription>
-                Informing your local ASHA worker helps protect your family and neighbors. Linked to Aadhaar {userAadhaar}.
+              <DialogDescription className="text-xs">
+                Informing your local ASHA worker alerts the medical team immediately. Verified via Aadhaar.
               </DialogDescription>
             </DialogHeader>
-            <form onSubmit={handleSubmitReport} className="space-y-5">
+            <form onSubmit={handleSubmitReport} className="space-y-5 pt-3">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="dialogPatientName" className="font-semibold">Your Name</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="dialogPatientName" className="font-bold text-xs text-muted-foreground uppercase">Your Name</Label>
                   <Input
                     id="dialogPatientName"
                     value={patientName}
                     onChange={(e) => setPatientName(e.target.value)}
                     placeholder="Rahul Das"
+                    className="h-10 text-xs rounded-xl"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="dialogVillageName" className="font-semibold">Your Village / Lane</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="dialogVillageName" className="font-bold text-xs text-muted-foreground uppercase">Village / Block</Label>
                   <Input
                     id="dialogVillageName"
                     value={villageName}
                     onChange={(e) => setVillageName(e.target.value)}
                     placeholder="Kamalabari, Sector 2"
+                    className="h-10 text-xs rounded-xl"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2.5">
-                <Label className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
-                  Select Symptoms or Observations
+              <div className="space-y-2">
+                <Label className="font-bold text-xs text-muted-foreground uppercase">
+                  Select Symptoms / Observations
                 </Label>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {commonSymptoms.map((symptom) => (
                     <div
                       key={symptom}
                       onClick={() => handleSymptomToggle(symptom)}
-                      className={`flex items-center gap-2 rounded-xl border p-2.5 cursor-pointer transition-all duration-200 ${
+                      className={cn(
+                        "flex items-center gap-2 rounded-xl border p-2.5 cursor-pointer transition-all duration-200",
                         selectedSymptoms.includes(symptom)
-                          ? 'border-primary bg-primary/10 text-primary font-bold shadow-xs'
+                          ? 'border-primary bg-primary/10 text-primary font-black shadow-xs'
                           : 'border-border/80 bg-card hover:bg-muted/50 text-foreground'
-                      }`}
+                      )}
                     >
                       <Checkbox
                         checked={selectedSymptoms.includes(symptom)}
                         onCheckedChange={() => handleSymptomToggle(symptom)}
                       />
-                      <span className="text-xs font-medium">{symptom}</span>
+                      <span className="text-xs font-bold">{symptom}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="dialogNotes" className="font-semibold">Additional Details</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="dialogNotes" className="font-bold text-xs text-muted-foreground uppercase">Additional details</Label>
                 <Textarea
                   id="dialogNotes"
-                  placeholder="e.g. Water from local pump looks cloudy, family member has had mild fever since yesterday..."
+                  placeholder="Cloudy tap water, stomach cramps, diarrhea symptoms..."
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
+                  className="text-xs rounded-xl"
                 />
               </div>
 
-              <Button type="submit" disabled={isSubmitting} className="w-full gap-2 py-6 text-sm font-bold shadow-md">
+              <Button type="submit" disabled={isSubmitting} className="w-full gap-2 font-black shadow-md shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground h-11 rounded-xl cursor-pointer">
                 {isSubmitting ? (
-                  <>Sending Update...</>
+                  <>Sending Report...</>
                 ) : (
                   <>
                     <Send className="size-4" /> Submit Aadhaar Verified Report
@@ -332,8 +339,6 @@ export function CitizenDashboard({ section }: { section: string }) {
             </form>
           </DialogContent>
         </Dialog>
-
-
       </div>
     )
   }
@@ -347,71 +352,75 @@ export function CitizenDashboard({ section }: { section: string }) {
           description="Submitting an update takes less than 1 minute and alerts your local health team immediately."
         />
 
-        <Card className="border-primary/20 shadow-md">
-          <CardHeader className="bg-primary/5">
-            <CardTitle className="text-base font-bold flex items-center gap-2">
+        <Card className="glass-card shadow-lg border-primary/20">
+          <CardHeader className="pb-3 border-b border-border/40">
+            <CardTitle className="text-base font-extrabold flex items-center gap-2">
               <ClipboardList className="size-5 text-primary" /> Community Report Form
             </CardTitle>
-            <CardDescription>
-              Select any observed symptoms or water contamination issues in your household or neighborhood.
+            <CardDescription className="text-xs">
+              Select symptoms or water contamination issues in your household. Verified via Aadhaar card secure link.
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-6">
-            <form onSubmit={handleSubmitReport} className="space-y-6">
+          <CardContent className="pt-5">
+            <form onSubmit={handleSubmitReport} className="space-y-5">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="patientName" className="font-semibold">Resident Name</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="patientName" className="font-bold text-xs text-muted-foreground uppercase">Resident Name</Label>
                   <Input
                     id="patientName"
                     value={patientName}
                     onChange={(e) => setPatientName(e.target.value)}
+                    className="h-10 text-xs rounded-xl"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="villageName" className="font-semibold">Village / Lane</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="villageName" className="font-bold text-xs text-muted-foreground uppercase">Village / Lane</Label>
                   <Input
                     id="villageName"
                     value={villageName}
                     onChange={(e) => setVillageName(e.target.value)}
+                    className="h-10 text-xs rounded-xl"
                   />
                 </div>
               </div>
 
-              <div className="space-y-3">
-                <Label className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Select Symptoms</Label>
+              <div className="space-y-2">
+                <Label className="font-bold text-xs text-muted-foreground uppercase">Select Symptoms</Label>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {commonSymptoms.map((symptom) => (
                     <div
                       key={symptom}
                       onClick={() => handleSymptomToggle(symptom)}
-                      className={`flex items-center gap-2 rounded-xl border p-3 cursor-pointer transition-all ${
+                      className={cn(
+                        "flex items-center gap-2 rounded-xl border p-2.5 cursor-pointer transition-all duration-200",
                         selectedSymptoms.includes(symptom)
-                          ? 'border-primary bg-primary/10 text-primary font-bold'
+                          ? 'border-primary bg-primary/10 text-primary font-black shadow-xs'
                           : 'border-border/80 bg-card hover:bg-muted/50 text-foreground'
-                      }`}
+                      )}
                     >
                       <Checkbox
                         checked={selectedSymptoms.includes(symptom)}
                         onCheckedChange={() => handleSymptomToggle(symptom)}
                       />
-                      <span className="text-xs font-medium">{symptom}</span>
+                      <span className="text-xs font-bold">{symptom}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="notes" className="font-semibold">Describe Problem</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="notes" className="font-bold text-xs text-muted-foreground uppercase">Describe Problem</Label>
                 <Textarea
                   id="notes"
-                  placeholder="e.g. Water smells unpleasant, family member experiencing stomach cramps..."
+                  placeholder="Cloudy tap water, stomach cramps, diarrhea symptoms..."
                   rows={4}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
+                  className="text-xs rounded-xl"
                 />
               </div>
 
-              <Button type="submit" disabled={isSubmitting} className="w-full gap-2 py-6 text-sm font-bold shadow-md">
+              <Button type="submit" disabled={isSubmitting} className="w-full gap-2 font-black shadow-md shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground h-11 rounded-xl cursor-pointer">
                 {isSubmitting ? (
                   <>Submitting Secured Report...</>
                 ) : (
@@ -435,27 +444,38 @@ export function CitizenDashboard({ section }: { section: string }) {
           title="Clean Water & Nearby Clinics"
           description="Find safe drinking water distribution points and open hospitals in your block."
         />
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
+          <div className="lg:col-span-8 glass-card rounded-3xl p-1.5 overflow-hidden shadow-xl border-border/80">
             <HotspotMap height={450} zoom={11} center={[26.95, 94.17]} />
           </div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base font-bold">Open Clinics & Hospitals</CardTitle>
-              <CardDescription>Available emergency beds in Jorhat district</CardDescription>
+          <Card className="lg:col-span-4 glass-card shadow-xl border-border/80">
+            <CardHeader className="pb-3 border-b border-border/40">
+              <CardTitle className="text-base font-extrabold">Open Clinics & Hospitals</CardTitle>
+              <CardDescription className="text-xs">Available emergency beds in Jorhat district</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="pt-4 space-y-3">
               {HOSPITALS.map((h) => (
-                <div key={h.id} className="rounded-xl border border-border p-3 space-y-1">
-                  <div className="flex justify-between items-start">
+                <div key={h.id} className="rounded-2xl border border-border bg-muted/10 p-4 space-y-2.5">
+                  <div className="flex justify-between items-start gap-1">
                     <p className="font-bold text-sm text-foreground">{h.name}</p>
-                    <Badge variant="outline" className="text-[10px]">
+                    <Badge variant="outline" className="text-[10px] font-bold uppercase rounded-full">
                       {h.type}
                     </Badge>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Available Beds: <span className="font-bold text-emerald-600 dark:text-emerald-400">{h.bedsAvailable}</span> / {h.beds}
-                  </p>
+                  
+                  {/* Progress target display */}
+                  <div className="space-y-1">
+                    <div className="flex justify-between text-[10px] text-muted-foreground font-bold">
+                      <span>Available Beds</span>
+                      <span className="text-foreground">{h.bedsAvailable} / {h.beds}</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-emerald-500 transition-all"
+                        style={{ width: `${Math.round((h.bedsAvailable / h.beds) * 100)}%` }}
+                      />
+                    </div>
+                  </div>
                 </div>
               ))}
             </CardContent>
@@ -475,29 +495,32 @@ export function CitizenDashboard({ section }: { section: string }) {
         <SectionHeader title="My Family Health & Water Requests" description="Track verification and water tanker dispatch status." />
         <div className="space-y-3">
           {reports.map((r) => (
-            <Card key={r.id} className="overflow-hidden">
-              <CardContent className="p-4 flex items-center justify-between gap-4">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-sm text-foreground">{r.patient}</span>
-                    <Badge variant="outline" className="text-xs">
+            <Card key={r.id} className="glass-card shadow-lg hover:border-primary/30 transition-all">
+              <CardContent className="p-5 flex items-center justify-between gap-4">
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-black text-sm text-foreground">{r.patient.split(' (Aadhaar')[0]}</span>
+                    <Badge variant="outline" className="text-[10px] border-primary/20 bg-primary/5 text-primary font-bold">
                       {r.village}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">{r.reportedAt}</span>
+                    <span className="text-[10px] text-muted-foreground flex items-center gap-1 font-bold">
+                      <Clock className="size-3" /> {r.reportedAt}
+                    </span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Symptoms / Notes: {r.symptoms.join(', ')}
+                  <p className="text-xs text-muted-foreground font-semibold">
+                    Symptoms / Notes: <span className="text-foreground font-bold">{r.symptoms.join(', ')}</span>
                   </p>
                 </div>
                 <Badge
                   variant="outline"
-                  className={
+                  className={cn(
+                    "text-[10px] font-black uppercase px-3 py-1 rounded-full border",
                     r.status === 'confirmed'
-                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600 font-bold'
-                      : 'border-amber-500/30 bg-amber-500/10 text-amber-600 font-bold'
-                  }
+                      ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-600'
+                      : 'border-amber-500/30 bg-amber-500/10 text-amber-600'
+                  )}
                 >
-                  {r.status === 'confirmed' ? 'Verified by ASHA' : 'Pending Verification'}
+                  {r.status === 'confirmed' ? 'Verified by ASHA ✓' : 'Pending Review'}
                 </Badge>
               </CardContent>
             </Card>
@@ -514,16 +537,16 @@ export function CitizenDashboard({ section }: { section: string }) {
         <SectionHeader title="Water Safety & Hygiene Tips" description="Simple steps to keep your home and drinking water safe." />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {AWARENESS.map((a) => (
-            <Card key={a.id} className="hover:border-primary/40 transition-colors">
-              <CardHeader>
+            <Card key={a.id} className="glass-card shadow-lg hover:border-primary/40 transition-all duration-300">
+              <CardHeader className="pb-3 border-b border-border/40">
                 <div className="flex justify-between items-center">
-                  <Badge variant="secondary" className="text-xs font-bold">{a.tag}</Badge>
-                  <BookOpen className="size-4 text-primary" />
+                  <Badge variant="secondary" className="text-[10px] font-black uppercase rounded-full">{a.tag}</Badge>
+                  <BookOpen className="size-4 text-primary animate-pulse" />
                 </div>
-                <CardTitle className="text-base mt-2 font-bold">{a.title}</CardTitle>
+                <CardTitle className="text-base mt-2 font-extrabold">{a.title}</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-xs text-muted-foreground leading-relaxed">{a.body}</p>
+              <CardContent className="pt-4">
+                <p className="text-xs text-muted-foreground leading-relaxed font-semibold">{a.body}</p>
               </CardContent>
             </Card>
           ))}
