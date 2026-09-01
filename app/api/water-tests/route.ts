@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     // Order by createdAt descending to show latest water tests first
     const q = query(waterCol, orderBy('createdAt', 'desc'))
     const snapshot = await getDocs(q)
-    let waterSources = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as WaterSource[]
+    let waterSources = snapshot.docs.map((d: any) => ({ id: d.id, ...d.data() })) as WaterSource[]
 
     // Auto-seed database if it is empty
     if (waterSources.length === 0) {
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
 
       // Retrieve again after seeding to return in correct order
       const freshSnapshot = await getDocs(q)
-      waterSources = freshSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as WaterSource[]
+      waterSources = freshSnapshot.docs.map((d: any) => ({ id: d.id, ...d.data() })) as WaterSource[]
     }
 
     return NextResponse.json(
@@ -102,7 +102,7 @@ export async function POST(request: Request) {
     const bacteria = Number(sanitized.bacteria) || 50
     const ph = Number(sanitized.ph) || 7.0
     // Set risk evaluation logically
-    const risk = bacteria > 300 || ph < 6.0 || ph > 8.5 ? 'high' : 'low'
+    const risk: 'high' | 'medium' | 'low' = bacteria > 300 || ph < 6.0 || ph > 8.5 ? 'high' : 'low'
 
     const newSourceData = {
       name: sanitized.name || 'Community Water Intake',

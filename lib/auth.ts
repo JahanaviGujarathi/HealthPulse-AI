@@ -28,7 +28,7 @@ export function getAuthSession(): UserSession | null {
 
 // Sync Firebase Authentication with localStorage session
 if (typeof window !== 'undefined') {
-  onAuthStateChanged(auth, async (user) => {
+  onAuthStateChanged(auth, async (user: any) => {
     if (user) {
       try {
         const userDocRef = doc(db, 'users', user.uid)
@@ -93,7 +93,7 @@ if (typeof window !== 'undefined') {
 
         localStorage.setItem(AUTH_KEY, JSON.stringify(session))
         window.dispatchEvent(new Event('auth_session_change'))
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error syncing auth session from Firestore:', err)
       }
     } else {
@@ -125,7 +125,7 @@ export function setAuthSession(roleId: RoleId, email?: string, aadhaar?: string)
 }
 
 export function clearAuthSession() {
-  signOut(auth).catch((err) => {
+  signOut(auth).catch((err: any) => {
     console.error('Firebase signOut error:', err)
   })
   if (typeof window !== 'undefined') {

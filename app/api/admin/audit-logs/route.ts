@@ -31,7 +31,7 @@ export async function GET(request: Request) {
     // Order by timestamp descending to show latest logs first, max 100
     const q = query(logsCol, orderBy('timestamp', 'desc'), limit(100))
     const snapshot = await getDocs(q)
-    let logs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+    let logs = snapshot.docs.map((d: any) => ({ id: d.id, ...d.data() }))
 
     // Auto-seed database if it is empty
     if (logs.length === 0) {
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
 
       // Retrieve again after seeding
       const freshSnapshot = await getDocs(q)
-      logs = freshSnapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+      logs = freshSnapshot.docs.map((d: any) => ({ id: d.id, ...d.data() }))
     }
 
     return NextResponse.json({ auditLogs: logs, total: logs.length }, { status: 200, headers: securityHeaders })

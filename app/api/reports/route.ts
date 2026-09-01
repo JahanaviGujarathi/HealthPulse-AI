@@ -38,7 +38,7 @@ export async function GET(request: Request) {
     // Order by createdAt descending to show latest reports first
     const q = query(reportsCol, orderBy('createdAt', 'desc'))
     const snapshot = await getDocs(q)
-    let reports = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as DiseaseReport[]
+    let reports = snapshot.docs.map((d: any) => ({ id: d.id, ...d.data() })) as DiseaseReport[]
 
     // Auto-seed database if it is empty
     if (reports.length === 0) {
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
 
       // Retrieve again after seeding to return in correct order
       const freshSnapshot = await getDocs(q)
-      reports = freshSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as DiseaseReport[]
+      reports = freshSnapshot.docs.map((d: any) => ({ id: d.id, ...d.data() })) as DiseaseReport[]
     }
 
     return NextResponse.json({ reports }, { status: 200, headers: securityHeaders })

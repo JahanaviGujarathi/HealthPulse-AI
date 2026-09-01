@@ -244,7 +244,7 @@ export function recordAuditEvent(event: Omit<AuditEvent, 'id' | 'timestamp'>): A
       ip: newEvent.ip || '127.0.0.1',
       details: newEvent.details || '',
       timestamp: newEvent.timestamp,
-    }).catch((err) => {
+    }).catch((err: any) => {
       console.error('Failed to log audit event to Firestore:', err)
     })
   }

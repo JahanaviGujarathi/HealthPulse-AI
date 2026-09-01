@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     const logsCol = collection(db, 'emergency_logs')
     const q = query(logsCol, orderBy('createdAt', 'desc'))
     const snapshot = await getDocs(q)
-    let logs = snapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as EmergencyCallLog[]
+    let logs = snapshot.docs.map((d: any) => ({ id: d.id, ...d.data() })) as EmergencyCallLog[]
 
     // Auto-seed database if it is empty
     if (logs.length === 0) {
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
 
       // Retrieve again after seeding
       const freshSnapshot = await getDocs(q)
-      logs = freshSnapshot.docs.map((d) => ({ id: d.id, ...d.data() })) as EmergencyCallLog[]
+      logs = freshSnapshot.docs.map((d: any) => ({ id: d.id, ...d.data() })) as EmergencyCallLog[]
     }
 
     return NextResponse.json({ logs }, { status: 200, headers: securityHeaders })

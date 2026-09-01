@@ -117,7 +117,7 @@ export function LoginForm() {
     setLoading(true)
 
     signInAnonymously(auth)
-      .then(async (userCredential) => {
+      .then(async (userCredential: any) => {
         const user = userCredential.user
         // Save the Aadhaar and profile details in Firestore
         await setDoc(doc(db, 'users', user.uid), {
@@ -134,7 +134,7 @@ export function LoginForm() {
 
         // Redirection will happen reactively via the auth_session_change listener
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setLoading(false)
         console.error('Anonymous auth error:', error)
         toast.error('Verification Failed', {
@@ -155,11 +155,11 @@ export function LoginForm() {
         })
         // Redirection will happen reactively via the auth_session_change listener
       })
-      .catch((error) => {
+      .catch((error: any) => {
         // Fallback: create demo user in Firebase Auth if it doesn't exist yet
         if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
           createUserWithEmailAndPassword(auth, email, password)
-            .then(async (userCredential) => {
+            .then(async (userCredential: any) => {
               const user = userCredential.user
               // Pre-register user in Firestore with selected role
               await setDoc(doc(db, 'users', user.uid), {
@@ -196,14 +196,14 @@ export function LoginForm() {
     setLoading(true)
     const provider = new GoogleAuthProvider()
     signInWithPopup(auth, provider)
-      .then(async (result) => {
+      .then(async (result: any) => {
         const user = result.user
         toast.success(`Authenticated as ${user.displayName || user.email}!`, {
           description: 'Syncing your profile and loading portal...',
         })
         // Redirection will happen reactively via the auth_session_change listener
       })
-      .catch((error) => {
+      .catch((error: any) => {
         setLoading(false)
         console.error('Google sign-in error:', error)
         toast.error('Google Sign-In Failed', {
