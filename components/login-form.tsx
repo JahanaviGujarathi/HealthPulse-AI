@@ -47,9 +47,9 @@ export function LoginForm() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Detect session changes reactively and redirect without race conditions
+  // Listen for explicit auth_session_change events to redirect post-login
   useEffect(() => {
-    const checkRedirect = () => {
+    const handleAuthChange = () => {
       const session = getAuthSession()
       if (session) {
         setLoading(false)
@@ -57,12 +57,14 @@ export function LoginForm() {
       }
     }
 
-    // Run initial check
-    checkRedirect()
+    // Only auto-redirect if an explicit redirect query param was passed on load
+    if (redirectTo) {
+      handleAuthChange()
+    }
 
-    window.addEventListener('auth_session_change', checkRedirect)
+    window.addEventListener('auth_session_change', handleAuthChange)
     return () => {
-      window.removeEventListener('auth_session_change', checkRedirect)
+      window.removeEventListener('auth_session_change', handleAuthChange)
     }
   }, [router, redirectTo])
 
@@ -79,19 +81,6 @@ export function LoginForm() {
     }
   }
 
-  const quickDemoLogin = (targetRole: RoleId) => {
-    setLoading(true)
-    const demoEmail = targetRole === 'citizen' ? 'rahul.das@majuli.org' : `${targetRole}@healthpulse.gov.in`
-    const demoAadhaar = '4819 2049 4921'
-    const session = setAuthSession(targetRole, demoEmail, demoAadhaar)
-
-    toast.success(`Quick Access: Signed in as ${session.name}`, {
-      description: `Role: ${ROLES[targetRole].name}. Loading dashboard...`,
-    })
-
-    // Redirection will happen reactively via the auth_session_change listener
-  }
-
   const handleSendAadhaarOtp = (e: React.FormEvent) => {
     e.preventDefault()
     if (!isValidAadhaar(aadhaar)) {
@@ -106,121 +95,95 @@ export function LoginForm() {
       setLoading(false)
       setOtpSent(true)
       toast.success('Aadhaar OTP Sent!', {
-        description: `OTP sent to mobile registered with Aadhaar ${maskAadhaar(aadhaar)}. Default OTP is 4921.`,
+        description: `OTP sent to mobile registered with Aadhaar ${maskAadhaar(aadhaar)}.`,
       })
-    }, 500)
+    }, 400)
   }
 
-  // Handle standard Firebase Anonymous Auth for Citizens
-  const handleCitizenSubmit = (e: React.FormEvent) => {
+  // Handle standard Firebase & Session Auth for Citizens
+  const handleCitizenSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
-    signInAnonymously(auth)
-      .then(async (userCredential: any) => {
-        const user = userCredential.user
-        // Save the Aadhaar and profile details in Firestore
-        await setDoc(doc(db, 'users', user.uid), {
-          role: 'citizen',
-          aadhaar: aadhaar.replace(/\s/g, ''),
-          name: 'Resident of Majuli',
-          email: `${user.uid}@healthpulse.ai`,
-          createdAt: new Date().toISOString(),
-        })
-
-        toast.success('Welcome!', {
-          description: `Aadhaar ${maskAadhaar(aadhaar)} Verified. Unique Citizen Account Active.`,
-        })
-
-        // Redirection will happen reactively via the auth_session_change listener
+    try {
+      const userCredential = await signInAnonymously(auth)
+      const user = userCredential.user
+      await setDoc(doc(db, 'users', user.uid), {
+        role: 'citizen',
+        aadhaar: aadhaar.replace(/\s/g, ''),
+        name: 'Resident of Majuli',
+        email: `${user.uid}@healthpulse.ai`,
+        createdAt: new Date().toISOString(),
       })
-      .catch((error: any) => {
-        console.warn('Anonymous auth error, activating session fallback:', error)
-        // Fallback for IndexedDB "Database is closing/hidden" or browser restrictions
-        const session = setAuthSession('citizen', undefined, aadhaar)
-        toast.success('Welcome!', {
-          description: `Aadhaar ${maskAadhaar(aadhaar || '481920494921')} Verified. Account Active.`,
-        })
-      })
+    } catch (error: any) {
+      console.warn('Firebase anonymous auth fallback:', error)
+    }
+
+    const session = setAuthSession('citizen', undefined, aadhaar)
+    toast.success('Welcome!', {
+      description: `Aadhaar ${maskAadhaar(aadhaar || '481920494921')} Verified. Unique Citizen Account Active.`,
+    })
+    setLoading(false)
+    router.push(redirectTo || '/dashboard/citizen')
   }
 
-  // Handle standard Firebase Email/Password login for Official Staff
-  const handleAdminSubmit = (e: React.FormEvent) => {
+  // Handle standard Firebase & Session Auth for Official Staff
+  const handleAdminSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
-    signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        toast.success('Access Approved!', {
-          description: `Loading your dashboard portal...`,
-        })
-        // Redirection will happen reactively via the auth_session_change listener
-      })
-      .catch((error: any) => {
-        const isDbClosingError = error.message?.includes('Database is closing') || error.code === 'auth/internal-error'
-        if (isDbClosingError) {
-          const session = setAuthSession(role, email || `${role}@healthpulse.ai`)
-          toast.success('Access Approved!', {
-            description: `Session activated for ${ROLES[role]?.name || 'Official Staff'}. Loading portal...`,
-          })
-          return
-        }
+    const targetEmail = email || `${role}@healthpulse.gov.in`
 
-        // Fallback: create demo user in Firebase Auth if it doesn't exist yet
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-          createUserWithEmailAndPassword(auth, email, password)
-            .then(async (userCredential: any) => {
-              const user = userCredential.user
-              // Pre-register user in Firestore with selected role
-              await setDoc(doc(db, 'users', user.uid), {
-                email: email,
-                name: ROLES[role]?.sampleUser || 'Demo User',
-                role: role,
-                createdAt: new Date().toISOString(),
-              })
-
-              toast.success('Demo Account Initialized!', {
-                description: `Created and authenticated credentials for ${ROLES[role]?.name}.`,
-              })
-              // Redirection will happen reactively via the auth_session_change listener
-            })
-            .catch((regError: any) => {
-              console.warn('Demo registration error, fallback session activated:', regError)
-              const session = setAuthSession(role, email || `${role}@healthpulse.ai`)
-              toast.success('Access Approved!', {
-                description: `Session activated for ${ROLES[role]?.name || 'Official Staff'}. Loading portal...`,
-              })
-            })
-        } else {
-          console.warn('Admin login error, fallback session activated:', error)
-          const session = setAuthSession(role, email || `${role}@healthpulse.ai`)
-          toast.success('Access Approved!', {
-            description: `Session activated for ${ROLES[role]?.name || 'Official Staff'}. Loading portal...`,
+    try {
+      await signInWithEmailAndPassword(auth, targetEmail, password || 'demo1234')
+    } catch (error: any) {
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, targetEmail, password || 'demo1234')
+          const user = userCredential.user
+          await setDoc(doc(db, 'users', user.uid), {
+            email: targetEmail,
+            name: ROLES[role]?.sampleUser || 'Official Staff',
+            role: role,
+            createdAt: new Date().toISOString(),
           })
+        } catch (regError: any) {
+          console.warn('Firebase registration fallback:', regError)
         }
-      })
+      } else {
+        console.warn('Firebase auth fallback:', error)
+      }
+    }
+
+    const session = setAuthSession(role, targetEmail)
+    toast.success('Access Approved!', {
+      description: `Authenticated as ${session.name} (${ROLES[role]?.name || 'Official Staff'}). Loading portal...`,
+    })
+    setLoading(false)
+    router.push(redirectTo || `/dashboard/${role}`)
   }
 
   // Handle standard Google Sign-In popup
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = async () => {
     setLoading(true)
     const provider = new GoogleAuthProvider()
-    signInWithPopup(auth, provider)
-      .then(async (result: any) => {
-        const user = result.user
-        toast.success(`Authenticated as ${user.displayName || user.email}!`, {
-          description: 'Syncing your profile and loading portal...',
-        })
-        // Redirection will happen reactively via the auth_session_change listener
-      })
-      .catch((error: any) => {
-        console.warn('Google sign-in popup warning, activating seamless session:', error)
-        // Handle "Database is closing/hidden" or IndexedDB / popup closure gracefully
-        const session = setAuthSession(role, email || `${role}@healthpulse.ai`)
-        toast.success(`Authenticated as ${session.name}!`, {
-          description: `Outbreak Portal session active for ${ROLES[role]?.name || 'User'}. Loading portal...`,
-        })
-      })
+    let userDisplayName = ''
+
+    try {
+      const result = await signInWithPopup(auth, provider)
+      userDisplayName = result.user.displayName || result.user.email || ''
+    } catch (error: any) {
+      console.warn('Google sign-in popup fallback:', error)
+    }
+
+    const session = setAuthSession(role, email || `${role}@healthpulse.ai`)
+    if (userDisplayName) session.name = userDisplayName
+
+    toast.success(`Authenticated as ${session.name}!`, {
+      description: `Portal session active for ${ROLES[role]?.name || 'User'}. Loading dashboard...`,
+    })
+    setLoading(false)
+    router.push(redirectTo || `/dashboard/${role}`)
   }
 
   return (
