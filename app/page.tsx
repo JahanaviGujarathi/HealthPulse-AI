@@ -1,6 +1,5 @@
 import { Features } from '@/components/landing/features'
 import { Hero } from '@/components/landing/hero'
-import { InteractiveDiseaseMapSection } from '@/components/landing/interactive-disease-map'
 import { RolesSection } from '@/components/landing/roles-section'
 import { SiteFooter } from '@/components/landing/site-footer'
 import { SiteHeader } from '@/components/landing/site-header'
@@ -14,7 +13,6 @@ export default function HomePage() {
       <SiteHeader />
       <main className="flex-1">
         <Hero />
-        <InteractiveDiseaseMapSection />
         <Features />
         <RolesSection />
       </main>
