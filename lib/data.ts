@@ -109,14 +109,14 @@ export const WATER_SOURCES: WaterSource[] = [
 ]
 
 export const DISEASE_REPORTS: DiseaseReport[] = [
-  { id: 'r1', patient: 'Household #241', village: 'Kamalabari', disease: 'Suspected', symptoms: ['Watery diarrhea', 'Vomiting', 'Dehydration'], status: 'pending', source: 'Citizen', reportedAt: '18 min ago', severity: 'high' },
+  { id: 'r1', patient: 'K. R. Hazarika', village: 'Kamalabari', disease: 'Suspected', symptoms: ['Watery diarrhea', 'Vomiting', 'Dehydration'], status: 'pending', source: 'Citizen', reportedAt: '18 min ago', severity: 'high' },
   { id: 'r2', patient: 'B. Hazarika', village: 'Kamalabari', disease: 'Cholera', symptoms: ['Severe diarrhea', 'Cramps'], status: 'confirmed', source: 'Doctor', reportedAt: '1 hour ago', severity: 'high' },
-  { id: 'r3', patient: 'Household #118', village: 'Garamur', disease: 'Suspected', symptoms: ['Fever', 'Abdominal pain'], status: 'verified', source: 'ASHA', reportedAt: '2 hours ago', severity: 'medium' },
+  { id: 'r3', patient: 'P. Boro', village: 'Garamur', disease: 'Suspected', symptoms: ['Fever', 'Abdominal pain'], status: 'verified', source: 'ASHA', reportedAt: '2 hours ago', severity: 'medium' },
   { id: 'r4', patient: 'M. Pegu', village: 'Teok', disease: 'Typhoid', symptoms: ['Prolonged fever', 'Weakness'], status: 'confirmed', source: 'Doctor', reportedAt: '3 hours ago', severity: 'medium' },
-  { id: 'r5', patient: 'Household #076', village: 'Dakhinpat', disease: 'Suspected', symptoms: ['Loose stools'], status: 'pending', source: 'Citizen', reportedAt: '4 hours ago', severity: 'low' },
+  { id: 'r5', patient: 'J. Kalita', village: 'Dakhinpat', disease: 'Suspected', symptoms: ['Loose stools'], status: 'pending', source: 'Citizen', reportedAt: '4 hours ago', severity: 'low' },
   { id: 'r6', patient: 'R. Saikia', village: 'Jorhat Town', disease: 'Hepatitis A', symptoms: ['Jaundice', 'Fatigue', 'Nausea'], status: 'confirmed', source: 'Doctor', reportedAt: '6 hours ago', severity: 'medium' },
-  { id: 'r7', patient: 'Household #302', village: 'Garamur', disease: 'Suspected', symptoms: ['Dysentery', 'Blood in stool'], status: 'verified', source: 'ASHA', reportedAt: '7 hours ago', severity: 'high' },
-  { id: 'r8', patient: 'Household #455', village: 'Cinnamora', disease: 'Suspected', symptoms: ['Mild fever'], status: 'rejected', source: 'Citizen', reportedAt: '9 hours ago', severity: 'low' },
+  { id: 'r7', patient: 'S. Saikia', village: 'Garamur', disease: 'Suspected', symptoms: ['Dysentery', 'Blood in stool'], status: 'verified', source: 'ASHA', reportedAt: '7 hours ago', severity: 'high' },
+  { id: 'r8', patient: 'M. Nath', village: 'Cinnamora', disease: 'Suspected', symptoms: ['Mild fever'], status: 'rejected', source: 'Citizen', reportedAt: '9 hours ago', severity: 'low' },
 ]
 
 // 14-day case trend by disease
@@ -196,7 +196,7 @@ export const AI_MODELS = [
   { id: 'm1', name: 'Outbreak Prediction', version: 'v2.4', accuracy: 91, status: 'active' as const, lastTrained: '2 days ago' },
   { id: 'm2', name: 'Water Risk Classifier', version: 'v1.8', accuracy: 88, status: 'active' as const, lastTrained: '5 days ago' },
   { id: 'm3', name: 'Hotspot Detection', version: 'v3.1', accuracy: 93, status: 'active' as const, lastTrained: '1 day ago' },
-  { id: 'm4', name: 'Fake Report Detection', version: 'v1.2', accuracy: 84, status: 'training' as const, lastTrained: 'in progress' },
+  { id: 'm4', name: 'Anomaly & Misinformation Classifier', version: 'v1.2', accuracy: 84, status: 'training' as const, lastTrained: 'in progress' },
 ]
 
 // ---------------------------------------------------------------------------

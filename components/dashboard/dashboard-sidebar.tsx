@@ -101,24 +101,21 @@ export function DashboardSidebar({
               </SidebarMenu>
             </SidebarGroup>
 
-            {/* Cryptographic Session Verification Card */}
+            {/* Official System Verification Badge */}
             <SidebarGroup className="mt-auto p-3">
-              <div className="rounded-2xl p-3 text-[10px] font-mono space-y-2 glass-card bg-primary/5 border-primary/20">
+              <div className="rounded-2xl p-3 text-[11px] space-y-1.5 glass-card bg-primary/5 border-primary/20">
                 <div className="flex items-center justify-between text-foreground font-black">
-                  <span className="flex items-center gap-1">
-                    <ShieldCheck className="size-3 text-emerald-500 animate-pulse" />
-                    SESSION STATE
+                  <span className="flex items-center gap-1.5">
+                    <ShieldCheck className="size-3.5 text-emerald-500" />
+                    IDSP Grid Active
                   </span>
-                  <span className="text-emerald-500 font-bold">SECURE</span>
+                  <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-extrabold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                    LIVE
+                  </span>
                 </div>
-                <div className="space-y-1 text-muted-foreground leading-normal font-bold">
-                  <p>REF: Jorhat-Block-L2</p>
-                  <p>NODE: {role.id.toUpperCase()}-GW-4</p>
-                  <p className="truncate">SIG: f89c...201b</p>
-                </div>
-                <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
-                  <div className="h-full bg-emerald-500 w-[100%] animate-pulse" />
-                </div>
+                <p className="text-[10px] text-muted-foreground font-semibold leading-relaxed">
+                  Real-time encrypted epidemiological surveillance pipeline active.
+                </p>
               </div>
             </SidebarGroup>
           </>

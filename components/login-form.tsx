@@ -41,10 +41,10 @@ export function LoginForm() {
   const [portalType, setPortalType] = useState<'citizen' | 'admin'>(defaultPortal === 'admin' ? 'admin' : 'citizen')
   const [role, setRole] = useState<RoleId>(defaultPortal === 'admin' ? 'dho' : 'citizen')
   const [email, setEmail] = useState(defaultPortal === 'admin' ? 'dho.jorhat@assam.gov.in' : '')
-  const [aadhaar, setAadhaar] = useState('4819 2049 4921')
+  const [aadhaar, setAadhaar] = useState('')
   const [otp, setOtp] = useState('')
   const [otpSent, setOtpSent] = useState(false)
-  const [password, setPassword] = useState('demo1234')
+  const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
   // Detect session changes reactively and redirect without race conditions
@@ -214,36 +214,6 @@ export function LoginForm() {
 
   return (
     <div className="space-y-6">
-      {/* Quick Demo Bypass Access Panel */}
-      <div className="rounded-2xl border border-dashed border-border/80 bg-muted/30 p-4 space-y-3">
-        <div className="flex items-center gap-1.5 text-xs font-black text-foreground">
-          <Sparkles className="size-3.5 text-amber-500 animate-pulse" /> Sandbox Quick Bypass Roles
-        </div>
-        <div className="grid grid-cols-3 gap-2">
-          <button
-            type="button"
-            onClick={() => quickDemoLogin('citizen')}
-            className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-primary/10 hover:border-primary/40"
-          >
-            <span>👥 Citizen</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => quickDemoLogin('lab')}
-            className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-cyan-500/10 hover:border-cyan-500/40"
-          >
-            <span>🔬 Lab Tech</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => quickDemoLogin('dho')}
-            className="flex items-center gap-1.5 rounded-xl border border-border bg-muted/40 p-2 text-xs font-extrabold text-foreground transition-all hover:scale-105 hover:bg-rose-500/10 hover:border-rose-500/40"
-          >
-            <span>🏛️ Official</span>
-          </button>
-        </div>
-      </div>
-
       {/* Portal Type Switcher Tabs */}
       <div className="grid grid-cols-2 gap-2 rounded-2xl bg-muted/60 p-1.5 border border-border">
         <button
