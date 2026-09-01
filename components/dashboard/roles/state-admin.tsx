@@ -229,12 +229,63 @@ export function StateAdminDashboard({ section }: { section: string }) {
     )
   }
 
+  // Models & AI Pipelines View
+  if (section === 'models') {
+    return (
+      <div className="space-y-6">
+        <SectionHeader title="AI Machine Learning Pipelines" description="Production model versions, inference accuracy, and retraining triggers." />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {models.map((m) => (
+            <Card key={m.id} className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-base font-extrabold">{m.name}</CardTitle>
+                  <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 font-extrabold text-xs">{m.version}</Badge>
+                </div>
+                <CardDescription className="text-xs">Last retrained: {m.lastTrained} · Status: {m.status}</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-4">
+                <div className="space-y-1.5">
+                  <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                    <span>Model Precision Rate</span>
+                    <span className="text-emerald-500 font-extrabold">{m.accuracy}%</span>
+                  </div>
+                  <div className="h-2.5 w-full rounded-full bg-muted overflow-hidden">
+                    <div className="h-full bg-emerald-500 transition-all duration-500" style={{ width: `${m.accuracy}%` }} />
+                  </div>
+                </div>
+                <Button size="sm" variant="outline" className="w-full gap-1.5 text-xs font-bold cursor-pointer" onClick={() => handleRetrainModel(m.id, m.name)}>
+                  <RefreshCw className="size-3.5 text-primary" /> Trigger Fine-Tuning Pipeline
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  // Fallback State View
   return (
     <div className="space-y-6">
       <SectionHeader title="State Administration View" description="System monitoring and audit inspection." />
-      <Card className="p-6 text-center text-muted-foreground text-sm">
-        Select a section from the left sidebar to manage system monitoring, user verification, or security audit logs.
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Active System Nodes</p>
+          <p className="text-2xl font-black text-primary">33 / 33</p>
+          <p className="text-[11px] text-muted-foreground font-semibold">100% District sync operational</p>
+        </Card>
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Pending Approvals</p>
+          <p className="text-2xl font-black text-amber-500">{usersQueue.length} Credentials</p>
+          <p className="text-[11px] text-muted-foreground font-semibold">Verification queue updated</p>
+        </Card>
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Audit Security Log</p>
+          <p className="text-2xl font-black text-emerald-500">TAMPER-PROOF</p>
+          <p className="text-[11px] text-muted-foreground font-semibold">Encrypted SHA-256 ledger</p>
+        </Card>
+      </div>
     </div>
   )
 }

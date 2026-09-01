@@ -456,12 +456,77 @@ export function AshaDashboard({ section }: { section: string }) {
     )
   }
 
+  // ORS & Zinc Distribution Section View
+  if (section === 'ors-distribution' || section === 'inventory') {
+    return (
+      <div className="space-y-6">
+        <SectionHeader title="ORS & Medical Inventory Distribution" description="Track Oral Rehydration Salts, Zinc tablets, and chlorine solution stocks assigned to your block." />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="glass-card shadow-md p-4 space-y-2">
+            <p className="text-xs text-muted-foreground font-bold uppercase">ORS Packets In Hand</p>
+            <p className="text-2xl font-black text-emerald-500">120 Packets</p>
+            <p className="text-[11px] text-muted-foreground">30 distributed today in Kamalabari</p>
+          </Card>
+          <Card className="glass-card shadow-md p-4 space-y-2">
+            <p className="text-xs text-muted-foreground font-bold uppercase">Zinc Tablets Stock</p>
+            <p className="text-2xl font-black text-primary">450 Strips</p>
+            <p className="text-[11px] text-muted-foreground font-semibold">Ready for pediatric cases</p>
+          </Card>
+          <Card className="glass-card shadow-md p-4 space-y-2">
+            <p className="text-xs text-muted-foreground font-bold uppercase">Chlorine Tablets</p>
+            <p className="text-2xl font-black text-cyan-500">800 Tablets</p>
+            <p className="text-[11px] text-muted-foreground font-semibold">For household well purification</p>
+          </Card>
+        </div>
+
+        <Card className="glass-card shadow-lg p-6 space-y-4">
+          <h3 className="font-extrabold text-base text-foreground flex items-center gap-2">
+            <HeartPulse className="size-4 text-primary" /> Active Household Distribution Queue
+          </h3>
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-border bg-muted/10 p-4 flex justify-between items-center">
+              <div>
+                <p className="font-bold text-sm">Garamur Village — Household #118</p>
+                <p className="text-xs text-muted-foreground">5 ORS packets & 2 Zinc strips provided</p>
+              </div>
+              <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold text-xs">DELIVERED</Badge>
+            </div>
+            <div className="rounded-2xl border border-border bg-muted/10 p-4 flex justify-between items-center">
+              <div>
+                <p className="font-bold text-sm">Kamalabari Village — Household #241</p>
+                <p className="text-xs text-muted-foreground">10 ORS packets & 5 Chlorine tablets required</p>
+              </div>
+              <Button size="sm" variant="default" className="text-xs font-bold gap-1 cursor-pointer" onClick={() => toast.success('ORS & Chlorine Delivered!')}>
+                <CheckCircle2 className="size-3.5" /> Deliver Supplies
+              </Button>
+            </div>
+          </div>
+        </Card>
+      </div>
+    )
+  }
+
+  // Fallback ASHA View
   return (
     <div className="space-y-6">
       <SectionHeader title="ASHA Worker Section" description="Manage assigned village health monitoring." />
-      <Card className="p-8 text-center text-muted-foreground text-sm glass-card">
-        Select a section from the left sidebar to manage field surveys, report verifications, and offline sync.
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Pending Verifications</p>
+          <p className="text-2xl font-black text-amber-500">{pendingReports.length} Reports</p>
+          <p className="text-[11px] text-muted-foreground font-semibold">Awaiting field check</p>
+        </Card>
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Offline Queue</p>
+          <p className="text-2xl font-black text-primary">{offlineCount} Surveys</p>
+          <p className="text-[11px] text-muted-foreground font-semibold">Stored locally</p>
+        </Card>
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Village Coverage</p>
+          <p className="text-2xl font-black text-emerald-500">4 / 4 Villages</p>
+          <p className="text-[11px] text-muted-foreground font-semibold">Surveillance active</p>
+        </Card>
+      </div>
     </div>
   )
 }

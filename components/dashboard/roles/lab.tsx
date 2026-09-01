@@ -216,11 +216,116 @@ export function LabDashboard({ section }: { section: string }) {
     )
   }
 
+  // Water Tests Section View
+  if (section === 'water-tests' || section === 'samples') {
+    return (
+      <div className="space-y-6">
+        <SectionHeader title="Microbiological Water Assay Log" description="Water sample membrane filtration, bacterial colony counts (CFU), and chlorine residual tests." />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-4">
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-extrabold flex items-center gap-2">
+                  <Droplets className="size-4 text-cyan-500" /> Log Water Sample Test
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <form onSubmit={handleUploadLabReport} className="space-y-3.5">
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs">Sample ID / Well Code</Label>
+                    <Input placeholder="e.g. WS-JOR-904" value={sampleId} onChange={(e) => setSampleId(e.target.value)} required className="h-9 text-xs rounded-xl" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs">Monitored Water Body</Label>
+                    <Input placeholder="e.g. Kamalabari Community Well" value={patient} onChange={(e) => setPatient(e.target.value)} className="h-9 text-xs rounded-xl" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs">CFU Count / 100ml</Label>
+                    <Input placeholder="e.g. 480 CFU" className="h-9 text-xs rounded-xl" />
+                  </div>
+                  <Button type="submit" className="w-full gap-2 font-black shadow-md shadow-cyan-500/20 bg-gradient-to-r from-cyan-600 to-primary hover:from-cyan-500 hover:to-primary text-white h-10 rounded-xl cursor-pointer">
+                    <Droplets className="size-4" /> Save Water Test Result
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-8">
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-extrabold">Tested Community Water Sources</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-3">
+                {waterSamples.map((w) => (
+                  <div key={w.id} className="rounded-2xl border border-border bg-muted/10 p-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="font-extrabold text-sm text-foreground">{w.name}</p>
+                        <p className="text-xs text-muted-foreground">Village: {w.village} · pH: {w.ph} · Turbidity: {w.turbidity} NTU</p>
+                      </div>
+                      <Badge variant="outline" className={w.risk === 'high' ? 'bg-destructive/10 text-destructive border-destructive/20 font-bold text-xs' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold text-xs'}>
+                        {w.bacteria} CFU / 100ml
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between items-center text-xs font-semibold text-muted-foreground pt-1 border-t border-border/40">
+                      <span>Chlorine Residual: {w.chlorine} mg/L</span>
+                      <span className={w.risk === 'high' ? 'text-destructive font-bold' : 'text-emerald-500 font-bold'}>
+                        {w.risk === 'high' ? '⚠️ High Outbreak Danger' : '✓ Safe Supply'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Pathogens & Microbiology Section
   return (
     <div className="space-y-6">
-      <SectionHeader title="Laboratory Management" description="Pathology testing and report verification." />
-      <Card className="p-8 text-center text-muted-foreground text-sm glass-card">
-        Select a laboratory section from the sidebar to process samples and certify pathogen tests.
+      <SectionHeader title="Pathogen Strain Surveillance" description="Microbiological identification of Vibrio cholerae, Salmonella typhi, and Hepatitis strains." />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Stool Culture Positivity</p>
+          <p className="text-2xl font-black text-rose-500">31.5%</p>
+          <p className="text-[11px] text-muted-foreground">Vibrio cholerae O1 Inaba predominant</p>
+        </Card>
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">PCR Turnaround Time</p>
+          <p className="text-2xl font-black text-primary">2.4 Hrs</p>
+          <p className="text-[11px] text-muted-foreground">Automated DNA extraction active</p>
+        </Card>
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Antimicrobial Resistance</p>
+          <p className="text-2xl font-black text-amber-500">Low (94% Susceptible)</p>
+          <p className="text-[11px] text-muted-foreground">Doxycycline & Azithromycin effective</p>
+        </Card>
+      </div>
+
+      <Card className="glass-card shadow-lg p-6 space-y-4">
+        <h3 className="font-extrabold text-base text-foreground flex items-center gap-2">
+          <Microscope className="size-4 text-primary" /> Active Pathogen Isolates Queue
+        </h3>
+        <div className="space-y-3">
+          <div className="rounded-2xl border border-border bg-muted/10 p-3.5 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-sm">Vibrio cholerae O1 Ogawa</p>
+              <p className="text-xs text-muted-foreground">Isolated from Majuli CHC stool sample #8841</p>
+            </div>
+            <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/20 font-extrabold text-xs">CONFIRMED</Badge>
+          </div>
+          <div className="rounded-2xl border border-border bg-muted/10 p-3.5 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-sm">Salmonella enterica serovar Typhi</p>
+              <p className="text-xs text-muted-foreground">Isolated from Teok PHC blood culture #9012</p>
+            </div>
+            <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20 font-extrabold text-xs">CONFIRMED</Badge>
+          </div>
+        </div>
       </Card>
     </div>
   )

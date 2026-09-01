@@ -269,12 +269,139 @@ export function WaterDashboard({ section }: { section: string }) {
     )
   }
 
+  // Water Quality Tests & Sources Section View
+  if (section === 'test' || section === 'tests' || section === 'sources') {
+    return (
+      <div className="space-y-6">
+        <SectionHeader title="Community Water Source Management" description="Log physical, chemical, and microbiological readings from field testing kits." />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-5">
+            <Card className="glass-card shadow-lg border-primary/20">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base flex items-center gap-2 font-extrabold">
+                  <Beaker className="size-5 text-primary" /> PHED Water Field Intake Form
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <form onSubmit={handleUploadTest} className="space-y-3.5">
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs text-muted-foreground uppercase">Water Source Name</Label>
+                    <Input placeholder="e.g. Kamalabari Well #2" value={name} onChange={(e) => setName(e.target.value)} required className="h-9 text-xs rounded-xl" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs text-muted-foreground uppercase">Village / Block</Label>
+                    <Input value={village} onChange={(e) => setVillage(e.target.value)} className="h-9 text-xs rounded-xl" />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-1.5">
+                      <Label className="font-bold text-xs text-muted-foreground uppercase">pH Level</Label>
+                      <Input value={ph} onChange={(e) => setPh(e.target.value)} className="h-9 text-xs rounded-xl" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="font-bold text-xs text-muted-foreground uppercase">Turbidity (NTU)</Label>
+                      <Input value={turbidity} onChange={(e) => setTurbidity(e.target.value)} className="h-9 text-xs rounded-xl" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="font-bold text-xs text-muted-foreground uppercase">Free Chlorine (mg/L)</Label>
+                      <Input value={chlorine} onChange={(e) => setChlorine(e.target.value)} className="h-9 text-xs rounded-xl" />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label className="font-bold text-xs text-muted-foreground uppercase">Bacteria (CFU)</Label>
+                      <Input value={bacteria} onChange={(e) => setBacteria(e.target.value)} className="h-9 text-xs rounded-xl" />
+                    </div>
+                  </div>
+
+                  <Button type="submit" disabled={isSubmitting} className="w-full gap-2 font-black shadow-md shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground h-10 rounded-xl cursor-pointer">
+                    <Send className="size-4 animate-pulse" /> Log Test & Evaluate Risk
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-7">
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-extrabold">Registered Monitored Sources</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-3">
+                {sources.map((s) => (
+                  <div key={s.id} className="rounded-2xl border border-border bg-muted/10 p-4 space-y-2.5">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <p className="font-extrabold text-sm text-foreground">{s.name}</p>
+                        <p className="text-xs text-muted-foreground">{s.village} · Last Tested {s.testedAt}</p>
+                      </div>
+                      <Badge variant="outline" className={s.risk === 'high' ? 'bg-destructive/10 text-destructive border-destructive/20 font-bold text-xs uppercase' : 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold text-xs uppercase'}>
+                        {s.risk} Risk
+                      </Badge>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2 text-[11px] font-semibold text-muted-foreground bg-muted/30 p-2 rounded-xl border border-border/40">
+                      <div>pH: <b className="text-foreground">{s.ph}</b></div>
+                      <div>Turb: <b className="text-foreground">{s.turbidity}</b></div>
+                      <div>Chlor: <b className="text-foreground">{s.chlorine}</b></div>
+                      <div>CFU: <b className="text-foreground">{s.bacteria}</b></div>
+                    </div>
+                    {s.risk === 'high' && (
+                      <Button size="sm" variant="destructive" className="w-full text-xs font-bold gap-1 cursor-pointer" onClick={() => handleDispatchChlorination(s.name)}>
+                        <Truck className="size-3.5" /> Dispatch Emergency Chlorination Unit
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Chlorination & Decontamination Fleet Section
   return (
     <div className="space-y-6">
-      <SectionHeader title="Water Testing Section" description="Quality monitoring and risk predictions." />
-      <div className="glass-card rounded-3xl p-3 shadow-lg border-border/80">
-        <WaterQualityChart />
+      <SectionHeader title="Chlorination & Disinfection Fleet" description="Mobile chemical dosing, bleaching powder stock, and well treatment schedules." />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Bleaching Powder Stock</p>
+          <p className="text-2xl font-black text-emerald-500">1,250 Kg</p>
+          <p className="text-[11px] text-muted-foreground">Sufficient for 45-day treatment</p>
+        </Card>
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Chlorine Tablets Dispatched</p>
+          <p className="text-2xl font-black text-primary">18,500 Units</p>
+          <p className="text-[11px] text-muted-foreground">Distributed to ASHA workers</p>
+        </Card>
+        <Card className="glass-card shadow-md p-4 space-y-2">
+          <p className="text-xs text-muted-foreground font-bold uppercase">Sources Decontaminated</p>
+          <p className="text-2xl font-black text-cyan-500">14 Wells</p>
+          <p className="text-[11px] text-muted-foreground">Re-tested & certified safe</p>
+        </Card>
       </div>
+
+      <Card className="glass-card shadow-lg p-6 space-y-4">
+        <h3 className="font-extrabold text-base text-foreground flex items-center gap-2">
+          <Truck className="size-4 text-primary" /> Active Mobile Chlorination Dispatch Units
+        </h3>
+        <div className="space-y-3">
+          <div className="rounded-2xl border border-border bg-muted/10 p-4 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-sm">PHED Fleet Unit #04 — Majuli Block</p>
+              <p className="text-xs text-muted-foreground">En route to Dakhinpat Pond & Kamalabari Well #1</p>
+            </div>
+            <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20 font-bold text-xs">EN ROUTE</Badge>
+          </div>
+          <div className="rounded-2xl border border-border bg-muted/10 p-4 flex justify-between items-center">
+            <div>
+              <p className="font-bold text-sm">PHED Fleet Unit #02 — Teok Intake</p>
+              <p className="text-xs text-muted-foreground">Super-chlorination treatment active at River Intake</p>
+            </div>
+            <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold text-xs">TREATING</Badge>
+          </div>
+        </div>
+      </Card>
     </div>
   )
 }

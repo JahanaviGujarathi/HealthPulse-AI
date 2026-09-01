@@ -310,51 +310,155 @@ export function DoctorDashboard({ section }: { section: string }) {
     )
   }
 
-  // Fallback Case View
-  if (section === 'cases') {
+  // Dedicated Hospital Bed Capacity Section
+  if (section === 'beds') {
     return (
       <div className="space-y-6">
-        <SectionHeader title="Log Confirmed Disease Case" description="Record verified clinical diagnoses to update district outbreak models." />
-        <div className="max-w-2xl mx-auto">
-          <Card className="glass-card shadow-lg">
-            <CardHeader>
-              <CardTitle className="text-base font-extrabold">Clinical Intake Form</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleAddCase} className="space-y-4">
-                <div className="space-y-2">
-                  <Label>Patient Name / ID</Label>
-                  <Input placeholder="e.g. Biren Saikia" value={patient} onChange={(e) => setPatient(e.target.value)} required />
-                </div>
-                <div className="space-y-2">
-                  <Label>Diagnosed Disease</Label>
-                  <Select value={disease} onValueChange={(v) => v && setDisease(v)}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {DISEASES.map((d) => (
-                        <SelectItem key={d} value={d}>{d}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button type="submit" className="w-full gap-2 font-bold">
-                  <FilePlus className="size-4" /> Upload Confirmed Case
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+        <SectionHeader
+          title="Hospital Bed Capacity & Ward Allocation — Jorhat Civil Hospital"
+          description="Real-time occupancy tracking, ICU bed availability, and inter-facility transfers."
+        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {HOSPITALS.map((h) => {
+            const occupied = h.beds - h.bedsAvailable
+            const pct = Math.round((occupied / h.beds) * 100)
+            return (
+              <Card key={h.id} className="glass-card shadow-lg">
+                <CardHeader className="pb-3 border-b border-border/40">
+                  <div className="flex justify-between items-center">
+                    <CardTitle className="text-base font-extrabold">{h.name}</CardTitle>
+                    <Badge variant="outline" className={pct > 80 ? "bg-rose-500/10 text-rose-600 border-rose-500/20 font-bold" : "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-bold"}>
+                      {pct}% Occupied
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-xs">{h.bedsAvailable} of {h.beds} beds available for emergency admissions.</CardDescription>
+                </CardHeader>
+                <CardContent className="pt-4 space-y-4">
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                      <span>Occupancy Meter</span>
+                      <span>{occupied} / {h.beds} Beds</span>
+                    </div>
+                    <div className="h-3 w-full rounded-full bg-muted overflow-hidden">
+                      <div
+                        className={cn("h-full transition-all duration-500", pct > 80 ? "bg-rose-500" : "bg-primary")}
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" className="w-full text-xs font-bold gap-1 cursor-pointer" onClick={() => toast.success(`Admission logged at ${h.name}`)}>
+                      <PlusCircle className="size-3.5 text-primary" /> Admit Patient
+                    </Button>
+                    <Button size="sm" variant="secondary" className="w-full text-xs font-bold gap-1 cursor-pointer" onClick={() => toast.success(`Discharge processed at ${h.name}`)}>
+                      <UserCheck className="size-3.5 text-emerald-600" /> Process Discharge
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )
+          })}
         </div>
       </div>
     )
   }
 
+  // Dedicated Clinical Cases & Registry View
+  if (section === 'cases' || section === 'reports') {
+    return (
+      <div className="space-y-6">
+        <SectionHeader title="Log Confirmed Disease Case" description="Record verified clinical diagnoses to update district outbreak models." />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-5">
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-extrabold flex items-center gap-2">
+                  <FilePlus className="size-4 text-primary" /> Clinical Intake Form
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4">
+                <form onSubmit={handleAddCase} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs">Patient Full Name / Reg ID</Label>
+                    <Input placeholder="e.g. Biren Saikia" value={patient} onChange={(e) => setPatient(e.target.value)} required className="h-9 text-xs rounded-xl" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs">Diagnosed Disease</Label>
+                    <Select value={disease} onValueChange={(v) => v && setDisease(v)}>
+                      <SelectTrigger className="h-9 text-xs rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {DISEASES.map((d) => (
+                          <SelectItem key={d} value={d} className="text-xs">{d}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs">Patient Village / Locality</Label>
+                    <Input value={village} onChange={(e) => setVillage(e.target.value)} className="h-9 text-xs rounded-xl" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <Label className="font-bold text-xs">Severity Level</Label>
+                    <Select value={severity} onValueChange={(v: any) => v && setSeverity(v)}>
+                      <SelectTrigger className="h-9 text-xs rounded-xl">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="high" className="text-xs">High (ICU Admission)</SelectItem>
+                        <SelectItem value="medium" className="text-xs">Medium (General Ward)</SelectItem>
+                        <SelectItem value="low" className="text-xs">Low (Outpatient ORS)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button type="submit" className="w-full gap-2 font-black shadow-md shadow-primary/20 bg-gradient-to-r from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground h-10 rounded-xl cursor-pointer">
+                    <FilePlus className="size-4" /> Upload Confirmed Case
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-7">
+            <Card className="glass-card shadow-lg">
+              <CardHeader className="pb-3 border-b border-border/40">
+                <CardTitle className="text-base font-extrabold">Active Confirmed Case Ledger</CardTitle>
+              </CardHeader>
+              <CardContent className="pt-4 space-y-3">
+                {cases.map((c) => (
+                  <div key={c.id} className="rounded-2xl border border-border bg-muted/10 p-4 flex items-center justify-between gap-3">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <p className="font-extrabold text-sm text-foreground">{c.patient}</p>
+                        <Badge variant="outline" className="border-primary/20 text-primary bg-primary/5 font-black text-[10px]">{c.disease}</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{c.village} · Reported {c.reportedAt} by {c.source}</p>
+                    </div>
+                    <Badge variant="outline" className={c.severity === 'high' ? 'bg-destructive/10 text-destructive border-destructive/20 font-bold text-xs uppercase' : 'bg-amber-500/10 text-amber-600 border-amber-500/20 font-bold text-xs uppercase'}>
+                      {c.severity}
+                    </Badge>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // Analytics & Trends Section
   return (
     <div className="space-y-6">
-      <SectionHeader title="Doctor Clinical View" description="Clinical analytics and trends." />
-      <div className="glass-card rounded-3xl p-3">
-        <CaseTrendChart />
+      <SectionHeader title="Clinical Epidemiological Analytics" description="Multi-variable epidemiological metrics and regional disease distribution." />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="glass-card rounded-3xl p-4 shadow-lg border border-border">
+          <CaseTrendChart title="Clinical Disease Trajectory" description="14-day trends across Cholera, Typhoid, and Diarrhea" />
+        </div>
+        <div className="glass-card rounded-3xl p-4 shadow-lg border border-border">
+          <CasesByBlockChart />
+        </div>
       </div>
     </div>
   )
