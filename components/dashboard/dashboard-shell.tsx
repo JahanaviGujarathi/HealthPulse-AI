@@ -22,6 +22,7 @@ import { clearAuthSession, getAuthSession, isAuthenticated, type UserSession } f
 import { toast } from 'sonner'
 
 import { ThemeToggle } from '@/components/theme-toggle'
+import { OfflineSyncIndicator } from '@/components/dashboard/offline-sync-indicator'
 
 export function DashboardShell({
   role,
@@ -136,6 +137,7 @@ export function DashboardShell({
               </DropdownMenu>
             )}
 
+            <OfflineSyncIndicator />
             <ThemeToggle />
 
             <DropdownMenu>

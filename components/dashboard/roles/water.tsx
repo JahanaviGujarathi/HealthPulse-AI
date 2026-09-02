@@ -12,6 +12,7 @@ import {
   Sparkles,
   Truck,
   Activity,
+  Download,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -24,6 +25,7 @@ import { WATER_SOURCES, type WaterSource } from '@/lib/data'
 import { toast } from 'sonner'
 import { sanitizeInput } from '@/lib/security'
 import { cn } from '@/lib/utils'
+import { exportToCSV } from '@/lib/export-utils'
 
 export function WaterDashboard({ section }: { section: string }) {
   const [sources, setSources] = useState<WaterSource[]>(WATER_SOURCES)
@@ -108,13 +110,40 @@ export function WaterDashboard({ section }: { section: string }) {
     })
   }
 
+  const handleExportCSV = () => {
+    exportToCSV(sources, 'phed_water_telemetry_report', [
+      { header: 'Source ID', key: 'id' },
+      { header: 'Water Source Name', key: 'name' },
+      { header: 'Village / Block', key: 'village' },
+      { header: 'pH Level', key: 'ph' },
+      { header: 'Turbidity (NTU)', key: 'turbidity' },
+      { header: 'Residual Chlorine (mg/L)', key: 'chlorine' },
+      { header: 'Bacterial Count (CFU/100mL)', key: 'bacteria' },
+      { header: 'Risk Status', key: 'risk' },
+    ])
+    toast.success('Water Telemetry Exported', {
+      description: 'Downloaded CSV telemetry report for PHED field analysis.',
+    })
+  }
+
   if (section === 'overview' || !section) {
     return (
       <div className="space-y-6">
-        <SectionHeader
-          title="Water Quality & Safety Operations — Priya Sen"
-          description="Public Health Engineering Department (PHED), Jorhat. Monitor pH, turbidity, residual chlorine, and bacterial contamination."
-        />
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <SectionHeader
+            title="Water Quality & Safety Operations — Priya Sen"
+            description="Public Health Engineering Department (PHED), Jorhat. Monitor pH, turbidity, residual chlorine, and bacterial contamination."
+          />
+          <Button
+            onClick={handleExportCSV}
+            variant="outline"
+            size="sm"
+            className="self-start sm:self-auto gap-2 text-xs font-semibold bg-background shadow-sm hover:bg-muted"
+          >
+            <Download className="size-3.5 text-primary" />
+            <span>Export CSV Report</span>
+          </Button>
+        </div>
 
         {/* Dynamic Metric cards with sparklines */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
