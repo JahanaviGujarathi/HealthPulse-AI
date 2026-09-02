@@ -35,6 +35,15 @@ You are HealthPulse AI — an advanced, empathetic, and highly intelligent AI As
    - Use bold formatting for numbers, results, state scores, and emergency helplines (**108**, **104**, **1915**).
 `
 
+export async function GET() {
+  return NextResponse.json({
+    status: 'online',
+    service: 'HealthPulse AI Chat & Surveillance Engine',
+    hasApiKey: Boolean(GEMINI_API_KEY),
+    supportedModels: ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-pro'],
+  })
+}
+
 export async function POST(req: Request) {
   try {
     const { messages, userQuery, stateContext } = await req.json()
@@ -59,12 +68,11 @@ export async function POST(req: Request) {
       },
     ]
 
-    // Supported Gemini REST API models (prioritizing 3.6-flash, 3.5-flash, 3.5-flash-lite)
+    // Standard Gemini REST API models (prioritizing 2.0-flash, 1.5-flash, 1.5-pro)
     const geminiModels = [
-      'gemini-3.6-flash',
-      'gemini-3.5-flash',
-      'gemini-3.5-flash-lite',
-      'gemini-3.1-flash-lite',
+      'gemini-2.0-flash',
+      'gemini-1.5-flash',
+      'gemini-1.5-pro',
       'gemini-flash-latest',
     ]
     let aiText = ''
@@ -104,6 +112,7 @@ export async function POST(req: Request) {
     )
   }
 }
+
 
 function generateFallbackIntelligence(query: string, stateContext?: any): string {
   const q = query.toLowerCase().trim()

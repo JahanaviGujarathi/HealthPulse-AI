@@ -246,15 +246,21 @@ export function LoginForm() {
       setLoading(false)
       router.push(redirectTo || `/dashboard/${targetRole}`)
     } catch (error: any) {
-      console.warn('Google sign-in popup error:', error)
+      console.warn('Google sign-in popup notice:', error)
 
-      if (error.code === 'auth/popup-blocked') {
-        toast.info('Popup blocked by browser. Initiating redirect login...')
+      // Fallback to Redirect auth if popup is blocked, fails cross-origin, or hit network error
+      if (
+        error.code === 'auth/popup-blocked' ||
+        error.code === 'auth/network-request-failed' ||
+        error.code === 'auth/internal-error' ||
+        error.message?.includes('Cross-Origin-Opener-Policy')
+      ) {
+        toast.info('Popup constrained. Initiating redirect authentication...')
         try {
           await signInWithRedirect(auth, provider)
           return
         } catch (redirectErr) {
-          console.error('Redirect error:', redirectErr)
+          console.error('Redirect auth error:', redirectErr)
         }
       }
 
@@ -278,6 +284,7 @@ export function LoginForm() {
       setLoading(false)
       router.push(redirectTo || `/dashboard/${role}`)
     }
+
   }
 
   return (

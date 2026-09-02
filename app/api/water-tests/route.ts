@@ -149,3 +149,64 @@ export async function POST(request: Request) {
     )
   }
 }
+
+export async function PATCH(request: Request) {
+  const securityHeaders = getSecurityHeaders()
+  
+  try {
+    const rawBody = await request.json()
+    const sanitized = sanitizeObject(rawBody)
+    const { id, ph, turbidity, chlorine, bacteria, risk } = sanitized
+
+    if (!id) {
+      return NextResponse.json({ error: 'Missing water source ID' }, { status: 400, headers: securityHeaders })
+    }
+
+    const waterRef = doc(db, 'water_tests', id)
+    const updateData: Record<string, any> = {}
+    
+    if (ph !== undefined) updateData.ph = Number(ph)
+    if (turbidity !== undefined) updateData.turbidity = Number(turbidity)
+    if (chlorine !== undefined) updateData.chlorine = Number(chlorine)
+    if (bacteria !== undefined) updateData.bacteria = Number(bacteria)
+    if (risk) updateData.risk = risk
+
+    await setDoc(waterRef, updateData, { merge: true })
+
+    return NextResponse.json(
+      { success: true, message: 'Water test updated successfully' },
+      { status: 200, headers: securityHeaders }
+    )
+  } catch (err: any) {
+    console.error('Error updating water test in Firestore:', err)
+    return NextResponse.json(
+      { error: 'Database update failed: ' + (err.message || err) },
+      { status: 500, headers: securityHeaders }
+    )
+  }
+}
+
+export async function DELETE(request: Request) {
+  const securityHeaders = getSecurityHeaders()
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  const role = searchParams.get('role') || 'water-officer'
+
+  if (!hasPermission(role, 'water:create') && !hasPermission(role, 'admin:users')) {
+    return NextResponse.json({ error: 'Forbidden: Insufficient permissions to delete water records' }, { status: 403, headers: securityHeaders })
+  }
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing water source ID' }, { status: 400, headers: securityHeaders })
+  }
+
+  try {
+    const { deleteDoc } = await import('firebase/firestore')
+    await deleteDoc(doc(db, 'water_tests', id))
+    return NextResponse.json({ success: true, message: 'Water test record deleted successfully' }, { status: 200, headers: securityHeaders })
+  } catch (err: any) {
+    console.error('Error deleting water test from Firestore:', err)
+    return NextResponse.json({ error: 'Failed to delete record: ' + (err.message || err) }, { status: 500, headers: securityHeaders })
+  }
+}
+

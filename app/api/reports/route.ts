@@ -190,3 +190,28 @@ export async function PATCH(request: Request) {
   }
 }
 
+export async function DELETE(request: Request) {
+  const securityHeaders = getSecurityHeaders()
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+  const role = searchParams.get('role') || 'citizen'
+
+  if (!hasPermission(role, 'case:confirm') && !hasPermission(role, 'admin:users')) {
+    return NextResponse.json({ error: 'Forbidden: Role cannot delete reports' }, { status: 403, headers: securityHeaders })
+  }
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing report ID' }, { status: 400, headers: securityHeaders })
+  }
+
+  try {
+    const { deleteDoc } = await import('firebase/firestore')
+    await deleteDoc(doc(db, 'reports', id))
+    return NextResponse.json({ success: true, message: 'Report deleted successfully' }, { status: 200, headers: securityHeaders })
+  } catch (err: any) {
+    console.error('Error deleting report from Firestore:', err)
+    return NextResponse.json({ error: 'Failed to delete report: ' + (err.message || err) }, { status: 500, headers: securityHeaders })
+  }
+}
+
+

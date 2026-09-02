@@ -115,3 +115,23 @@ export async function POST(request: Request) {
     )
   }
 }
+
+export async function DELETE(request: Request) {
+  const securityHeaders = getSecurityHeaders()
+  const { searchParams } = new URL(request.url)
+  const id = searchParams.get('id')
+
+  if (!id) {
+    return NextResponse.json({ error: 'Missing emergency log ID' }, { status: 400, headers: securityHeaders })
+  }
+
+  try {
+    const { deleteDoc } = await import('firebase/firestore')
+    await deleteDoc(doc(db, 'emergency_logs', id))
+    return NextResponse.json({ success: true, message: 'Emergency log deleted successfully' }, { status: 200, headers: securityHeaders })
+  } catch (err: any) {
+    console.error('Error deleting emergency log from Firestore:', err)
+    return NextResponse.json({ error: 'Failed to delete emergency log: ' + (err.message || err) }, { status: 500, headers: securityHeaders })
+  }
+}
+
