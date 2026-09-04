@@ -23,6 +23,7 @@ import { toast } from 'sonner'
 
 import { ThemeToggle } from '@/components/theme-toggle'
 import { OfflineSyncIndicator } from '@/components/dashboard/offline-sync-indicator'
+import { CommandPalette } from '@/components/dashboard/command-palette'
 
 export function DashboardShell({
   role,
@@ -137,6 +138,7 @@ export function DashboardShell({
               </DropdownMenu>
             )}
 
+            <CommandPalette />
             <OfflineSyncIndicator />
             <ThemeToggle />
 
