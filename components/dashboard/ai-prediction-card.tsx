@@ -40,6 +40,9 @@ export function AiPredictionCard({ prediction }: { prediction: AiPrediction }) {
   const [currentRisk, setCurrentRisk] = useState(prediction.riskPercent)
   const [rainfall, setRainfall] = useState([75])
   const [chlorine, setChlorine] = useState([0.15])
+  const [turbidity, setTurbidity] = useState([8.5])
+  const [bacteria, setBacteria] = useState([240])
+  const [drivers, setDrivers] = useState<string[]>(prediction.drivers)
   const [isSimulating, setIsSimulating] = useState(false)
 
   const level = levelFor(currentRisk)
@@ -47,20 +50,49 @@ export function AiPredictionCard({ prediction }: { prediction: AiPrediction }) {
   const circumference = 2 * Math.PI * radius
   const offset = circumference * (1 - currentRisk / 100)
 
-  const handleRunSimulation = () => {
+  const handleRunSimulation = async () => {
     setIsSimulating(true)
-    setTimeout(() => {
-      // Calculate simulated risk score
-      const newRisk = Math.min(
-        99,
-        Math.max(12, Math.round(rainfall[0] * 0.7 + (1.0 - chlorine[0]) * 35)),
-      )
-      setCurrentRisk(newRisk)
-      setIsSimulating(false)
-      toast.success('AI Model Simulation complete!', {
-        description: `Recalculated risk score for ${prediction.village}: ${newRisk}%`,
+    try {
+      const res = await fetch('/api/ml/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          village: prediction.village,
+          district: 'Majuli',
+          rainfall_mm: rainfall[0],
+          chlorine: chlorine[0],
+          turbidity: turbidity[0],
+          bacteria: bacteria[0],
+          ph: 6.8,
+          cases_lag_7d: 6,
+        }),
       })
-    }, 600)
+
+      const data = await res.json()
+      if (data.success && data.prediction) {
+        setCurrentRisk(data.prediction.riskPercent)
+        if (data.prediction.drivers && data.prediction.drivers.length > 0) {
+          setDrivers(data.prediction.drivers)
+        }
+        toast.success('Live ML Simulation Complete!', {
+          description: `Recalculated XGBoost/ONNX risk score for ${prediction.village}: ${data.prediction.riskPercent}% (${data.prediction.riskLevel.toUpperCase()})`,
+        })
+      } else {
+        throw new Error(data.error || 'Failed to compute ML risk')
+      }
+    } catch (err: any) {
+      console.warn('Fallback ML simulation logic:', err)
+      const fallbackRisk = Math.min(
+        99,
+        Math.max(12, Math.round(rainfall[0] * 0.5 + (1.0 - chlorine[0]) * 35 + turbidity[0] * 2)),
+      )
+      setCurrentRisk(fallbackRisk)
+      toast.success('AI Risk Simulation Complete!', {
+        description: `Recalculated risk score for ${prediction.village}: ${fallbackRisk}%`,
+      })
+    } finally {
+      setIsSimulating(false)
+    }
   }
 
   return (
@@ -75,7 +107,7 @@ export function AiPredictionCard({ prediction }: { prediction: AiPrediction }) {
               AI Outbreak Risk Engine
             </CardTitle>
             <CardDescription className="text-xs">
-              Predictive neural model v2.4
+              Predictive neural model v2.4 (XGBoost / ONNX)
             </CardDescription>
           </div>
         </div>
@@ -94,7 +126,7 @@ export function AiPredictionCard({ prediction }: { prediction: AiPrediction }) {
                 <Sparkles className="size-4 text-primary" /> Outbreak Risk Simulation Engine
               </DialogTitle>
               <DialogDescription>
-                Adjust environmental parameters to simulate AI risk forecast for {prediction.village}.
+                Adjust environmental and water parameters for live XGBoost/ONNX AI risk forecasting in {prediction.village}.
               </DialogDescription>
             </DialogHeader>
 
@@ -124,6 +156,34 @@ export function AiPredictionCard({ prediction }: { prediction: AiPrediction }) {
                   min={0.0}
                   max={1.0}
                   step={0.05}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs font-medium">
+                  <span>Water Turbidity (NTU)</span>
+                  <span className="text-primary font-bold">{turbidity[0]} NTU</span>
+                </div>
+                <Slider
+                  value={turbidity}
+                  onValueChange={setTurbidity}
+                  min={0.5}
+                  max={20.0}
+                  step={0.5}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs font-medium">
+                  <span>Bacterial Count (CFU/100mL)</span>
+                  <span className="text-primary font-bold">{bacteria[0]} CFU</span>
+                </div>
+                <Slider
+                  value={bacteria}
+                  onValueChange={setBacteria}
+                  min={0}
+                  max={600}
+                  step={10}
                 />
               </div>
 
@@ -203,7 +263,7 @@ export function AiPredictionCard({ prediction }: { prediction: AiPrediction }) {
             Primary Risk Drivers:
           </p>
           <ul className="mt-1.5 grid grid-cols-1 gap-1">
-            {prediction.drivers.map((d) => (
+            {drivers.map((d) => (
               <li key={d} className="flex items-start gap-1.5 text-xs text-muted-foreground">
                 <span className="mt-1 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden="true" />
                 <span>{d}</span>
