@@ -30,6 +30,7 @@ export function SiteHeader() {
   const [currentLang, setCurrentLang] = useState<SupportedLanguage>('en')
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<string>('#disease-map')
 
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
@@ -50,7 +51,7 @@ export function SiteHeader() {
     window.addEventListener('auth_session_change', handleAuthChange)
 
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
+      setScrolled(window.scrollY > 15)
     }
     window.addEventListener('scroll', handleScroll)
 
@@ -61,7 +62,7 @@ export function SiteHeader() {
   }, [])
 
   const triggerLiveAlert = () => {
-    toast.warning('🚨 LIVE SURVEILLANCE ALERT: High Dengue & Waterborne Outbreak Alert in Delhi & West Bengal', {
+    toast.warning('LIVE SURVEILLANCE ALERT: High Dengue & Waterborne Outbreak in Delhi & West Bengal', {
       description: 'Central Health Emergency Team dispatched. Real-time vector indices updated.',
       action: {
         label: 'View Map',
@@ -74,54 +75,59 @@ export function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 transition-all duration-300">
-      {/* Vibrant Gradient Accent Top Bar */}
-      <div className="h-[3px] w-full bg-gradient-to-r from-cyan-500 via-primary to-emerald-400" />
-
+    <header className="sticky top-0 z-50 transition-all duration-200">
       <div
-        className={`w-full border-b transition-all duration-300 ${
+        className={`w-full border-b transition-all duration-200 ${
           scrolled
-            ? 'border-border/80 bg-background/90 shadow-xl backdrop-blur-2xl py-1.5'
-            : 'border-border/40 bg-background/70 backdrop-blur-xl py-2.5'
+            ? 'border-[#DCE4F0] bg-white/95 shadow-xs backdrop-blur-md py-1 dark:bg-[#111A2B]/95 dark:border-[#1E2D45]'
+            : 'border-[#E8EDF5] bg-white py-2 dark:bg-[#0D1525] dark:border-[#1E2D45]'
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Brand Logo */}
-          <Link href="/" aria-label="HealthPulse AI home" className="flex items-center gap-3 group">
-            <Brand size="lg" />
+          <Link href="/" aria-label="HealthPulse AI home" className="flex items-center gap-2 group">
+            <Brand size="md" />
           </Link>
 
-          {/* Center Navigation Links (Spacious Pill Bar) */}
+          {/* Center Navigation Links (Clean Active / Inactive states) */}
           <nav
-            className="hidden items-center gap-1.5 rounded-full border border-primary/20 bg-card/75 px-4 py-1.5 shadow-sm backdrop-blur-md lg:flex"
+            className="hidden items-center gap-1 rounded-full border border-[#DCE4F0] bg-[#F7F9FE] p-1 lg:flex dark:border-[#1E2D45] dark:bg-[#111A2B]"
             aria-label="Primary Navigation"
           >
-            {navLinks.map((l) => (
-              <a
-                key={l.href}
-                href={l.href}
-                className="rounded-full px-4 py-1.5 text-xs font-extrabold text-muted-foreground transition-all duration-200 hover:bg-primary/10 hover:text-primary"
-              >
-                {l.label}
-              </a>
-            ))}
+            {navLinks.map((l) => {
+              const isActive = activeTab === l.href
+              return (
+                <a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setActiveTab(l.href)}
+                  className={`rounded-full px-3.5 py-1 text-xs font-semibold transition-colors duration-150 ${
+                    isActive
+                      ? 'bg-[#3157D5] text-white shadow-xs'
+                      : 'text-[#64748B] hover:text-[#172033] hover:bg-[#EEF3FF] dark:text-[#94A3B8] dark:hover:text-white dark:hover:bg-[#172554]'
+                  }`}
+                >
+                  {l.label}
+                </a>
+              )
+            })}
           </nav>
 
-          {/* Right Controls (Language Selector + Report Export + Theme Toggle + Auth CTAs) */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* Right Controls */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
             {/* Multi-Language Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-                className="flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-3 py-1.5 text-xs font-bold text-foreground transition-all hover:bg-accent/40"
+                className="flex items-center gap-1.5 rounded-lg border border-[#DCE4F0] bg-white px-2.5 py-1.5 text-xs font-semibold text-[#172033] transition-colors hover:bg-[#F7F9FE] dark:border-[#1E2D45] dark:bg-[#111A2B] dark:text-[#F1F5F9]"
                 aria-label="Select Language"
               >
-                <Globe className="size-3.5 text-primary" />
-                <span className="uppercase">{currentLang}</span>
+                <Globe className="size-3.5 text-[#3157D5]" />
+                <span className="uppercase text-[11px]">{currentLang}</span>
               </button>
 
               {isLangMenuOpen && (
-                <div className="absolute right-0 mt-2 w-40 rounded-2xl border border-border bg-card p-1.5 shadow-2xl backdrop-blur-xl z-50">
+                <div className="absolute right-0 mt-2 w-36 rounded-xl border border-[#DCE4F0] bg-white p-1 shadow-lg z-50 dark:border-[#1E2D45] dark:bg-[#111A2B]">
                   {LANGUAGES.map((lang) => (
                     <button
                       key={lang.code}
@@ -130,10 +136,10 @@ export function SiteHeader() {
                         setIsLangMenuOpen(false)
                         toast.success(`Language set to ${lang.label}`)
                       }}
-                      className={`flex w-full items-center justify-between rounded-xl px-3 py-2 text-xs font-bold transition-all ${
+                      className={`flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
                         currentLang === lang.code
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-foreground hover:bg-muted'
+                          ? 'bg-[#3157D5] text-white'
+                          : 'text-[#172033] hover:bg-[#F7F9FE] dark:text-[#F1F5F9] dark:hover:bg-[#172554]'
                       }`}
                     >
                       <span>{lang.nativeName}</span>
@@ -144,37 +150,37 @@ export function SiteHeader() {
               )}
             </div>
 
-            {/* 1-Click Interactive Emergency Call Helpline */}
+            {/* Semantic Emergency Helpline (Semantic Red outline) */}
             <a
               href="tel:108"
-              className="flex items-center gap-1.5 rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1.5 text-xs font-black text-rose-600 dark:text-rose-400 shadow-sm transition-all hover:bg-rose-500/20 hover:scale-105"
-              title="24/7 Free National Medical Ambulance Helpline"
+              className="flex items-center gap-1.5 rounded-lg border border-[#FFB7C0] bg-[#FFF0F2] px-2.5 py-1.5 text-xs font-semibold text-[#E5485D] transition-colors hover:bg-[#FFE4E8]"
+              title="24/7 National Emergency Ambulance Helpline"
             >
-              <PhoneCall className="size-3.5 animate-pulse" />
-              <span>Call 108</span>
+              <PhoneCall className="size-3 text-[#E5485D]" />
+              <span className="text-[11px]">108 SOS</span>
             </a>
 
-            {/* Quick Report Download Button */}
+            {/* Quick Report Download */}
             <Button
               variant="outline"
               size="sm"
               onClick={() => generateEpidemiologyReport()}
-              className="hidden sm:flex items-center gap-1.5 rounded-full border-primary/30 text-xs font-bold text-primary hover:bg-primary/10"
-              title="One-Click Epidemiological Summary Report"
+              className="hidden sm:flex items-center gap-1.5 rounded-lg border-[#DCE4F0] text-xs font-semibold text-[#172033] hover:bg-[#F7F9FE] h-8"
+              title="Download Epidemiological Surveillance Report"
             >
-              <FileSpreadsheet className="size-3.5" />
+              <FileSpreadsheet className="size-3.5 text-[#3157D5]" />
               <span>Report</span>
             </Button>
 
-            {/* Real-time Alert Trigger Button */}
+            {/* Restrained Alert Button */}
             <Button
               variant="ghost"
               size="icon"
               onClick={triggerLiveAlert}
-              className="h-9 w-9 rounded-full text-rose-500 hover:bg-rose-500/10 hover:text-rose-600 transition-all"
-              title="Trigger Real-time Outbreak Broadcast"
+              className="h-8 w-8 rounded-lg text-[#64748B] hover:text-[#E5485D] hover:bg-[#FFF0F2]"
+              title="View Real-time Outbreak Broadcast"
             >
-              <BellRing className="size-4 animate-bounce" />
+              <BellRing className="size-4" />
             </Button>
 
             {/* Theme Toggle */}
@@ -183,13 +189,13 @@ export function SiteHeader() {
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="h-9 w-9 rounded-full hover:bg-primary/10 text-muted-foreground hover:text-primary transition-all"
+                className="h-8 w-8 rounded-lg text-[#64748B] hover:text-[#3157D5] hover:bg-[#EEF3FF]"
                 aria-label="Toggle theme"
               >
                 {theme === 'dark' ? (
-                  <Sun className="size-4 text-amber-400" />
+                  <Sun className="size-4 text-[#D99A24]" />
                 ) : (
-                  <Moon className="size-4 text-primary" />
+                  <Moon className="size-4 text-[#3157D5]" />
                 )}
               </Button>
             )}
@@ -199,58 +205,52 @@ export function SiteHeader() {
               <Button
                 size="sm"
                 onClick={() => router.push(`/dashboard/${session.role}`)}
-                className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90 font-extrabold text-xs shadow-md rounded-full px-4 h-9"
+                className="gap-1.5 bg-[#3157D5] hover:bg-[#243FA8] text-white font-semibold text-xs rounded-lg px-3.5 h-8 shadow-xs"
               >
                 <LayoutDashboard className="size-3.5" />
                 <span>Portal ({session.name.split(' ')[0]})</span>
               </Button>
             ) : (
-              <div className="flex items-center gap-2">
-                <Button
-                  size="sm"
-                  onClick={() => router.push('/login')}
-                  className="gap-1.5 font-extrabold shadow-md text-xs bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-4 h-9 transition-all hover:scale-105"
-                >
-                  <span>{t.openPortals}</span>
-                  <ArrowRight className="size-3.5" />
-                </Button>
-              </div>
+              <Button
+                size="sm"
+                onClick={() => router.push('/login')}
+                className="gap-1.5 font-semibold text-xs bg-[#3157D5] hover:bg-[#243FA8] text-white rounded-lg px-3.5 h-8 shadow-xs"
+              >
+                <span>{t.openPortals}</span>
+                <ArrowRight className="size-3.5" />
+              </Button>
             )}
 
-            {/* Mobile Hamburger Toggle */}
+            {/* Mobile Menu */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden rounded-full p-2 text-foreground hover:bg-muted"
+              className="lg:hidden rounded-lg p-1.5 text-[#64748B] hover:bg-[#F7F9FE]"
             >
               {isMobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation Menu Drawer */}
+        {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden border-t border-border bg-card/95 px-4 py-4 backdrop-blur-2xl space-y-3">
+          <div className="lg:hidden border-t border-[#DCE4F0] bg-white px-4 py-3 space-y-2 dark:bg-[#111A2B] dark:border-[#1E2D45]">
             {navLinks.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="block rounded-xl px-4 py-2.5 text-sm font-extrabold text-foreground hover:bg-primary/10 hover:text-primary"
+                onClick={() => {
+                  setActiveTab(l.href)
+                  setIsMobileMenuOpen(false)
+                }}
+                className={`block rounded-lg px-3 py-2 text-xs font-semibold ${
+                  activeTab === l.href
+                    ? 'bg-[#3157D5] text-white'
+                    : 'text-[#64748B] hover:bg-[#F7F9FE] dark:text-[#94A3B8]'
+                }`}
               >
                 {l.label}
               </a>
             ))}
-            <div className="pt-2 border-t border-border flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => generateEpidemiologyReport()}
-                className="w-full gap-2 rounded-xl text-xs font-bold"
-              >
-                <FileSpreadsheet className="size-4 text-primary" />
-                <span>Download Report</span>
-              </Button>
-            </div>
           </div>
         )}
       </div>

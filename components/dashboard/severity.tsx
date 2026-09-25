@@ -3,21 +3,21 @@ import { cn } from '@/lib/utils'
 import type { RiskLevel } from '@/lib/data'
 
 const dotColor: Record<RiskLevel, string> = {
-  high: 'bg-destructive',
-  medium: 'bg-warning',
-  low: 'bg-success',
+  high: 'bg-[#E5485D]',
+  medium: 'bg-[#D99A24]',
+  low: 'bg-[#3BAA72]',
 }
 
 const badgeClass: Record<RiskLevel, string> = {
-  high: 'border-destructive/30 bg-destructive/10 text-destructive',
-  medium: 'border-warning/40 bg-warning/15 text-warning-foreground',
-  low: 'border-success/30 bg-success/10 text-success',
+  high: 'border-[#FFB7C0] bg-[#FFF0F2] text-[#E5485D]',
+  medium: 'border-[#FDE68A] bg-[#FFF7E5] text-[#D99A24]',
+  low: 'border-[#A7F3D0] bg-[#EAF8F1] text-[#3BAA72]',
 }
 
 const label: Record<RiskLevel, string> = {
-  high: 'High',
-  medium: 'Medium',
-  low: 'Low',
+  high: 'High Risk',
+  medium: 'Medium Risk',
+  low: 'Safe / Low',
 }
 
 export function severityColorVar(severity: RiskLevel): string {
@@ -51,24 +51,24 @@ export function RiskBadge({
   className?: string
 }) {
   return (
-    <Badge variant="outline" className={cn('gap-1.5 font-medium', badgeClass[level], className)}>
+    <Badge variant="outline" className={cn('gap-1.5 font-medium px-2 py-0.5 rounded-full text-[11px]', badgeClass[level], className)}>
       <span className={cn('size-1.5 rounded-full', dotColor[level])} aria-hidden="true" />
-      {children ?? `${label[level]} risk`}
+      {children ?? label[level]}
     </Badge>
   )
 }
 
 export function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    confirmed: 'border-destructive/30 bg-destructive/10 text-destructive',
-    verified: 'border-primary/30 bg-primary/10 text-primary',
-    pending: 'border-warning/40 bg-warning/15 text-warning-foreground',
-    rejected: 'border-border bg-muted text-muted-foreground',
-    active: 'border-success/30 bg-success/10 text-success',
-    training: 'border-warning/40 bg-warning/15 text-warning-foreground',
+    confirmed: 'border-[#FFB7C0] bg-[#FFF0F2] text-[#E5485D]',
+    verified: 'border-[#DCE5FF] bg-[#EEF3FF] text-[#3157D5]',
+    pending: 'border-[#FDE68A] bg-[#FFF7E5] text-[#D99A24]',
+    rejected: 'border-[#DCE4F0] bg-[#F7F9FE] text-[#64748B]',
+    active: 'border-[#A7F3D0] bg-[#EAF8F1] text-[#3BAA72]',
+    training: 'border-[#FDE68A] bg-[#FFF7E5] text-[#D99A24]',
   }
   return (
-    <Badge variant="outline" className={cn('capitalize', map[status] ?? 'bg-muted')}>
+    <Badge variant="outline" className={cn('capitalize font-medium text-[11px] px-2 py-0.5 rounded-full', map[status] ?? 'bg-muted text-muted-foreground')}>
       {status}
     </Badge>
   )

@@ -290,29 +290,29 @@ export function LoginForm() {
   return (
     <div className="space-y-6">
       {/* Portal Type Switcher Tabs */}
-      <div className="grid grid-cols-2 gap-2 rounded-2xl bg-muted/60 p-1.5 border border-border">
+      <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-[#F7F9FE] p-1 border border-[#DCE4F0] dark:bg-[#111A2B] dark:border-[#1E2D45]">
         <button
           type="button"
           onClick={() => handlePortalSwitch('citizen')}
-          className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-extrabold transition-all cursor-pointer ${
+          className={`flex items-center justify-center gap-2 rounded-lg py-2 text-xs font-semibold transition-all cursor-pointer ${
             portalType === 'citizen'
-              ? 'bg-card text-foreground shadow-md'
-              : 'text-muted-foreground hover:text-foreground'
+              ? 'bg-[#3157D5] text-white shadow-xs'
+              : 'text-[#64748B] hover:text-[#172033] dark:text-[#94A3B8] dark:hover:text-[#F1F5F9]'
           }`}
         >
-          <Fingerprint className="size-4 text-primary" /> Citizen Aadhaar Portal
+          <Fingerprint className="size-3.5" /> Citizen Aadhaar
         </button>
 
         <button
           type="button"
           onClick={() => handlePortalSwitch('admin')}
-          className={`flex items-center justify-center gap-2 rounded-xl py-2.5 text-xs font-extrabold transition-all cursor-pointer ${
+          className={`flex items-center justify-center gap-2 rounded-lg py-2 text-xs font-semibold transition-all cursor-pointer ${
             portalType === 'admin'
-              ? 'bg-card text-foreground shadow-md'
-              : 'text-muted-foreground hover:text-foreground'
+              ? 'bg-[#3157D5] text-white shadow-xs'
+              : 'text-[#64748B] hover:text-[#172033] dark:text-[#94A3B8] dark:hover:text-[#F1F5F9]'
           }`}
         >
-          <Building2 className="size-4 text-emerald-600 dark:text-emerald-400" /> Staff & Officials
+          <Building2 className="size-3.5" /> Staff & Officials
         </button>
       </div>
 

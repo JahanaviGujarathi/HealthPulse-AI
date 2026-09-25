@@ -675,49 +675,49 @@ export function InteractiveDiseaseMapSection() {
                       onMouseEnter={() => setHoveredStateCode(st.code)}
                       onMouseLeave={() => setHoveredStateCode(null)}
                       className={cn(
-                        'relative flex flex-col justify-between p-2 rounded-2xl border transition-all duration-350 cursor-pointer select-none h-16 sm:h-20',
+                        'relative flex flex-col justify-between p-2 rounded-xl border transition-all duration-150 cursor-pointer select-none h-16 sm:h-20 bg-white dark:bg-[#111A2B]',
                         !visible && 'opacity-20 pointer-events-none',
                         st.risk === 'High Risk'
-                          ? 'bg-rose-500/5 border-rose-500/20 text-rose-500 hover:bg-rose-500/15 dark:bg-rose-500/10 shadow-[0_0_10px_rgba(244,63,94,0.05)] hover:shadow-[0_0_15px_rgba(244,63,94,0.2)]'
+                          ? 'border-[#FFB7C0] hover:bg-[#FFF0F2] dark:border-[#5C232B] dark:hover:bg-[#201519]'
                           : st.risk === 'Medium Risk'
-                            ? 'bg-amber-500/5 border-amber-500/25 text-amber-500 hover:bg-amber-500/15 dark:bg-amber-500/10 shadow-[0_0_8px_rgba(245,158,11,0.04)] hover:shadow-[0_0_12px_rgba(245,158,11,0.15)]'
-                            : 'bg-emerald-500/5 border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/15 dark:bg-emerald-500/5',
-                        isSelected && 'ring-2 ring-primary border-primary shadow-xl scale-105 z-10 bg-card/90 animate-glow-primary',
-                        isHovered && !isSelected && 'scale-105 z-10 shadow-lg border-foreground/45'
+                            ? 'border-[#FDE68A] hover:bg-[#FFF7E5] dark:border-[#523B15] dark:hover:bg-[#1E1710]'
+                            : 'border-[#DCE4F0] hover:bg-[#F7F9FE] dark:border-[#1E2D45] dark:hover:bg-[#162032]',
+                        isSelected && 'ring-2 ring-[#3157D5] border-[#3157D5] bg-[#EEF3FF] shadow-xs z-10 dark:bg-[#172554] dark:border-[#3157D5]',
+                        isHovered && !isSelected && 'shadow-xs border-[#3157D5]'
                       )}
                     >
                       {/* Top Bar: Code + Risk Dot */}
                       <div className="flex items-center justify-between">
-                        <span className="font-black text-xs sm:text-sm tracking-wider text-foreground">
+                        <span className="font-bold text-xs sm:text-sm tracking-tight text-[#172554] dark:text-[#F1F5F9]">
                           {st.code}
                         </span>
                         <span
                           className={cn(
                             'size-2 rounded-full',
                             st.risk === 'High Risk'
-                              ? 'bg-rose-500 animate-ping'
+                              ? 'bg-[#E5485D]'
                               : st.risk === 'Medium Risk'
-                                ? 'bg-amber-500'
-                                : 'bg-emerald-500'
+                                ? 'bg-[#D99A24]'
+                                : 'bg-[#3BAA72]'
                           )}
                         />
                       </div>
 
                       {/* Middle: State Sublabel Name */}
-                      <p className="text-[10px] sm:text-[11px] font-extrabold text-muted-foreground truncate leading-tight">
+                      <p className="text-[10px] sm:text-[11px] font-medium text-[#64748B] truncate leading-tight dark:text-[#94A3B8]">
                         {st.name}
                       </p>
 
                       {/* Bottom: Risk Index Score */}
-                      <div className="flex items-center justify-between text-[9px] font-black text-foreground">
-                        <span className="text-muted-foreground">Score</span>
+                      <div className="flex items-center justify-between text-[9px] font-semibold text-[#172033] dark:text-[#F1F5F9]">
+                        <span className="text-[#94A3B8]">Index</span>
                         <span
                           className={cn(
                             st.risk === 'High Risk'
-                              ? 'text-rose-600 dark:text-rose-400'
+                              ? 'text-[#E5485D]'
                               : st.risk === 'Medium Risk'
-                                ? 'text-amber-600 dark:text-amber-400'
-                                : 'text-emerald-600 dark:text-emerald-400'
+                                ? 'text-[#D99A24]'
+                                : 'text-[#3BAA72]'
                           )}
                         >
                           {st.riskScore}
@@ -730,13 +730,13 @@ export function InteractiveDiseaseMapSection() {
             </div>
 
             {/* Bottom Selected State Spotlight Bar */}
-            <div className="pt-3 flex items-center justify-between text-xs text-muted-foreground border-t border-border/60">
+            <div className="pt-3 flex items-center justify-between text-xs text-[#64748B] border-t border-[#E8EDF5] dark:border-[#1E2D45] dark:text-[#94A3B8]">
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-foreground">Active Focus:</span>
+                <span className="font-semibold text-[#172554] dark:text-[#F1F5F9]">Selected State:</span>
                 <Badge
                   variant="outline"
                   className={cn(
-                    'font-black text-xs px-3 py-1 rounded-full',
+                    'font-semibold text-xs px-2.5 py-0.5 rounded-full',
                     selectedState.risk === 'High Risk'
                       ? 'bg-rose-500/10 text-rose-600 border-rose-500/30'
                       : selectedState.risk === 'Medium Risk'

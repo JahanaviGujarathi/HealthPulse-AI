@@ -1,75 +1,73 @@
 'use client'
 
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { ArrowRight, ArrowUpRight, Lock, ShieldCheck } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { ROLE_GROUPS, ROLE_ORDER, ROLES } from '@/lib/roles'
-import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 export function RolesSection() {
   const router = useRouter()
 
   return (
-    <section id="roles" className="border-b border-border bg-card/40 py-16 sm:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+    <section id="roles" className="border-b border-[#DCE4F0] bg-white py-14 sm:py-20 dark:bg-[#0D1525] dark:border-[#1E2D45]">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl">
-          <span className="text-xs font-bold uppercase tracking-wider text-primary">
-            Role-Based Portals
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#3157D5] bg-[#EEF3FF] px-3 py-1 rounded-full border border-[#DCE5FF] dark:bg-[#172554] dark:border-[#243FA8] dark:text-[#EEF3FF]">
+            Role-Based Access
           </span>
-          <h2 className="mt-2 text-balance text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl">
-            One platform, eight specialized role portals
+          <h2 className="mt-3 text-balance text-2xl sm:text-3xl font-bold tracking-tight text-[#172554] dark:text-[#F1F5F9]">
+            Dedicated Portals for Every Public Health Stakeholder
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-muted-foreground">
-            Each role receives a purpose-built dashboard with secure permission controls. Select any role to log in and inspect the workflow.
+          <p className="mt-2 text-xs sm:text-sm text-[#64748B] dark:text-[#94A3B8]">
+            Each operational role has tailored dashboards, RBAC permissions, and actionable intervention controls.
           </p>
         </div>
 
-        <div className="mt-12 flex flex-col gap-12">
+        <div className="mt-10 flex flex-col gap-10">
           {ROLE_GROUPS.map((group) => (
             <div key={group.id}>
-              <div className="mb-5 flex items-center gap-2">
-                <span className="h-4 w-1 rounded-full bg-primary" />
-                <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <div className="mb-4 flex items-center gap-2">
+                <span className="h-3.5 w-1 rounded-full bg-[#3157D5]" />
+                <h3 className="text-xs font-bold uppercase tracking-wider text-[#64748B] dark:text-[#94A3B8]">
                   {group.label}
                 </h3>
               </div>
 
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {ROLE_ORDER.filter((id) => ROLES[id].group === group.id).map((id) => {
                   const role = ROLES[id]
                   return (
                     <div
                       key={id}
                       onClick={() => router.push(`/login?redirect=/dashboard/${id}`)}
-                      className="group flex flex-col justify-between rounded-2xl border border-border bg-background p-6 transition-all duration-300 hover:-translate-y-2 hover:border-primary/60 hover:shadow-2xl hover:shadow-primary/10 cursor-pointer"
+                      className="group flex flex-col justify-between rounded-2xl border border-[#DCE4F0] bg-[#F7F9FE] p-5 transition-all hover:bg-white hover:border-[#3157D5] hover:shadow-xs cursor-pointer dark:bg-[#111A2B] dark:border-[#1E2D45] dark:hover:bg-[#162032]"
                     >
                       <div>
                         <div className="flex items-center justify-between">
-                          <div className="grid size-12 place-items-center rounded-xl bg-primary/10 text-primary transition-transform duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground">
-                            <role.icon className="size-6 transition-colors" />
+                          <div className="grid size-10 place-items-center rounded-xl bg-[#EEF3FF] text-[#3157D5] transition-colors group-hover:bg-[#3157D5] group-hover:text-white dark:bg-[#172554] dark:text-[#EEF3FF]">
+                            <role.icon className="size-5" />
                           </div>
-                          <Badge variant="outline" className="text-[10px] font-medium border-primary/20 bg-primary/5 text-primary">
+                          <Badge variant="outline" className="text-[10px] font-semibold border-[#DCE4F0] bg-white text-[#64748B] dark:bg-[#162032] dark:border-[#1E2D45] dark:text-[#94A3B8]">
                             {role.short}
                           </Badge>
                         </div>
 
-                        <div className="mt-4">
-                          <h4 className="text-lg font-bold text-foreground flex items-center gap-1 transition-colors group-hover:text-primary">
+                        <div className="mt-3.5">
+                          <h4 className="text-base font-bold text-[#172554] flex items-center gap-1 group-hover:text-[#3157D5] transition-colors dark:text-[#F1F5F9]">
                             {role.name}
-                            <ArrowUpRight className="size-4 text-muted-foreground transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-primary" />
+                            <ArrowUpRight className="size-3.5 text-[#94A3B8] transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#3157D5]" />
                           </h4>
-                          <p className="mt-1 text-xs font-semibold text-primary">{role.tagline}</p>
-                          <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                          <p className="mt-0.5 text-xs font-semibold text-[#3157D5]">{role.tagline}</p>
+                          <p className="mt-2 text-xs leading-relaxed text-[#64748B] dark:text-[#94A3B8]">
                             {role.description}
                           </p>
                         </div>
                       </div>
 
-                      <div className="mt-6 border-t border-border/50 pt-3 flex items-center justify-between text-xs text-muted-foreground">
-                        <span className="truncate">{role.sampleUser}</span>
-                        <span className="font-semibold text-primary flex items-center gap-1 transition-all duration-300 group-hover:translate-x-1">
-                          Sign In & Access <ArrowRight className="size-3" />
+                      <div className="mt-5 border-t border-[#E8EDF5] pt-3 flex items-center justify-between text-xs text-[#64748B] dark:border-[#1E2D45] dark:text-[#94A3B8]">
+                        <span className="truncate text-[11px]">{role.sampleUser}</span>
+                        <span className="font-semibold text-xs text-[#3157D5] flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                          Enter Portal <ArrowRight className="size-3" />
                         </span>
                       </div>
                     </div>

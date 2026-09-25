@@ -6,12 +6,11 @@ import {
   ArrowRight,
   Droplets,
   ShieldCheck,
-  Sparkles,
   Activity,
-  Bell,
   AlertTriangle,
   TrendingUp,
-  HeartPulse,
+  MapPin,
+  CheckCircle2,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -22,7 +21,6 @@ export function Hero() {
   const [reportText, setReportText] = useState('')
   const [time, setTime] = useState('')
 
-  // Live ticking clock for high-end diagnostic feel
   useEffect(() => {
     const updateTime = () => {
       const now = new Date()
@@ -36,245 +34,205 @@ export function Hero() {
   const handleQuickReport = (e: React.FormEvent) => {
     e.preventDefault()
     if (!reportText.trim()) return
-    // Forward the report query straight to the login -> citizen dashboard
     router.push(`/login?redirect=/dashboard/citizen?section=report&query=${encodeURIComponent(reportText)}`)
   }
 
   return (
-    <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-background via-secondary/15 to-background py-16 lg:py-24">
-      {/* Cinematic Glowing Background Blobs */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/4 top-10 -z-10 -translate-x-1/2 blur-3xl opacity-35 dark:opacity-20 animate-pulse-glow"
-      >
-        <div className="h-[450px] w-[900px] rounded-full bg-gradient-to-tr from-primary via-accent to-purple-600" />
-      </div>
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute right-1/4 bottom-10 -z-10 blur-3xl opacity-20 dark:opacity-10 animate-float"
-        style={{ animationDuration: '9s' }}
-      >
-        <div className="h-[350px] w-[700px] rounded-full bg-gradient-to-br from-accent to-emerald-500" />
-      </div>
-
+    <section className="relative overflow-hidden border-b border-[#DCE4F0] bg-[#F7F9FE] py-12 lg:py-16 dark:bg-[#0B111E] dark:border-[#1E2D45]">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 items-start">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 items-start">
           
           {/* ZONE 1: Action Console (Left - 5 Cols) */}
-          <div className="lg:col-span-5 flex flex-col gap-6 lg:sticky lg:top-24">
-            {/* Live Ticker System Pill */}
-            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3.5 py-1 text-xs font-black text-primary backdrop-blur-md shadow-xs transition-all duration-300 hover:scale-105">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-75" />
-                <span className="relative inline-flex size-2 rounded-full bg-accent" />
-              </span>
-              <span>EPIDEMIOLOGICAL RISK CENTER</span>
-              <span className="text-[10px] text-muted-foreground border-l border-border/60 pl-2 ml-1 font-mono">
-                {time || 'SYS ACTIVE'}
+          <div className="lg:col-span-5 flex flex-col gap-5">
+            {/* Live Status Pill */}
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-[#DCE4F0] bg-white px-3 py-1 text-xs font-semibold text-[#172554] shadow-xs dark:bg-[#111A2B] dark:border-[#1E2D45] dark:text-[#EEF3FF]">
+              <span className="flex size-2 rounded-full bg-[#3BAA72]" />
+              <span className="text-[11px] font-bold tracking-wide uppercase text-[#3157D5]">SURVEILLANCE NETWORK ACTIVE</span>
+              <span className="text-[10px] text-[#94A3B8] border-l border-[#DCE4F0] pl-2 font-mono dark:border-[#1E2D45]">
+                {time || 'LIVE'}
               </span>
             </div>
 
-            {/* Core Cinematic Headline */}
-            <h1 className="text-balance text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-5xl xl:text-6xl leading-[1.08]">
-              Outbreak Surveillance{' '}
-              <span className="bg-gradient-to-r from-primary via-accent to-purple-500 bg-clip-text text-transparent">
-                System Active.
-              </span>
+            {/* Clean Medical Headline */}
+            <h1 className="text-balance text-3xl font-bold tracking-tight text-[#172554] sm:text-4xl lg:text-5xl leading-tight dark:text-[#F1F5F9]">
+              Smart Water Safety & Epidemic Early Warning.
             </h1>
 
-            <p className="max-w-xl text-pretty text-sm sm:text-base leading-relaxed text-muted-foreground font-normal">
-              HealthPulse AI is an early warning network mapping water safety and illness clusters. Enter an issue below to instantly alert local ASHA workers and deploy response teams.
+            <p className="max-w-xl text-sm leading-relaxed text-[#64748B] font-normal dark:text-[#94A3B8]">
+              HealthPulse AI maps potable water contamination and clinical symptom clusters across villages in real time. Flag water issues to immediately trigger local rapid response teams.
             </p>
 
-            {/* Integrated Quick Report Search Input */}
+            {/* Quick Report Input */}
             <form onSubmit={handleQuickReport} className="relative w-full max-w-md">
-              <div className="flex items-center gap-2 rounded-2xl border border-primary/20 bg-card/60 p-2 shadow-lg backdrop-blur-md focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all duration-300">
+              <div className="flex items-center gap-2 rounded-xl border border-[#DCE4F0] bg-white p-1.5 shadow-xs focus-within:border-[#3157D5] focus-within:ring-2 focus-within:ring-[#EEF3FF] transition-all dark:bg-[#111A2B] dark:border-[#1E2D45]">
                 <Input
                   value={reportText}
                   onChange={(e) => setReportText(e.target.value)}
-                  placeholder="e.g. Diarrhea outbreak in Kamalabari..."
-                  className="flex-1 border-0 bg-transparent text-xs sm:text-sm placeholder-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0 h-10 px-2 font-medium"
+                  placeholder="e.g. Diarrhea cluster in Kamalabari..."
+                  className="flex-1 border-0 bg-transparent text-xs sm:text-sm text-[#172033] placeholder-[#94A3B8] focus-visible:ring-0 h-9 px-2 dark:text-[#F1F5F9]"
                 />
                 <Button
                   type="submit"
                   size="sm"
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-extrabold text-xs h-10 px-4 rounded-xl flex items-center gap-1 shrink-0 cursor-pointer shadow-md shadow-primary/20 hover:scale-[1.02] transition-transform"
+                  className="bg-[#3157D5] hover:bg-[#243FA8] text-white font-semibold text-xs h-9 px-4 rounded-lg flex items-center gap-1 shrink-0"
                 >
                   <span>Report</span>
                   <ArrowRight className="size-3.5" />
                 </Button>
               </div>
-              <p className="text-[10px] text-muted-foreground mt-2 px-1 font-bold">
-                ⚠️ Citizen reports are verified via Aadhaar OTP prior to medical routing.
+              <p className="text-[11px] text-[#94A3B8] mt-2 px-1">
+                Submissions are verified via local ASHA workers and laboratory water cultures.
               </p>
             </form>
 
-            {/* Dashboard Sign in Trigger */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-1">
               <Button
-                size="lg"
+                size="default"
                 onClick={() => router.push('/login')}
-                className="group gap-2 text-xs sm:text-sm font-black shadow-lg shadow-primary/25 bg-gradient-to-r from-primary to-accent hover:from-primary/95 hover:to-accent/95 text-primary-foreground px-6 py-5 rounded-xl transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
+                className="gap-2 text-xs sm:text-sm font-semibold bg-[#3157D5] hover:bg-[#243FA8] text-white px-5 py-2.5 rounded-lg shadow-xs"
               >
-                <span>Access Clinical Portals</span>
-                <Activity className="size-4 animate-pulse text-white/95" />
+                <span>Access Health Portals</span>
+                <ArrowRight className="size-4" />
               </Button>
               <Button
-                size="lg"
+                size="default"
                 variant="outline"
                 onClick={() => {
                   document.getElementById('disease-map')?.scrollIntoView({ behavior: 'smooth' })
                 }}
-                className="gap-2 text-xs sm:text-sm font-extrabold border-border/80 hover:bg-muted/50 px-6 py-5 rounded-xl transition-all duration-300 hover:-translate-y-0.5"
+                className="text-xs sm:text-sm font-semibold border-[#DCE4F0] bg-white text-[#172033] hover:bg-[#F7F9FE] px-5 py-2.5 rounded-lg dark:bg-[#111A2B] dark:border-[#1E2D45] dark:text-[#F1F5F9]"
               >
-                View Map
+                View Outbreak Map
               </Button>
             </div>
 
-            {/* Security Compliance Seal */}
-            <div className="flex items-center gap-2 text-[11px] font-bold text-muted-foreground pt-1">
-              <ShieldCheck className="size-4 text-emerald-500 animate-pulse" />
-              <span>Sanitized Data Intake (A03) · Secure Access Control (A01)</span>
+            {/* Compliance Note */}
+            <div className="flex items-center gap-2 text-[11px] font-medium text-[#64748B] pt-1">
+              <ShieldCheck className="size-4 text-[#3BAA72]" />
+              <span>OWASP Level 3 Security · Aadhaar OTP Verification</span>
             </div>
           </div>
 
           {/* ZONE 2: Threat Monitor Console (Center - 4 Cols) */}
-          <div className="lg:col-span-4 rounded-3xl p-5 shadow-2xl relative overflow-hidden flex flex-col justify-between glass-card border-border/80 h-[520px]">
-            {/* Ambient Background Grid Overlay */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none" />
-            
-            {/* Terminal Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-border/60 relative z-10">
-              <div className="flex items-center gap-1.5">
-                <span className="size-2.5 rounded-full bg-rose-500 animate-ping" />
-                <span className="text-xs font-black uppercase tracking-wider text-rose-500">Live Surveillance Feed</span>
+          <div className="lg:col-span-4 rounded-2xl bg-white border border-[#DCE4F0] p-5 shadow-xs flex flex-col justify-between h-[490px] dark:bg-[#111A2B] dark:border-[#1E2D45]">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 border-b border-[#E8EDF5] dark:border-[#1E2D45]">
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-[#E5485D]" />
+                <span className="text-xs font-bold text-[#172554] uppercase tracking-wide dark:text-[#F1F5F9]">
+                  Live Surveillance Ledger
+                </span>
               </div>
-              <Badge variant="outline" className="text-[9px] font-mono border-rose-500/20 text-rose-500 bg-rose-500/5">
-                OUTBREAK ACTIVE
+              <Badge variant="outline" className="text-[10px] font-semibold border-[#FFB7C0] text-[#E5485D] bg-[#FFF0F2]">
+                Active Feed
               </Badge>
             </div>
 
-            {/* Simulated Clinical Feed Log */}
-            <div className="flex-1 my-4 space-y-3.5 overflow-y-auto pr-1 text-[11px] font-mono scrollbar-none relative z-10">
-              <div className="p-3 rounded-xl bg-destructive/10 border border-destructive/20 space-y-1 animate-pulse">
-                <div className="flex justify-between font-bold text-destructive">
-                  <span>[WARNING] WATERBORNE SURGE</span>
-                  <span>14:04:12</span>
+            {/* Feed Log (Restrained Semantic Cards) */}
+            <div className="flex-1 my-3.5 space-y-2.5 overflow-y-auto pr-1 text-xs">
+              {/* High Risk Card */}
+              <div className="p-3 rounded-xl bg-white border border-[#FFB7C0] space-y-1 shadow-2xs dark:bg-[#161F32]">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="font-bold text-[#E5485D] flex items-center gap-1.5">
+                    <span className="size-1.5 rounded-full bg-[#E5485D]" /> Waterborne Warning
+                  </span>
+                  <span className="text-[#94A3B8] font-mono">14:04</span>
                 </div>
-                <p className="text-foreground/90 font-bold leading-normal">
-                  ASHA confirmed 7 watery diarrhea cases in Kamalabari block. High threat score verified.
+                <p className="text-[#172033] text-xs leading-normal font-medium dark:text-[#F1F5F9]">
+                  ASHA worker confirmed 7 watery diarrhea cases in Kamalabari block.
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/20 space-y-1">
-                <div className="flex justify-between font-bold text-amber-500">
-                  <span>[ADVISORY] TURBIDITY ALERT</span>
-                  <span>12:11:45</span>
+              {/* Warning Amber Card */}
+              <div className="p-3 rounded-xl bg-white border border-[#FDE68A] space-y-1 shadow-2xs dark:bg-[#161F32]">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="font-bold text-[#D99A24] flex items-center gap-1.5">
+                    <span className="size-1.5 rounded-full bg-[#D99A24]" /> Turbidity Advisory
+                  </span>
+                  <span className="text-[#94A3B8] font-mono">12:11</span>
                 </div>
-                <p className="text-foreground/80 leading-normal">
-                  Community Well #3 recorded 12.4 NTU. Boil-water guidance issued for Kamalabari village.
+                <p className="text-[#172033] text-xs leading-normal font-medium dark:text-[#F1F5F9]">
+                  Community Well #3 recorded 12.4 NTU. Boil-water advisory dispatched.
                 </p>
               </div>
 
-              <div className="p-3 rounded-xl bg-muted/40 border border-border/40 space-y-1">
-                <div className="flex justify-between font-bold text-muted-foreground">
-                  <span>[SYSTEM] DIAGNOSTIC CLEAR</span>
-                  <span>10:32:01</span>
+              {/* Normal Success Card */}
+              <div className="p-3 rounded-xl bg-white border border-[#A7F3D0] space-y-1 shadow-2xs dark:bg-[#161F32]">
+                <div className="flex justify-between items-center text-[11px]">
+                  <span className="font-bold text-[#3BAA72] flex items-center gap-1.5">
+                    <span className="size-1.5 rounded-full bg-[#3BAA72]" /> Lab Confirmed
+                  </span>
+                  <span className="text-[#94A3B8] font-mono">10:32</span>
                 </div>
-                <p className="text-foreground/70 leading-normal">
-                  State Health Lab confirmed NEGATIVE cholera culture for Teok Block. Tracking low risk.
+                <p className="text-[#172033] text-xs leading-normal font-medium dark:text-[#F1F5F9]">
+                  State Lab confirmed NEGATIVE cholera culture for Teok Block.
                 </p>
               </div>
             </div>
 
-            {/* Bottom Real-time Water Safety Dial Indicator */}
-            <div className="pt-3 border-t border-border/60 relative z-10 flex items-center justify-between">
+            {/* Bottom Risk Score */}
+            <div className="pt-3 border-t border-[#E8EDF5] flex items-center justify-between dark:border-[#1E2D45]">
               <div>
-                <span className="text-[10px] text-muted-foreground block font-bold uppercase">District Risk Index</span>
-                <span className="text-lg font-black text-foreground">72/100 · High</span>
+                <span className="text-[10px] text-[#64748B] block font-semibold uppercase">District Threat Index</span>
+                <span className="text-base font-bold text-[#172554] dark:text-[#F1F5F9]">72 / 100</span>
               </div>
-              <div className="flex items-center gap-1 text-xs text-rose-500 font-bold bg-rose-500/10 border border-rose-500/20 rounded-lg px-2 py-1">
-                <TrendingUp className="size-3.5" />
-                <span>+12.8% vs Mon</span>
-              </div>
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#E5485D] bg-[#FFF0F2] border border-[#FFB7C0] rounded-lg px-2.5 py-1">
+                <TrendingUp className="size-3" />
+                <span>Elevated</span>
+              </span>
             </div>
           </div>
 
-          {/* ZONE 3: Floating Resource Hub (Right - 3 Cols) */}
-          <div className="lg:col-span-3 flex flex-col gap-4">
-            
-            {/* Widget 1: Water Safety Parameters */}
-            <div className="rounded-2xl p-4 glass-card shadow-lg flex flex-col gap-3 transition-transform hover:scale-[1.01]">
+          {/* ZONE 3: Telemetry Hub (Right - 3 Cols) */}
+          <div className="lg:col-span-3 flex flex-col gap-3.5">
+            {/* Widget 1: Water Safety */}
+            <div className="rounded-2xl bg-white border border-[#DCE4F0] p-4 shadow-xs flex flex-col gap-3 dark:bg-[#111A2B] dark:border-[#1E2D45]">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-foreground uppercase tracking-wide flex items-center gap-1.5">
-                  <Droplets className="size-4 text-accent animate-bounce" />
-                  Water Parameters
+                <span className="text-xs font-bold text-[#172554] uppercase tracking-wide flex items-center gap-1.5 dark:text-[#F1F5F9]">
+                  <Droplets className="size-3.5 text-[#3157D5]" />
+                  Water Telemetry
                 </span>
-                <span className="size-2 rounded-full bg-amber-500 animate-pulse" />
-              </div>
-              <div className="space-y-2 text-xs">
-                <div>
-                  <div className="flex justify-between text-muted-foreground mb-1 font-bold">
-                    <span>Chlorine Levels</span>
-                    <span className="text-foreground">0.1 mg/L (Low)</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-rose-500 w-[15%]" />
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-between text-muted-foreground mb-1 font-bold">
-                    <span>Turbidity Index</span>
-                    <span className="text-foreground">12.4 NTU (High)</span>
-                  </div>
-                  <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-amber-500 w-[82%]" />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Widget 2: Active Emergency Dispatch */}
-            <div className="rounded-2xl p-4 glass-card shadow-lg flex flex-col gap-3 transition-transform hover:scale-[1.01]">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-foreground uppercase tracking-wide flex items-center gap-1.5">
-                  <HeartPulse className="size-4 text-rose-500" />
-                  Active Dispatch
-                </span>
-                <Badge className="text-[9px] bg-emerald-500/10 text-emerald-600 border-emerald-500/20 font-extrabold uppercase">
-                  EN ROUTE
+                <Badge variant="outline" className="text-[10px] border-[#DCE4F0] text-[#64748B]">
+                  PHED Grid
                 </Badge>
               </div>
-              <p className="text-xs text-foreground font-bold">Kamalabari Block deployment:</p>
-              <div className="space-y-1.5 text-xs text-muted-foreground font-bold">
-                <div className="flex items-center gap-1.5">
-                  <span className="size-1.5 rounded-full bg-emerald-500" />
-                  <span>Tanker #4: 2.1km away</span>
+
+              <div className="space-y-2 text-xs">
+                <div className="flex justify-between items-center py-1 border-b border-[#E8EDF5] dark:border-[#1E2D45]">
+                  <span className="text-[#64748B]">Average pH</span>
+                  <span className="font-semibold text-[#172033] dark:text-[#F1F5F9]">7.1 (Safe)</span>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="size-1.5 rounded-full bg-emerald-500" />
-                  <span>Chlorination unit: Arrived</span>
+                <div className="flex justify-between items-center py-1 border-b border-[#E8EDF5] dark:border-[#1E2D45]">
+                  <span className="text-[#64748B]">Free Chlorine</span>
+                  <span className="font-semibold text-[#E5485D]">0.12 mg/L (Low)</span>
+                </div>
+                <div className="flex justify-between items-center py-1">
+                  <span className="text-[#64748B]">Bacterial Coliform</span>
+                  <span className="font-semibold text-[#E5485D]">180 CFU/100mL</span>
                 </div>
               </div>
             </div>
 
-            {/* Widget 3: AI Prediction Timeline */}
-            <div className="rounded-2xl p-4 glass-card shadow-lg flex flex-col gap-3 transition-transform hover:scale-[1.01]">
+            {/* Widget 2: Healthcare Capacity */}
+            <div className="rounded-2xl bg-white border border-[#DCE4F0] p-4 shadow-xs flex flex-col gap-3 dark:bg-[#111A2B] dark:border-[#1E2D45]">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-black text-foreground uppercase tracking-wide flex items-center gap-1.5">
-                  <Sparkles className="size-4 text-primary animate-spin" style={{ animationDuration: '8s' }} />
-                  AI Outbreak Forecast
+                <span className="text-xs font-bold text-[#172554] uppercase tracking-wide flex items-center gap-1.5 dark:text-[#F1F5F9]">
+                  <Activity className="size-3.5 text-[#3157D5]" />
+                  Clinical Capacity
                 </span>
-                <span className="text-[10px] text-primary font-bold">10-Day Prediction</span>
+                <span className="text-[11px] font-semibold text-[#3BAA72]">78% Utilized</span>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="text-2xl font-black text-foreground">84%</div>
-                <div className="text-[10px] text-muted-foreground leading-normal font-bold">
-                  High cholera threat predicted within 3 days if chlorine levels remain unadjusted.
-                </div>
+
+              <div className="w-full bg-[#EEF3FF] h-2 rounded-full overflow-hidden dark:bg-[#1E2D45]">
+                <div className="bg-[#3157D5] h-full rounded-full" style={{ width: '78%' }} />
+              </div>
+
+              <div className="flex justify-between text-[11px] text-[#64748B]">
+                <span>142 Active Admissions</span>
+                <span>38 Beds Available</span>
               </div>
             </div>
-
           </div>
 
         </div>

@@ -9,6 +9,37 @@
   --font-sans: var(--font-sans), 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: var(--font-mono), ui-monospace, monospace;
 
+  /* Cobalt Scale */
+  --color-cobalt-50: #F7F9FE;
+  --color-cobalt-100: #EEF3FF;
+  --color-cobalt-200: #DCE5FF;
+  --color-cobalt-300: #B8C8F5;
+  --color-cobalt-400: #7189E3;
+  --color-cobalt-500: #3157D5;
+  --color-cobalt-600: #2949BE;
+  --color-cobalt-700: #243FA8;
+  --color-cobalt-800: #1E347F;
+  --color-cobalt-900: #172554;
+
+  /* Semantic Scales */
+  --color-success-50: #EAF8F1;
+  --color-success-500: #3BAA72;
+
+  --color-danger-50: #FFF0F2;
+  --color-danger-200: #FFB7C0;
+  --color-danger-500: #E5485D;
+
+  --color-warning-50: #FFF7E5;
+  --color-warning-500: #D99A24;
+
+  /* Neutral Scales */
+  --color-neutral-primary: #172033;
+  --color-neutral-secondary: #64748B;
+  --color-neutral-muted: #94A3B8;
+  --color-neutral-border: #DCE4F0;
+  --color-neutral-divider: #E8EDF5;
+
+  /* Theme Tokens */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -56,85 +87,99 @@
 
 :root {
   color-scheme: light;
-  /* Premium Ocean Azure Blue Theme - Light Mode */
-  --background: oklch(0.985 0.012 225); /* Crisp ocean-breeze warm background */
-  --foreground: oklch(0.18 0.05 230); /* Deep ocean navy text */
-  --card: oklch(1 0.005 225);
-  --card-foreground: oklch(0.18 0.05 230);
-  --popover: oklch(1 0.005 225);
-  --popover-foreground: oklch(0.18 0.05 230);
-  --primary: oklch(0.56 0.18 225); /* Vibrant Ocean Azure Blue */
-  --primary-foreground: oklch(0.99 0.005 225);
-  --secondary: oklch(0.95 0.02 225); /* Soft azure panel */
-  --secondary-foreground: oklch(0.30 0.08 228);
-  --muted: oklch(0.96 0.015 225);
-  --muted-foreground: oklch(0.48 0.04 228);
-  --accent: oklch(0.64 0.16 190); /* Bright Cyan / Lagoon Accent */
-  --accent-foreground: oklch(0.18 0.05 230);
-  --success: oklch(0.62 0.13 160);
-  --success-foreground: oklch(0.99 0.005 240);
-  --warning: oklch(0.72 0.16 70);
-  --warning-foreground: oklch(0.22 0.04 70);
-  --destructive: oklch(0.55 0.20 25);
-  --destructive-foreground: oklch(0.99 0.005 240);
-  --border: oklch(0.91 0.02 225); /* Soft ocean-blue borders */
-  --input: oklch(0.91 0.02 225);
-  --ring: oklch(0.56 0.18 225);
-  --chart-1: oklch(0.56 0.18 225);
-  --chart-2: oklch(0.64 0.16 190);
-  --chart-3: oklch(0.72 0.16 70);
-  --chart-4: oklch(0.55 0.20 25);
-  --chart-5: oklch(0.62 0.13 160);
-  --radius: 1rem;
-  --sidebar: oklch(0.985 0.01 225);
-  --sidebar-foreground: oklch(0.18 0.05 230);
-  --sidebar-primary: oklch(0.56 0.18 225);
-  --sidebar-primary-foreground: oklch(0.99 0.005 225);
-  --sidebar-accent: oklch(0.95 0.02 225);
-  --sidebar-accent-foreground: oklch(0.30 0.06 228);
-  --sidebar-border: oklch(0.91 0.02 225);
-  --sidebar-ring: oklch(0.56 0.18 225);
+  /* Clinical Cobalt Architecture - Light Mode */
+  --background: #F7F9FE;
+  --foreground: #172033;
+  --card: #FFFFFF;
+  --card-foreground: #172033;
+  --popover: #FFFFFF;
+  --popover-foreground: #172033;
+  
+  /* Primary Cobalt & Navy System */
+  --primary: #3157D5;
+  --primary-foreground: #FFFFFF;
+  --secondary: #EEF3FF;
+  --secondary-foreground: #172554;
+  --muted: #F1F4F9;
+  --muted-foreground: #64748B;
+  --accent: #EEF3FF;
+  --accent-foreground: #3157D5;
+  
+  /* Semantic Standards */
+  --success: #3BAA72;
+  --success-foreground: #FFFFFF;
+  --warning: #D99A24;
+  --warning-foreground: #FFFFFF;
+  --destructive: #E5485D;
+  --destructive-foreground: #FFFFFF;
+  
+  /* Borders and Dividers */
+  --border: #DCE4F0;
+  --input: #DCE4F0;
+  --ring: #3157D5;
+  
+  /* Chart Tokens */
+  --chart-1: #3157D5;
+  --chart-2: #243FA8;
+  --chart-3: #D99A24;
+  --chart-4: #E5485D;
+  --chart-5: #3BAA72;
+  
+  --radius: 1rem; /* 16px */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #172033;
+  --sidebar-primary: #3157D5;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #EEF3FF;
+  --sidebar-accent-foreground: #3157D5;
+  --sidebar-border: #DCE4F0;
+  --sidebar-ring: #3157D5;
 }
 
 .dark {
   color-scheme: dark;
-  /* Ultra-Premium Glassmorphic Ocean Azure & Cyan - Dark Mode */
-  --background: oklch(0.11 0.025 230); /* Deep oceanic space dark */
-  --foreground: oklch(0.96 0.008 225); /* Crisp ocean ice text */
-  --card: oklch(0.15 0.028 230); /* Oceanic space card */
-  --card-foreground: oklch(0.96 0.008 225);
-  --popover: oklch(0.15 0.028 230);
-  --popover-foreground: oklch(0.96 0.008 225);
-  --primary: oklch(0.68 0.17 225); /* Glowing neon ocean azure blue */
-  --primary-foreground: oklch(0.11 0.025 230);
-  --secondary: oklch(0.18 0.03 230);
-  --secondary-foreground: oklch(0.96 0.008 225);
-  --muted: oklch(0.16 0.02 230);
-  --muted-foreground: oklch(0.68 0.03 228); /* Muted azure glow */
-  --accent: oklch(0.72 0.14 190); /* Glowing Lagoon Cyan */
-  --accent-foreground: oklch(0.11 0.025 230);
-  --success: oklch(0.75 0.14 165);
-  --success-foreground: oklch(0.11 0.025 230);
-  --warning: oklch(0.78 0.15 75);
-  --warning-foreground: oklch(0.11 0.025 230);
-  --destructive: oklch(0.62 0.20 25);
-  --destructive-foreground: oklch(0.98 0.005 240);
-  --border: oklch(1 0.03 225 / 10%); /* Subtle frosted border lines */
-  --input: oklch(1 0.03 225 / 12%);
-  --ring: oklch(0.68 0.17 225);
-  --chart-1: oklch(0.68 0.17 225);
-  --chart-2: oklch(0.72 0.14 190);
-  --chart-3: oklch(0.78 0.15 75);
-  --chart-4: oklch(0.62 0.20 25);
-  --chart-5: oklch(0.75 0.14 165);
-  --sidebar: oklch(0.13 0.025 230);
-  --sidebar-foreground: oklch(0.96 0.008 225);
-  --sidebar-primary: oklch(0.68 0.17 225);
-  --sidebar-primary-foreground: oklch(0.11 0.025 230);
-  --sidebar-accent: oklch(0.17 0.03 230);
-  --sidebar-accent-foreground: oklch(0.96 0.008 225);
-  --sidebar-border: oklch(1 0.03 225 / 10%);
-  --sidebar-ring: oklch(0.68 0.17 225);
+  /* Professional Clinical Cobalt - Dark Mode */
+  --background: #0B111E;
+  --foreground: #F1F5F9;
+  --card: #111A2B;
+  --card-foreground: #F1F5F9;
+  --popover: #111A2B;
+  --popover-foreground: #F1F5F9;
+  
+  --primary: #4C71F5;
+  --primary-foreground: #FFFFFF;
+  --secondary: #172554;
+  --secondary-foreground: #EEF3FF;
+  --muted: #162032;
+  --muted-foreground: #94A3B8;
+  --accent: #172554;
+  --accent-foreground: #EEF3FF;
+  
+  --success: #3BAA72;
+  --success-foreground: #FFFFFF;
+  --warning: #D99A24;
+  --warning-foreground: #FFFFFF;
+  --destructive: #E5485D;
+  --destructive-foreground: #FFFFFF;
+  
+  --border: #1E2D45;
+  --input: #1E2D45;
+  --ring: #4C71F5;
+  
+  --chart-1: #4C71F5;
+  --chart-2: #3157D5;
+  --chart-3: #D99A24;
+  --chart-4: #E5485D;
+  --chart-5: #3BAA72;
+  
+  --sidebar: #0D1525;
+  --sidebar-foreground: #F1F5F9;
+  --sidebar-primary: #4C71F5;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #172554;
+  --sidebar-accent-foreground: #EEF3FF;
+  --sidebar-border: #1E2D45;
+  --sidebar-ring: #4C71F5;
 }
 
 @layer base {
@@ -144,135 +189,51 @@
 
   body {
     @apply bg-background text-foreground;
+    /* Subtle healthcare dotted pattern */
+    background-image: radial-gradient(rgba(49, 87, 213, 0.05) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-cobalt-900);
+  }
+
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: #F1F5F9;
   }
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    opacity: 0.3;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: scale(1.05);
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-.animate-float {
-  animation: float 4.5s ease-in-out infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
-.animate-shimmer {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0) 100%);
-  background-size: 200% 100%;
-  animation: shimmer 2.5s infinite;
-}
-
-/* Glowing Alerts and Outlines */
-@keyframes glow-red {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(239, 68, 68, 0.2);
-    border-color: rgba(239, 68, 68, 0.3);
-  }
-  50% {
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.5);
-    border-color: rgba(239, 68, 68, 0.6);
-  }
-}
-
-@keyframes glow-amber {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(245, 158, 11, 0.15);
-    border-color: rgba(245, 158, 11, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
-    border-color: rgba(245, 158, 11, 0.5);
-  }
-}
-
-@keyframes glow-primary {
-  0%, 100% {
-    box-shadow: 0 0 5px var(--primary);
-    border-color: var(--primary);
-  }
-  50% {
-    box-shadow: 0 0 15px var(--primary);
-    border-color: var(--primary);
-  }
-}
-
-.animate-glow-red {
-  animation: glow-red 2s ease-in-out infinite;
-}
-
-.animate-glow-amber {
-  animation: glow-amber 2.5s ease-in-out infinite;
-}
-
-.animate-glow-primary {
-  animation: glow-primary 3s ease-in-out infinite;
-}
-
-/* Frosted Glassmorphism Cards */
-.glass-card {
-  background: color-mix(in oklab, var(--card) 75%, transparent);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+/* Subtle healthcare UI cards */
+.clinical-card {
+  background: var(--card);
   border: 1px solid var(--border);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgba(23, 32, 51, 0.04), 0 1px 2px -1px rgba(23, 32, 51, 0.02);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.glass-card-hover {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+.clinical-card:hover {
+  border-color: #B8C8F5;
+  box-shadow: 0 4px 12px 0 rgba(49, 87, 213, 0.06);
 }
 
-.glass-card-hover:hover {
-  transform: translateY(-4px) scale(1.008);
-  box-shadow: 0 24px 38px -10px rgba(0, 0, 0, 0.12), 0 12px 18px -12px rgba(0, 0, 0, 0.06);
-  border-color: color-mix(in oklab, var(--primary) 40%, var(--border));
+/* Restrained alert style */
+.clinical-alert-danger {
+  background: #FFFFFF;
+  border: 1px solid #FFB7C0;
+  border-radius: 16px;
 }
 
-.glass-card-glow {
-  position: relative;
+.clinical-alert-warning {
+  background: #FFFFFF;
+  border: 1px solid #FDE68A;
+  border-radius: 16px;
 }
 
-.glass-card-glow::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 25px -5px var(--primary);
-  opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  pointer-events: none;
-  z-index: -1;
-}
-
-.glass-card-glow:hover::after {
-  opacity: 0.15;
+.clinical-alert-success {
+  background: #FFFFFF;
+  border: 1px solid #A7F3D0;
+  border-radius: 16px;
 }
 
 /* Scrollbar styling */
@@ -286,12 +247,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--foreground) 10%, transparent);
+  background: #DCE4F0;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in oklab, var(--foreground) 25%, transparent);
+  background: #94A3B8;
 }
 
 /* Map alignments */
@@ -306,7 +267,7 @@
 
 .leaflet-container .leaflet-control-attribution {
   font-size: 10px;
-  background: color-mix(in oklab, var(--card) 80%, transparent);
+  background: rgba(255, 255, 255, 0.85);
 }
 
 /* Custom Scrolling Advisory Ticker */
