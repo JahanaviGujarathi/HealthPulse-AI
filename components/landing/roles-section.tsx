@@ -40,7 +40,7 @@ export function RolesSection() {
                     <div
                       key={id}
                       onClick={() => router.push(`/login?redirect=/dashboard/${id}`)}
-                      className="group flex flex-col justify-between rounded-2xl border border-[#DCE4F0] bg-[#F7F9FE] p-5 transition-all hover:bg-white hover:border-[#3157D5] hover:shadow-xs cursor-pointer dark:bg-[#111A2B] dark:border-[#1E2D45] dark:hover:bg-[#162032]"
+                      className="group flex flex-col justify-between rounded-2xl border border-[#DCE4F0] bg-[#F7F9FE] p-5 interactive-card hover:bg-white cursor-pointer dark:bg-[#111A2B] dark:border-[#1E2D45] dark:hover:bg-[#162032]"
                     >
                       <div>
                         <div className="flex items-center justify-between">

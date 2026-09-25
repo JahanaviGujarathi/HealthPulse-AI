@@ -115,11 +115,11 @@ export function Hero() {
           </div>
 
           {/* ZONE 2: Threat Monitor Console (Center - 4 Cols) */}
-          <div className="lg:col-span-4 rounded-2xl bg-white border border-[#DCE4F0] p-5 shadow-xs flex flex-col justify-between h-[490px] dark:bg-[#111A2B] dark:border-[#1E2D45]">
+          <div className="lg:col-span-4 rounded-2xl bg-white border border-[#DCE4F0] p-5 shadow-xs flex flex-col justify-between h-[490px] interactive-card dark:bg-[#111A2B] dark:border-[#1E2D45]">
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-[#E8EDF5] dark:border-[#1E2D45]">
               <div className="flex items-center gap-2">
-                <span className="size-2 rounded-full bg-[#E5485D]" />
+                <span className="size-2 rounded-full bg-[#E5485D] animate-pulse-ring-danger" />
                 <span className="text-xs font-bold text-[#172554] uppercase tracking-wide dark:text-[#F1F5F9]">
                   Live Surveillance Ledger
                 </span>
@@ -132,7 +132,7 @@ export function Hero() {
             {/* Feed Log (Restrained Semantic Cards) */}
             <div className="flex-1 my-3.5 space-y-2.5 overflow-y-auto pr-1 text-xs">
               {/* High Risk Card */}
-              <div className="p-3 rounded-xl bg-white border border-[#FFB7C0] space-y-1 shadow-2xs dark:bg-[#161F32]">
+              <div className="p-3 rounded-xl bg-white border border-[#FFB7C0] space-y-1 shadow-2xs hover:border-[#E5485D] transition-colors dark:bg-[#161F32]">
                 <div className="flex justify-between items-center text-[11px]">
                   <span className="font-bold text-[#E5485D] flex items-center gap-1.5">
                     <span className="size-1.5 rounded-full bg-[#E5485D]" /> Waterborne Warning
@@ -187,10 +187,10 @@ export function Hero() {
           {/* ZONE 3: Telemetry Hub (Right - 3 Cols) */}
           <div className="lg:col-span-3 flex flex-col gap-3.5">
             {/* Widget 1: Water Safety */}
-            <div className="rounded-2xl bg-white border border-[#DCE4F0] p-4 shadow-xs flex flex-col gap-3 dark:bg-[#111A2B] dark:border-[#1E2D45]">
+            <div className="rounded-2xl bg-white border border-[#DCE4F0] p-4 shadow-xs flex flex-col gap-3 interactive-card dark:bg-[#111A2B] dark:border-[#1E2D45]">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[#172554] uppercase tracking-wide flex items-center gap-1.5 dark:text-[#F1F5F9]">
-                  <Droplets className="size-3.5 text-[#3157D5]" />
+                  <Droplets className="size-3.5 text-[#3157D5] animate-subtle-bounce" />
                   Water Telemetry
                 </span>
                 <Badge variant="outline" className="text-[10px] border-[#DCE4F0] text-[#64748B]">
@@ -215,7 +215,7 @@ export function Hero() {
             </div>
 
             {/* Widget 2: Healthcare Capacity */}
-            <div className="rounded-2xl bg-white border border-[#DCE4F0] p-4 shadow-xs flex flex-col gap-3 dark:bg-[#111A2B] dark:border-[#1E2D45]">
+            <div className="rounded-2xl bg-white border border-[#DCE4F0] p-4 shadow-xs flex flex-col gap-3 interactive-card dark:bg-[#111A2B] dark:border-[#1E2D45]">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-[#172554] uppercase tracking-wide flex items-center gap-1.5 dark:text-[#F1F5F9]">
                   <Activity className="size-3.5 text-[#3157D5]" />
@@ -225,7 +225,7 @@ export function Hero() {
               </div>
 
               <div className="w-full bg-[#EEF3FF] h-2 rounded-full overflow-hidden dark:bg-[#1E2D45]">
-                <div className="bg-[#3157D5] h-full rounded-full" style={{ width: '78%' }} />
+                <div className="bg-[#3157D5] h-full rounded-full transition-all duration-1000 ease-out" style={{ width: '78%' }} />
               </div>
 
               <div className="flex justify-between text-[11px] text-[#64748B]">

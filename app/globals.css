@@ -87,7 +87,6 @@
 
 :root {
   color-scheme: light;
-  /* Clinical Cobalt Architecture - Light Mode */
   --background: #F7F9FE;
   --foreground: #172033;
   --card: #FFFFFF;
@@ -95,7 +94,6 @@
   --popover: #FFFFFF;
   --popover-foreground: #172033;
   
-  /* Primary Cobalt & Navy System */
   --primary: #3157D5;
   --primary-foreground: #FFFFFF;
   --secondary: #EEF3FF;
@@ -105,7 +103,6 @@
   --accent: #EEF3FF;
   --accent-foreground: #3157D5;
   
-  /* Semantic Standards */
   --success: #3BAA72;
   --success-foreground: #FFFFFF;
   --warning: #D99A24;
@@ -113,12 +110,10 @@
   --destructive: #E5485D;
   --destructive-foreground: #FFFFFF;
   
-  /* Borders and Dividers */
   --border: #DCE4F0;
   --input: #DCE4F0;
   --ring: #3157D5;
   
-  /* Chart Tokens */
   --chart-1: #3157D5;
   --chart-2: #243FA8;
   --chart-3: #D99A24;
@@ -201,40 +196,107 @@
   }
 }
 
-/* Subtle modern transitions and animations */
-.smooth-hover {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
+/* ========================================================================= */
+/* KEYFRAME ANIMATIONS & RICH MICRO-TRANSITIONS */
+/* ========================================================================= */
 
-.smooth-hover:hover {
-  transform: translateY(-2px);
-}
-
-/* Modern Card Glow */
-.card-hover-cobalt {
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.card-hover-cobalt:hover {
-  transform: translateY(-2px);
-  border-color: #3157D5;
-  box-shadow: 0 8px 24px -4px rgba(49, 87, 213, 0.08);
-}
-
-/* Subtle Pulse */
-@keyframes subtle-pulse {
+@keyframes float-gentle {
   0%, 100% {
-    opacity: 1;
-    transform: scale(1);
+    transform: translateY(0px);
   }
   50% {
-    opacity: 0.7;
-    transform: scale(0.96);
+    transform: translateY(-5px);
   }
 }
 
-.animate-subtle-pulse {
-  animation: subtle-pulse 3s ease-in-out infinite;
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(49, 87, 213, 0.4);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(49, 87, 213, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(49, 87, 213, 0);
+  }
+}
+
+@keyframes pulse-ring-danger {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(229, 72, 93, 0.5);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(229, 72, 93, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(229, 72, 93, 0);
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes subtle-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-float-gentle {
+  animation: float-gentle 4s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-pulse-ring-danger {
+  animation: pulse-ring-danger 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-subtle-bounce {
+  animation: subtle-bounce 2s ease-in-out infinite;
+}
+
+/* Micro-interaction utility classes */
+.interactive-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive-card:hover {
+  transform: translateY(-3px);
+  border-color: #3157D5;
+  box-shadow: 0 10px 25px -5px rgba(49, 87, 213, 0.08), 0 8px 10px -6px rgba(49, 87, 213, 0.04);
+}
+
+.interactive-btn {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.interactive-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(49, 87, 213, 0.2);
+}
+
+.interactive-btn:active {
+  transform: scale(0.97);
 }
 
 /* Scrollbar styling */
@@ -282,7 +344,7 @@
 }
 
 .animate-ticker {
-  animation: ticker 40s linear infinite;
+  animation: ticker 35s linear infinite;
 }
 
 .animate-ticker:hover {

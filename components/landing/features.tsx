@@ -68,10 +68,10 @@ export function Features() {
                 {flow.map((f, i) => (
                   <li
                     key={f.step}
-                    className="relative flex flex-col gap-3 rounded-2xl p-5 bg-[#F7F9FE] border border-[#DCE4F0] hover:border-[#B8C8F5] transition-all dark:bg-[#111A2B] dark:border-[#1E2D45]"
+                    className="relative flex flex-col gap-3 rounded-2xl p-5 bg-[#F7F9FE] border border-[#DCE4F0] interactive-card dark:bg-[#111A2B] dark:border-[#1E2D45]"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-[#3157D5] bg-white px-2.5 py-0.5 rounded-md border border-[#DCE4F0] dark:bg-[#162032] dark:border-[#1E2D45]">
+                      <span className="text-xs font-bold text-[#3157D5] bg-white px-2.5 py-0.5 rounded-md border border-[#DCE4F0] shadow-2xs dark:bg-[#162032] dark:border-[#1E2D45]">
                         Step {f.step}
                       </span>
                     </div>
@@ -79,8 +79,8 @@ export function Features() {
                     <p className="text-xs leading-relaxed text-[#64748B] dark:text-[#94A3B8]">{f.body}</p>
                     
                     {i < 2 && (
-                      <div className="hidden md:block absolute -right-3.5 top-1/2 -translate-y-1/2 z-10 text-[#94A3B8]">
-                        <ArrowRight className="size-4" />
+                      <div className="hidden md:block absolute -right-3.5 top-1/2 -translate-y-1/2 z-10 text-[#94A3B8] transition-transform duration-300 group-hover:translate-x-1">
+                        <ArrowRight className="size-4 text-[#3157D5]" />
                       </div>
                     )}
                   </li>
@@ -113,12 +113,12 @@ export function Features() {
               return (
                 <div
                   key={feat.title}
-                  className="flex flex-col gap-3 rounded-2xl p-5 bg-white border border-[#DCE4F0] hover:border-[#3157D5] hover:shadow-xs transition-all dark:bg-[#111A2B] dark:border-[#1E2D45]"
+                  className="group flex flex-col gap-3 rounded-2xl p-5 bg-white border border-[#DCE4F0] interactive-card dark:bg-[#111A2B] dark:border-[#1E2D45]"
                 >
-                  <div className="grid size-10 place-items-center rounded-xl bg-[#EEF3FF] text-[#3157D5] dark:bg-[#172554] dark:text-[#EEF3FF]">
+                  <div className="grid size-10 place-items-center rounded-xl bg-[#EEF3FF] text-[#3157D5] transition-transform duration-300 group-hover:scale-110 group-hover:bg-[#3157D5] group-hover:text-white dark:bg-[#172554] dark:text-[#EEF3FF]">
                     <Icon className="size-5" />
                   </div>
-                  <h3 className="font-bold text-sm text-[#172554] dark:text-[#F1F5F9]">{feat.title}</h3>
+                  <h3 className="font-bold text-sm text-[#172554] group-hover:text-[#3157D5] transition-colors dark:text-[#F1F5F9]">{feat.title}</h3>
                   <p className="text-xs leading-relaxed text-[#64748B] dark:text-[#94A3B8]">{feat.body}</p>
                 </div>
               )
