@@ -125,7 +125,7 @@
   --chart-4: #E5485D;
   --chart-5: #3BAA72;
   
-  --radius: 1rem; /* 16px */
+  --radius: 1rem;
   --sidebar: #FFFFFF;
   --sidebar-foreground: #172033;
   --sidebar-primary: #3157D5;
@@ -138,7 +138,6 @@
 
 .dark {
   color-scheme: dark;
-  /* Professional Clinical Cobalt - Dark Mode */
   --background: #0B111E;
   --foreground: #F1F5F9;
   --card: #111A2B;
@@ -189,7 +188,6 @@
 
   body {
     @apply bg-background text-foreground;
-    /* Subtle healthcare dotted pattern */
     background-image: radial-gradient(rgba(49, 87, 213, 0.05) 1px, transparent 1px);
     background-size: 24px 24px;
   }
@@ -203,43 +201,46 @@
   }
 }
 
-/* Subtle healthcare UI cards */
-.clinical-card {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  box-shadow: 0 1px 3px 0 rgba(23, 32, 51, 0.04), 0 1px 2px -1px rgba(23, 32, 51, 0.02);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+/* Subtle modern transitions and animations */
+.smooth-hover {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.clinical-card:hover {
-  border-color: #B8C8F5;
-  box-shadow: 0 4px 12px 0 rgba(49, 87, 213, 0.06);
+.smooth-hover:hover {
+  transform: translateY(-2px);
 }
 
-/* Restrained alert style */
-.clinical-alert-danger {
-  background: #FFFFFF;
-  border: 1px solid #FFB7C0;
-  border-radius: 16px;
+/* Modern Card Glow */
+.card-hover-cobalt {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.clinical-alert-warning {
-  background: #FFFFFF;
-  border: 1px solid #FDE68A;
-  border-radius: 16px;
+.card-hover-cobalt:hover {
+  transform: translateY(-2px);
+  border-color: #3157D5;
+  box-shadow: 0 8px 24px -4px rgba(49, 87, 213, 0.08);
 }
 
-.clinical-alert-success {
-  background: #FFFFFF;
-  border: 1px solid #A7F3D0;
-  border-radius: 16px;
+/* Subtle Pulse */
+@keyframes subtle-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.96);
+  }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 3s ease-in-out infinite;
 }
 
 /* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -281,7 +282,7 @@
 }
 
 .animate-ticker {
-  animation: ticker 35s linear infinite;
+  animation: ticker 40s linear infinite;
 }
 
 .animate-ticker:hover {
